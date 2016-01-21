@@ -13,4 +13,6 @@ public interface StoreService {
 	StoreDTO getStoreByStoreId(String storeId);
 	void saveStore(Store store);
 	List<StoreDTO> getStoreByUserId( String userId);
+	
+	List<StoreDTO> getStoreByBrandKey(String key);
 }

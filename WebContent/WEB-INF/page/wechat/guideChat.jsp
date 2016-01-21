@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>导购 :: 李大海</title>
+	<title>导购 :: ${guide.name }</title>
      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <meta name="format-detection" content="telephone=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -91,7 +91,10 @@
 		<div class="tools">
 			<div class="input">
 				<form action="#" id="talkform">
-					<input type="text" id="talk-content" maxlength="200" name="words"> <i class="icon-circle-plus"></i>
+					<input type="text" id="talk-content" maxlength="200" name="words"> 
+					<c:if test="${!empty guide }">
+					<i class="icon-circle-plus"></i>
+					</c:if>
 				</form>
 				
 
@@ -123,9 +126,9 @@
 								<i class="icon-bubble"></i>
 								<strong>话术</strong>
 								<select name="preword" id="preword">
-									<option value="0">您可以到我们门店进一步挑选。</option>
-									<option value="1">还有什么其他的需要呢？</option>
-									<option value="2">您大致打算在何时购买？</option>
+									<option value="您可以到我们门店进一步挑选。">您可以到我们门店进一步挑选。</option>
+									<option value="还有什么其他的需要呢？">还有什么其他的需要呢？</option>
+									<option value="您大致打算在何时购买？">您大致打算在何时购买？</option>
 
 								</select>
 							</label>
@@ -143,18 +146,9 @@
 <!-- 隐藏html -->
 <div style="display:none">
 	<!-- 导购 -->
-	<div id="guide-namecard">
-			<strong>我的名片</strong>
-			<br>姓名：${guide.name }<br>
-			所属门店：${guide.brand.brandName }品牌${guide.store.storeName }店<br>
-			电话：${guide.phone }
-
-	</div>
+	<div id="guide-namecard"><strong>我的名片</strong><br>姓名：${guide.name }<br>所属门店：${guide.brand.brandName }品牌${guide.store.storeName }店<br>电话：${guide.phone }</div>
 	<!-- 导购信息 -->
-	<div id="guide-location">
-			<strong>${guide.brand.brandName }品牌${guide.store.storeName }店</strong>
-			<br>地址：${guide.store.address }${guide.store.doorCode }
-	</div>
+	<div id="guide-location"><strong>${guide.brand.brandName }品牌${guide.store.storeName }店</strong><br>地址：${guide.store.address }${guide.store.doorCode }</div>
 </div>
 
 

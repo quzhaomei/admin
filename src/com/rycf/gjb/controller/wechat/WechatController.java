@@ -111,70 +111,8 @@ public class WechatController extends BaseController {
 			HttpServletResponse response, Model model) {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
 				.getAttribute(LOGIN_USER);
-		if (loginUser == null) {
-			String code = request.getParameter("code");
-			String channelCode = request.getParameter("channelCode");// 渠道编码
-			if (code != null) {
-				Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
-				String openId_temp = (String) jsonMap.get("openid");
-				String access_token = (String) jsonMap.get("access_token");
-				// 先查看用户注册没有。
-				WechatUser wechatUser = wechatUserService
-						.getWechatUserByOpenId(openId_temp);
-				if (wechatUser == null) {
-					wechatUser = openIdUtil.getUserByTokenAndUser(access_token,
-							openId_temp);
-					// 生成凯特猫用户
-					GetMoreUser user = new GetMoreUser();
-					user.setCreateDate(new Date());
-					user.setPhoto(wechatUser.getHeadimgurl());
-					user.setCode(channelCode);// 第一次进入初始化渠道编码
-					user.setStatus(1);// 正常
-					user.setType(1);// 微信用户
-					user.setUserName(wechatUser.getNickname());
-					user.setLoginName(UuidUtils.getObjectUUID("wechat"));
-					user.setPassword(UuidUtils.getObjectUUID("wechat"));
-					getMoreUserService.saveGetMoreUser(user);// 保存用户
-
-					wechatUser.setGetMoreId(user.getGetMoreId());// 关联ID
-					wechatUser.setOpenid(openId_temp);// 初始化openId 为了防止没有授权
-					wechatUserService.saveWechatUser(wechatUser);
-					// 保存session
-					loginUser = getMoreUserService.getUserById(user
-							.getGetMoreId());
-					request.getSession().setAttribute(LOGIN_USER, loginUser);
-				} else {
-					loginUser = getMoreUserService.getUserById(wechatUser
-							.getGetMoreId());
-					request.getSession().setAttribute(LOGIN_USER, loginUser);// 保存session
-
-					if (wechatUser.getHeadimgurl() == null
-							|| "".equals(wechatUser.getHeadimgurl())) {
-						Integer getMoreId = wechatUser.getGetMoreId();// 凯特号
-						// 查看有头像信息不，没有再请求一次
-						wechatUser = openIdUtil.getUserByTokenAndUser(
-								access_token, openId_temp);
-						if (wechatUser.getHeadimgurl() != null
-								&& wechatUser.getOpenid() != null) {// 正确返回
-
-							wechatUserService.update(wechatUser);// 更新数据
-							// 更新头像昵称
-							GetMoreUser updateParam = new GetMoreUser();
-							updateParam.setGetMoreId(getMoreId);
-							updateParam.setUserName(wechatUser.getNickname());
-							updateParam.setPhoto(wechatUser.getHeadimgurl());
-							getMoreUserService.updateGetMoreUser(updateParam);// 更新
-						}
-
-					}
-				}
-			} else {// 本地环境测试
-				loginUser = new GetMoreUserDTO();
-				loginUser.setGetMoreId(10070);
-				loginUser.setCreateDate(new Date());
-				request.getSession().setAttribute(LOGIN_USER, loginUser);// 保存session
-			}
-
+		if(request.getParameter("out")!=null){//如果是从外部请求
+			request.setAttribute("uri", request.getParameter("out"));
 		}
 		// 更新凯特猫的浏览记录
 		String timeFormat = new SimpleDateFormat("yyyy-MM-dd")
@@ -209,6 +147,9 @@ public class WechatController extends BaseController {
 		model.addAttribute("timestamp", timestamp);
 		model.addAttribute("signature", sign);
 		model.addAttribute("nonceStr", nonceStr);
+		if(request.getParameter("out")!=null){//如果是从外部请求
+			request.setAttribute("uri", request.getParameter("out"));
+		}
 		// 查询是否需要内部跳转
 		String goto_uri = request.getParameter("goto");
 		if (goto_uri != null) {

@@ -15,4 +15,7 @@ public interface StoreDao {
 	List<StoreDTO> getStoreByBrandId(@Param(value = "brandId") String brandId);
 	List<StoreDTO> getAllStores();
 	List<StoreDTO> getStoreByUserId(@Param(value = "userId") String userId);
+	
+	List<StoreDTO> getStoreByBrandKey(@Param(value = "key") String key);
+	
 }

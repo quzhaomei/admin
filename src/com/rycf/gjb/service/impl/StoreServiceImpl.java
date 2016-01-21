@@ -54,4 +54,9 @@ public class StoreServiceImpl implements StoreService {
 		return storeDao.getStoreByUserId(userId);
 	}
 
+	@Override
+	public List<StoreDTO> getStoreByBrandKey(String key) {
+		return storeDao.getStoreByBrandKey(key);
+	}
+
 }
