@@ -118,4 +118,13 @@
 		and bu.brandId =b.brandId left join system_user u
 		on u.systemUserId=s.keeperId)
 	</select>
+	<select id="getStoreByBrandKey" resultMap="storeDTO" >
+		select
+		s.storeId,s.storeName,s.address,s.status
+		,b.brandName,s.keeperId,gu.phone,gu.wechatId
+		from store s left join brand b on s.brandId=b.brandId and b.status='1' 
+		left join system_user gu on gu.systemUserId = s.keeperId
+		where b.pinying like '${key}%'
+	
+	</select>
 </mapper>  

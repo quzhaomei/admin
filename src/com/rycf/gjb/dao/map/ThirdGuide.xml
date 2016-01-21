@@ -29,6 +29,7 @@
 		<association property="getMoreUser" column="getMoreId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
 		<id property="getMoreId" column="getMoreId"/>
 		<result property="userName" column="userName"/>
+		<result property="photo" column="photo"/>
 		</association>
 	</resultMap>
 	
@@ -122,18 +123,19 @@
 		limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
 	</select>
 	<select id="getListByParam" resultMap="guideDTO">
-		select t.guideId,t.createDate,t.updateDate,t.status,
+		select t.guideId,t.createDate,t.updateDate,t.status,t.name,
 		b.brandId,b.brandName,
-		gu.getMoreId,gu.userName
+		gu.getMoreId,gu.userName,gu.photo
 		from third_guide t
-		left join brand b on b.brandId=t.brandId
+		left join store s on s.storeId=t.storeId
+		left join brand b on b.brandId=s.brandId
 		left join getmore_user gu on gu.getMoreId=t.getMoreId
 		where 1=1 
 		<if test="guide.status!=null">
 			and t.status=#{guide.status}
 		</if>
-		<if test="guide.brandId!=null">
-			and t.brandId=#{guide.brandId}
+		<if test="guide.storeId!=null">
+			and t.storeId=#{guide.storeId}
 		</if>
 		order by createDate asc
 	</select>
