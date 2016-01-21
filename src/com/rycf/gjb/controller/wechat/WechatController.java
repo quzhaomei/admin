@@ -1089,7 +1089,17 @@ public class WechatController extends BaseController {
 		model.addAttribute("guideCustom", guideCustom);
 		return "wechat/guideCustom";
 	}
-
+	//获取用户信息
+	@RequestMapping(value = "/socketLogin")
+	public String userinfo(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
+				.getAttribute(LOGIN_USER);
+		loginUser=getMoreUserService.getUserById(loginUser.getGetMoreId());
+		model.addAttribute("json", JSONUtil.object2json(loginUser));
+		return "json";
+	}
+	
 	// 导购员对话页面
 	@RequestMapping(value = "/guideChat")
 	public String guideChat(HttpServletRequest request,
