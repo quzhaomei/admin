@@ -18,6 +18,10 @@ Date.prototype.toString=function(){
 
 //输入框添加html
 var chat={};
+//滚动到底部
+chat.scollToButtom=function(){
+	$("#talking-container").scrollTop( $("#talking-container")[0].scrollHeight );
+}
 //发送信息
 chat.speakHtml=function(content,headimgurl,time,loadTag){
 	var $html=$("<span>").addClass("bubble b_right").html(content);
@@ -30,6 +34,7 @@ chat.speakHtml=function(content,headimgurl,time,loadTag){
 	}else{
 		$("#talking-container").append($li);
 	}
+	chat.scollToButtom();
 };
 
 //接收信息
