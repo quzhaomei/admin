@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.BrandTypeDao">
+ <cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.entity.BrandType" id="brandType">
+		<id property="brandTypeId" column="brandTypeId" />
+		<result property="html" column="html" />
+		<result property="name" column="name" />
+		<result property="status" column="status" />
+	</resultMap>
+	<insert id="saveBrandType" flushCache="true">
+		insert into brand_type(brandTypeId,html,name,status)
+		values(#{brandType.brandTypeId},#{brandType.html},#{brandType.name},#{brandType.status})
+	</insert>
+	<update id="updateBrandType" flushCache="true">
+		update brand_type set
+		<if test="brandType.html!=null">
+			html=#{brandType.html},
+		</if>
+		<if test="brandType.name!=null">
+			name=#{brandType.name},
+		</if>
+		<if test="brandType.status!=null">
+			status=#{brandType.status},
+		</if>
+		brandTypeId=#{brandType.brandTypeId} where brandTypeId=#{brandType.brandTypeId}
+	</update>
+	<select id="getById" resultMap="brandType" useCache="true">
+		select brandTypeId,html,name,status from brand_type where brandTypeId=#{id}
+	</select>
+	<select id="getBrandByParam" resultMap="brandType"  useCache="false">
+		select brandTypeId,html,name,status from brand_type 
+		where 1=1
+		<if test="brandType.name!=null">
+			and name=#{brandType.name}
+		</if>
+		<if test="brandType.status!=null">
+			and status=#{brandType.status}
+		</if>
+	</select>
+</mapper>  

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureBudgetDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.FurnitureBudgetDTO" id="budgetDTO">
+		<id property="budgetId" column="budgetId" />
+		<result property="startNum" column="startNum"/>
+		<result property="endNum" column="endNum"/>
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+	</resultMap>
+	<update id="saveBudget" flushCache="true">
+		insert into furniture_budget
+		(budgetId,startNum,endNum,status,createDate,createUserId)
+		values
+		(#{budget.budgetId},#{budget.startNum},#{budget.endNum},
+		#{budget.status},#{budget.createDate},#{budget.createUserId})
+	</update>
+	
+	<update id="updateBudget" flushCache="true">
+		update furniture_budget z set
+			<if test="budget.startNum !=null">
+				 z.startNum=#{budget.startNum},
+			</if>
+			<if test="budget.endNum !=null">
+				 z.endNum=#{budget.endNum},
+			</if>
+			<if test="budget.status !=null">
+				z.status=#{budget.status},
+			</if>
+			<if test="budget.updateDate !=null">
+				z.updateDate=#{budget.updateDate},
+			</if>
+			<if test="budget.updateUserId !=null">
+				z.updateUserId=#{budget.updateUserId},
+			</if>
+				z.budgetId=#{budget.budgetId}
+			where z.budgetId=#{budget.budgetId} 
+	</update>
+	
+	<select id="getBudgetById"  resultMap="budgetDTO"  useCache="false"> 
+		select m.budgetId,m.startNum,m.endNum,m.status,m.createDate from furniture_budget m 
+		where m.status='1' and m.budgetId=#{id}
+	</select>
+	
+	<select id="getBudgetByPageAndParam" resultMap="budgetDTO"  useCache="false" >
+		select m.budgetId,m.startNum,m.endNum,m.status,m.createDate from furniture_budget m  where m.status!=0 order by m.createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getCountByParam" resultType="int" useCache="true">
+		select count(1) from furniture_budget t where t.status='1'
+	</select>
+	
+	<select id="getAllBudget" resultMap="budgetDTO" useCache="true">
+		select m.budgetId,m.startNum,m.endNum,m.status,m.createDate from furniture_budget m where m.status='1' order by m.startNum 
+	</select>
+	
+</mapper>  

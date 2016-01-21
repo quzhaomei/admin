@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.OrderChannelDao">
+	<resultMap type="com.rycf.gjb.dto.OrderDTO" id="orderDTO">
+		<id property="orderId" column="orderId" />
+		<result property="orderImg" column="orderImg" />
+		<result property="status" column="status" />
+		<result property="getMoreId" column="getMoreId" />
+		<result property="username" column="username" />
+		
+		<result property="tempId" column="tempId" /><!-- 第三方支付号 -->
+		
+		<result property="hasPay" column="hasPay" />
+		<result property="phone" column="phone" />
+		<result property="buyDate" column="buyDate" />
+		<result property="createDate" column="createDate" />
+		
+		<result property="headimgurl" column="headimgurl" />
+		<result property="nickname" column="nickname" />
+	</resultMap>
+	
+	<insert id="save" flushCache="true" keyProperty="temp.id" useGeneratedKeys="true">
+		insert into order_channel(id,orderId,channelId)
+		values(#{temp.id},#{temp.orderId},#{temp.channelId})
+	</insert>
+	<select id="getOrderByChannelIdAndPage" resultMap="orderDTO">
+		select o.getMoreId,o.username,o.phone,o.orderImg,o.buyDate,
+		o.createDate,o.orderId,o.hasPay,
+		oc.id tempId
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where o.status='3' and tc.id=#{channelId}
+		 order by o.createDate
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getCountByChannelId" resultType="int">
+		select count(*)
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where o.status=3 and tc.id=#{channelId}
+	</select>
+	
+	<select id="getOrderByChannelIdAndPageForRead" resultMap="orderDTO"><!-- 展示给渠道商看 -->
+		select o.getMoreId,o.username,o.phone,o.orderImg,o.status,
+		o.createDate,o.orderId,o.hasPay,wu.headimgurl,wu.nickname,
+		oc.id tempId
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		left join wechat_user wu on wu.getMoreId=u.getMoreId
+		where  tc.id=#{channelId}
+		 order by o.createDate desc
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getCountByChannelIdForRead" resultType="int">
+		select count(*)
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where  tc.id=#{channelId}
+	</select>
+	
+	<select id="getPayedCount" resultType="float">
+		select COALESCE(sum(o.hasPay),0)
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where o.status=3 and tc.id=#{channelId}
+		and oc.id is not null
+	</select>
+	<select id="getUnPayedCount" resultType="float">
+		select COALESCE(sum(o.hasPay),0)
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where o.status=3 and tc.id=#{channelId}
+		and oc.id is null
+	</select>
+	<update id="batchPayed">
+		insert into order_channel(orderId,channelId)
+		select o.orderId,${channelId}
+		from fur_order o 
+		left join getmore_user u on u.getMoreId=o.getMoreId
+		left join third_channel tc on tc.code=u.code
+		left join order_channel oc on oc.channelId=tc.id and oc.orderId=o.orderId
+		where o.status=3 and tc.id=#{channelId}
+		and oc.id is null
+	</update>
+</mapper>  

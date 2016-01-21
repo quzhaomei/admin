@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureZoneDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.FurnitureZoneDTO" id="zoneDTO">
+		<id property="zoneId" column="zoneId" />
+		<result property="zoneName" column="zoneName" />
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+	</resultMap>
+	<update id="saveZone" flushCache="true">
+		insert into furniture_zone
+		(zoneId,zoneName,status,createDate,createUserId)
+		values
+		(#{zone.zoneId},#{zone.zoneName},#{zone.status},#{zone.createDate},#{zone.createUserId})
+	</update>
+	
+	<update id="updateZone" flushCache="true">
+		update furniture_zone z set
+			<if test="zone.zoneName !=null">
+				 z.zoneName=#{zone.zoneName},
+			</if>
+			<if test="zone.status !=null">
+				z.status=#{zone.status},
+			</if>
+			<if test="zone.updateDate !=null">
+				z.updateDate=#{zone.updateDate},
+			</if>
+			<if test="zone.updateUserId !=null">
+				z.updateUserId=#{zone.updateUserId},
+			</if>
+				z.zoneId=#{zone.zoneId}
+			where z.zoneId=#{zone.zoneId} 
+	</update>
+	
+	<select id="getZoneById"  resultMap="zoneDTO"  useCache="false"> 
+		select m.zoneId,m.zoneName,m.status,m.createDate from furniture_zone m 
+		where m.status='1' and m.zoneId=#{id}
+	</select>
+	
+	<select id="getZoneByPageAndParam" resultMap="zoneDTO"  useCache="false">
+		select m.zoneId,m.zoneName,m.status,m.createDate from furniture_zone m  where m.status!=0 order by m.createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getCountByParam" resultType="int" useCache="true">
+		select count(1) from furniture_zone t where t.status='1'
+	</select>
+	
+	<select id="getAllZone" resultMap="zoneDTO" useCache="true">
+		select m.zoneId,m.zoneName,m.status,m.createDate from furniture_zone m where m.status='1'
+		 order by m.createDate
+	</select>
+	
+</mapper>  

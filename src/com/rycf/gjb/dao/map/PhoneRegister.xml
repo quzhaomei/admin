@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.minisite.PhoneRegisterDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/>
+	<resultMap type="com.rycf.gjb.entity.minisite.PhoneRegister" id="register">
+		<id property="registerId" column="registerId" />
+		<result property="phone" column="phone" />
+		<result property="name" column="name" />
+		<result property="readyTime" column="readyTime" />
+		<result property="registerCode" column="registerCode" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+		<result property="status" column="status" />
+		<result property="type" column="type" />
+		<result property="shortUrl" column="shortUrl" />
+	</resultMap>
+	<insert id="save" flushCache="true">
+		insert into phone_register(registerId,phone,name,readyTime,registerCode,shortUrl,
+		createDate,updateDate,status,type)values(
+		#{data.registerId},#{data.phone},#{data.name},#{data.readyTime},#{data.registerCode},
+		#{data.shortUrl},#{data.createDate},
+		#{data.updateDate},#{data.status},#{data.type}
+		)
+	</insert>
+	<update id="update" flushCache="true">
+		update phone_register set registerId=#{data.registerId}
+		<if test="data.name!=null">
+		,name=#{data.name}
+		</if>
+		<if test="data.phone!=null">
+		,phone=#{data.phone}
+		</if>
+		<if test="data.shortUrl!=null">
+		,shortUrl=#{data.shortUrl}
+		</if>
+		<if test="data.status!=null">
+		,status=#{data.status}
+		</if>
+		<if test="data.updateDate!=null">
+		,updateDate=#{data.updateDate}
+		</if>
+		<if test="data.readyTime!=null">
+		,readyTime=#{data.readyTime}
+		</if>
+		where registerId=#{data.registerId}
+	</update>
+	<select id="getAll" resultMap="register" useCache="true">
+		select registerId,phone,type,name,registerCode,shortUrl,readyTime,createDate,updateDate,status 
+		from phone_register order by createDate
+	</select>
+	<select id="getAllByType" resultMap="register" useCache="true">
+		select registerId,phone,type,name,registerCode,shortUrl,readyTime,createDate,updateDate,status 
+		from phone_register  where type=#{type} order by createDate
+	</select>
+	<select id="getByParam" resultMap="register"  useCache="false">
+		select registerId,phone,name,registerCode,type,shortUrl,readyTime,createDate,updateDate,status from phone_register 
+		where 1=1
+		<if test="data.registerCode!=null">
+			and registerCode=#{data.registerCode}
+		</if>
+		<if test="data.phone!=null">
+			and phone=#{data.phone}
+		</if>
+		<if test="data.type!=null">
+			and type=#{data.type}
+		</if>
+		<if test="data.registerId!=null">
+			and registerId=#{data.registerId}
+		</if>
+	</select>
+	
+	<select id="getPageByParam" resultMap="register" >
+		select registerId,phone,name,registerCode,type,shortUrl,readyTime,createDate,updateDate,status from phone_register 
+		where 1=1
+		<if test="data.param.registerCode!=null">
+			and registerCode=#{data.param.registerCode}
+		</if>
+		<if test="data.param.phone!=null">
+			and phone=#{data.param.phone}
+		</if>
+		<if test="data.param.status!=null">
+			and status=#{data.param.status}
+		</if>
+		<if test="data.param.type!=null">
+			and type=#{data.param.type}
+		</if>
+		<if test="data.param.registerId!=null">
+			and registerId=#{data.param.registerId}
+		</if>
+		order by createDate
+		 limit ${(data.pageIndex-1)*data.pageSize},${data.pageSize}
+	</select>
+	<select id="getCount" resultType="int" >
+		select count(*) from phone_register
+		where 1=1
+		<if test="data.registerCode!=null">
+			and registerCode=#{data.registerCode}
+		</if>
+		<if test="data.phone!=null">
+			and phone=#{data.phone}
+		</if>
+		<if test="data.type!=null">
+			and type=#{data.type}
+		</if>
+		<if test="data.status!=null">
+			and status=#{data.status}
+		</if>
+		<if test="data.registerId!=null">
+			and registerId=#{data.registerId}
+		</if>
+	</select>
+	
+	<select id="getPageByParamAndTime" resultMap="register" >
+		select registerId,phone,name,type,registerCode,shortUrl,readyTime,createDate,updateDate,status from phone_register 
+		where 1=1
+		<if test="data.param.registerCode!=null">
+			and registerCode=#{data.param.registerCode}
+		</if>
+		<if test="data.param.phone!=null">
+			and phone=#{data.param.phone}
+		</if>
+		<if test="data.param.status!=null">
+			and status=#{data.param.status}
+		</if>
+		<if test="data.param.type!=null">
+			and type=#{data.param.type}
+		</if>
+		<if test="data.param.registerId!=null">
+			and registerId=#{data.param.registerId}
+		</if>
+		<if test="startTime!=null">
+			and readyTime &gt; #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and readyTime &lt; #{endTime}
+		</if>
+		order by 
+		<if test="startTime!=null || endTime!=null ">
+			readyTime,
+		</if>
+		createDate
+		 limit ${(data.pageIndex-1)*data.pageSize},${data.pageSize}
+	</select>
+	<select id="getCountByTime" resultType="int" >
+		select count(*) from phone_register
+		where 1=1
+		<if test="data.registerCode!=null">
+			and registerCode=#{data.registerCode}
+		</if>
+		<if test="data.phone!=null">
+			and phone=#{data.phone}
+		</if>
+		<if test="data.status!=null">
+			and status=#{data.status}
+		</if>
+		<if test="data.type!=null">
+			and type=#{data.type}
+		</if>
+		<if test="data.registerId!=null">
+			and registerId=#{data.registerId}
+		</if>
+		<if test="startTime!=null">
+			and readyTime &gt; #{startTime}
+		</if>
+		<if test="endTime!=null">
+			and readyTime &lt; #{endTime}
+		</if>
+	</select>
+</mapper>  

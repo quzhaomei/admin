@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.GuideChatHistoryDao">
+	<resultMap type="com.rycf.gjb.dto.GuideChatHistoryDTO" id="historyDTO">
+		<id property="historyId" column="historyId"/>
+		<result property="content" column="content"/>
+		<result property="status" column="status"/>
+		<result property="createDate" column="createDate"/>
+				
+		<association property="fromUser" column="fromId" javaType="com.rycf.gjb.entity.WechatUser">
+		<id property="getMoreId" column="fromId"/>
+		<result property="headimgurl" column="headimgurl_f"/>
+		</association>
+		
+		<association property="toUser" column="toId" javaType="com.rycf.gjb.entity.WechatUser">
+		<id property="getMoreId" column="toId"/>
+		<result property="headimgurl" column="headimgurl_t"/>
+		</association>
+		
+	</resultMap>
+	
+	<insert id="save" flushCache="true" keyProperty="history.historyId" useGeneratedKeys="true">
+		insert into guide_chat_history(historyId,fromId,toId,content,status,createDate
+		)values(#{history.historyId},#{history.fromId},#{history.toId},#{history.content},
+		#{history.status},#{history.createDate})
+	</insert>
+	
+	<update id="update">
+		update guide_chat_history b set
+		<if test="history.status!=null">
+			 b.status=#{history.status!=null},
+		</if>
+		b.historyId=#{history.historyId}
+		where b.historyId=#{history.historyId}
+	</update>
+	<select id="getById" resultMap="historyDTO">
+		select gch.historyId,toId,gch.content,gch.status,gch.createDate, gch.fromId,wu.headimgurl headimgurl_f, gch.toId,tot.headimgurl headimgurl_t from guide_chat_history gch 
+		left join wechat_user wu on wu.getMoreId=gch.fromId 
+		left join wechat_user tot on tot.getMoreId=gch.toId where gch.historyId=#{id}
+	</select>
+	<select id="loadByParam" resultMap="historyDTO">
+		select gch.historyId,gch.toId,gch.content,gch.status,gch.createDate, 
+		gch.fromId,wu.headimgurl headimgurl_f, 
+		gch.toId,tot.headimgurl headimgurl_t 
+		from guide_chat_history gch 
+		left join wechat_user wu on wu.getMoreId=gch.fromId 
+		left join wechat_user tot on tot.getMoreId=gch.toId 
+		where 1=1 
+		<if test="page.param.status!=null">
+			and gch.status=#{page.param.status}
+		</if>
+		and 
+		(
+		gch.toId=#{page.param.toId} and gch.fromId=#{page.param.fromId}
+		or
+		gch.toId=#{page.param.fromId} and gch.fromId=#{page.param.toId}
+		)
+		order by gch.createDate desc
+		limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="loadListByParam" resultMap="historyDTO">
+		select gch.historyId,gch.toId,gch.content,gch.status,gch.createDate, 
+		gch.fromId,wu.headimgurl headimgurl_f, 
+		gch.toId,tot.headimgurl headimgurl_t 
+		from guide_chat_history gch 
+		left join wechat_user wu on wu.getMoreId=gch.fromId 
+		left join wechat_user tot on tot.getMoreId=gch.toId 
+		where 1=1 
+		<if test="history.status!=null">
+			and gch.status=#{history.status}
+		</if>
+		and 
+		(
+		gch.toId=#{history.toId} and gch.fromId=#{history.fromId}
+		or
+		gch.toId=#{history.fromId} and gch.fromId=#{history.toId}
+		)
+		order by gch.createDate desc
+	</select>
+	
+	<select id="loadCountByParam" resultType="int">
+		select count(*)
+		from guide_chat_history gch 
+		where 1=1 
+		<if test="history.status!=null">
+			and gch.status=#{history.status}
+		</if>
+		and 
+		(
+		gch.toId=#{history.toId} and gch.fromId=#{history.fromId}
+		or
+		gch.toId=#{history.fromId} and gch.fromId=#{history.toId}
+		)
+	</select>
+	
+</mapper>  

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.RoleMenusDao">
+	<resultMap type="com.rycf.gjb.dto.RoleMenusDTO" id="roleMenusDTO">
+		<id property="roleMenusId" column="roleMenusId" />
+		<result property="roleId" column="roleId" />
+		<result property="menuId" column="menuId" />
+		<result property="status" column="status" />
+	</resultMap>
+	<update id="saveRoleMenus"> 
+		insert into role_menus(roleMenusId,roleId,menuId,status)
+		values
+		(#{roleMenus.roleMenusId},#{roleMenus.roleId},#{roleMenus.menuId},#{roleMenus.status})
+		</update>
+	<update id="updateRoleMenus">
+		update role_menus set status=#{roleMenus.status}
+		where roleId=#{roleMenus.roleId} and menuId=#{roleMenus.menuId}
+	</update>
+	<select id="getRoleMenusById" resultMap="roleMenusDTO">
+		select roleMenusId,roleId,menuId,status from role_menus
+		where roleId=#{roleMenus.roleId} and menuId=#{roleMenus.menuId}
+	</select>
+</mapper>  

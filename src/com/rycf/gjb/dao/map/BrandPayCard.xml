@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.BrandPayCardDao">
+	<resultMap type="com.rycf.gjb.dto.BrandPayCardDTO" id="payDTO">
+		<id property="userId" column="userId"/>
+		<result property="payCardId" column="payCardId" />
+		
+		<result property="brandCode" column="brandCode" />
+		<result property="brandKey" column="brandKey" />
+		
+		<result property="ledgerno" column="ledgerno" />
+		<result property="bindmobile" column="bindmobile" />
+		<result property="idcard" column="idcard" />
+		<result property="legalperson" column="legalperson" />
+		<result property="bankaccountnumber" column="bankaccountnumber" />
+		<result property="bankname" column="bankname" />
+		<result property="accountname" column="accountname" />
+		<result property="bankaccounttype" column="bankaccounttype" />
+		<result property="bankprovince" column="bankprovince" />
+		<result property="bankcity" column="bankcity" />
+		<association property="systemUserDTO" javaType="com.rycf.gjb.dto.SystemUserDTO" column="userId">
+			<id property="systemUserId" column="userId"/>
+			<result property="userName" column="userName"/>
+			<result property="phone" column="phone"/>
+			<result property="wechatId" column="wechatId"/>
+		</association>
+		<collection property="brandDTO"  ofType="com.rycf.gjb.dto.BrandDTO" column="brandId" >
+			<id property="brandId" column="brandId"/>
+			<result property="brandName" column="brandName"/>
+		</collection>
+	</resultMap>
+	<insert id="saveBrandPayCard">
+		insert into brand_pay_card(payCardId,userId,bindmobile,idcard,legalperson,bankaccountnumber,
+		bankname,accountname,bankaccounttype,bankprovince,bankcity)
+		values
+		(#{payCard.payCardId},#{payCard.userId},#{payCard.bindmobile},#{payCard.idcard},#{payCard.legalperson},#{payCard.bankaccountnumber},
+		#{payCard.bankname},#{payCard.accountname},#{payCard.bankaccounttype},#{payCard.bankprovince}
+		,#{payCard.bankcity})
+	</insert>
+	<update id="updateBrandPayCard">
+		update brand_pay_card set 
+		<if test="payCard.brandCode!=null">
+			brandCode=#{payCard.brandCode},
+		</if>
+		<if test="payCard.brandKey!=null">
+			brandKey=#{payCard.brandKey},
+		</if>
+		<if test="payCard.bindmobile!=null">
+			bindmobile=#{payCard.bindmobile},
+		</if>
+		<if test="payCard.idcard!=null">
+			idcard=#{payCard.idcard},
+		</if>
+		<if test="payCard.legalperson!=null">
+			legalperson=#{payCard.legalperson},
+		</if>
+		<if test="payCard.bankaccountnumber!=null">
+			bankaccountnumber=#{payCard.bankaccountnumber},
+		</if>
+		<if test="payCard.bankname!=null">
+			bankname=#{payCard.bankname},
+		</if>
+		<if test="payCard.accountname!=null">
+			accountname=#{payCard.accountname},
+		</if>
+		<if test="payCard.bankaccounttype!=null">
+			bankaccounttype=#{payCard.bankaccounttype},
+		</if>
+		<if test="payCard.bankprovince!=null">
+			bankprovince=#{payCard.bankprovince},
+		</if>
+		<if test="payCard.bankcity!=null">
+			bankcity=#{payCard.bankcity},
+		</if>
+		userId=#{payCard.userId} where userId=#{payCard.userId}
+	</update>
+	<select id="getBrandPayCardByUserId" resultMap="payDTO">
+		select bpc.payCardId,bpc.bindmobile,bpc.brandCode,bpc.brandKey,bpc.idcard,bpc.legalperson,bpc.bankaccountnumber,
+		bpc.bankname,bpc.accountname,bpc.bankaccounttype,bpc.bankprovince,bpc.bankcity,bu.userId,su.userName,su.phone,su.wechatId,
+		b.brandId,b.brandName
+		 from brand_user bu 
+		left join system_user su on bu.userId=su.systemUserId 
+		left join brand_pay_card bpc
+		on bpc.userId=bu.userId 
+		left join brand b on b.brandId=bu.brandId where bu.status='1' and bu.userId is not null and bu.userId=#{userId}
+	</select>
+	<select id="getAllBrandPayCard" resultMap="payDTO">
+		select  
+			bpc.payCardId,
+			bpc.bindmobile,
+			bpc.brandCode,
+			bpc.brandKey,
+			bpc.idcard,
+			bpc.legalperson,
+			bpc.bankaccountnumber,
+			bpc.bankname,
+			bpc.accountname,
+			bpc.bankaccounttype,
+			bpc.bankprovince,
+			bpc.bankcity,
+			bu.userId,
+			su.userName,
+			su.phone,
+			su.wechatId,
+			b.brandId,
+			b.brandName 
+		from brand_user bu 
+		left join system_user su on bu.userId=su.systemUserId 
+		left join brand_pay_card bpc on bpc.userId=bu.userId 
+		left join brand b on b.brandId=bu.brandId 
+		where bu.status='1' and bu.userId is not null order by payCardId
+	</select>
+</mapper>  

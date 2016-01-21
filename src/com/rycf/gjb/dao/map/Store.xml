@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.StoreDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.StoreDTO" id="storeDTO">
+		<id property="storeId" column="storeId" />
+		<result property="storeName" column="storeName" />
+		<result property="address" column="address" />
+		<result property="status" column="status" />
+		<result property="doorCode" column="doorCode" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<association property="brand" column="brandId"
+			javaType="com.rycf.gjb.dto.BrandDTO">
+			<id property="brandId" column="brandId" />
+			<result property="brandName" column="brandName" />
+			<result property="imgPath" column="imgPath" />
+		</association>
+		<association property="user" column="keeperId"
+			javaType="com.rycf.gjb.dto.SystemUserDTO">
+			<id property="systemUserId" column="keeperId" />
+			<result property="userName" column="userName" />
+			<result property="phone" column="phone" />
+			<result property="wechatId" column="wechatId" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.rycf.gjb.dto.BrandDTO" id="brandDTO">
+		<id property="brandId" column="brandId" />
+		<result property="brandName" column="brandName" />
+	</resultMap>
+	<insert id="saveStore" flushCache="true">
+		insert into
+		store(storeId,storeName,address,status,lng,lat,brandId,keeperId,doorCode)
+		values(#{store.storeId},#{store.storeName},#{store.address},#{store.status},
+		#{store.lng},#{store.lat},#{store.brandId},#{store.keeperId},#{store.doorCode})
+	</insert>
+	
+	<insert id="updateStore" flushCache="true">
+		update store set 
+		<if test="store.storeName!=null">
+			storeName=#{store.storeName},
+		</if>
+		<if test="store.address!=null">
+			address=#{store.address},
+		</if>
+		<if test="store.status!=null">
+			status=#{store.status},
+		</if>
+		<if test="store.lng!=null">
+			lng=#{store.lng},
+		</if>
+		<if test="store.lat!=null">
+			lat=#{store.lat},
+		</if>
+		<if test="store.brandId!=null">
+			brandId=#{store.brandId},
+		</if>
+		<if test="store.keeperId!=null">
+			keeperId=#{store.keeperId},
+		</if>
+		<if test="store.doorCode!=null">
+			doorCode=#{store.doorCode},
+		</if>
+			storeId=#{store.storeId} where storeId=#{store.storeId}
+	</insert>
+	
+	<select id="getStoreByStoreId" resultMap="storeDTO"  useCache="false">
+		select
+		s.storeId,s.storeName,s.address,s.status,s.lng,s.lat
+		,b.brandId,b.brandName,b.imgPath,s.keeperId,u.userName,u.phone,s.doorCode,u.wechatId
+		from store s left join brand b on s.brandId=b.brandId and b.status='1' left join system_user u
+		on u.systemUserId=s.keeperId and u.status='1'
+		
+		where s.status='1'
+		and s.storeId=#{storeId}
+	</select>
+
+	<select id="getNearStore" resultMap="storeDTO">
+		select
+		s.storeId,s.storeName,s.address,s.status,s.lng,s.lat
+		,b.brandId,b.brandName,b.imgPath,s.keeperId,u.userName,u.phone,s.doorCode,u.wechatId
+		from store s left join brand b on s.brandId=b.brandId  left join system_user u
+		 on s.keeperId = u.systemUserId and u.status='1'
+		where s.status='1'and b.status='1'
+		order by (POW(${store.lng}-lng,2) +
+		POW(${store.lat}-lat,2)) asc 
+		
+		 limit 0,50 
+	</select>
+	<select id="getStoreByBrandId" resultMap="storeDTO" useCache="true">
+		select
+		s.storeId,s.storeName,s.address,s.status,s.lng,s.lat
+		,b.brandId,b.brandName,b.imgPath,s.keeperId,u.userName,u.phone,s.doorCode,u.wechatId
+		from store s left join brand b on s.brandId=b.brandId and b.status='1' left join system_user u
+		on u.systemUserId=s.keeperId and u.status='1'
+		where s.status='1'
+		and  s.brandId=#{brandId}
+	</select>
+	<select id="getAllStores" resultMap="storeDTO" useCache="true">
+		select
+		s.storeId,s.storeName,s.address,s.status
+		,b.brandName,s.keeperId,u.userName,u.phone,u.wechatId
+		from store s left join brand b on s.brandId=b.brandId and b.status='1' left join system_user u
+		on u.systemUserId=s.keeperId and u.status='1'
+	</select>
+	<select id="getStoreByUserId" resultMap="storeDTO" >
+		(select
+		s.storeId,s.storeName,s.address,s.status
+		,b.brandName,s.keeperId,u.userName,u.phone,u.wechatId
+		from store s left join brand b on s.brandId=b.brandId and b.status='1' left join system_user u
+		on u.systemUserId=s.keeperId and u.status='1' where s.keeperId=#{userId})
+		union
+		( select
+		s.storeId,s.storeName,s.address,s.status
+		,b.brandName,s.keeperId,u.userName,u.phone,u.wechatId from store s 
+		left join brand b on b.brandId=s.brandId inner join brand_user bu on bu.userId= #{userId} 
+		and bu.brandId =b.brandId left join system_user u
+		on u.systemUserId=s.keeperId)
+	</select>
+</mapper>  

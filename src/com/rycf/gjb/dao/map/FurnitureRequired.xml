@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureRequiredDao">
+	<resultMap type="com.rycf.gjb.dto.FurnitureRequiredDTO" id="requiredDTO">
+		<id property="requiredId" column="requiredId" />
+		<result property="getMoreId" column="getMoreId"/>
+		<result property="typeIds" column="typeIds"/>
+		<result property="styleIds" column="styleIds" />
+		<result property="description" column="description" />
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+		<association property="zoneDTO" column="zoneId" javaType="com.rycf.gjb.dto.FurnitureZoneDTO">
+			<id property="zoneId" column="zoneId"/>
+			<result property="zoneName" column="zoneName"/>
+		</association>
+		<association property="budgetDTO" column="budgetId" javaType="com.rycf.gjb.dto.FurnitureBudgetDTO">
+			<id property="budgetId" column="budgetId"/>
+			<result property="startNum" column="startNum"/>
+			<result property="endNum" column="endNum"/>
+		</association>
+	</resultMap>
+	<update id="saveRequired">
+		insert into furniture_required
+		(requiredId,getMoreId,zoneId,typeIds,styleIds,budgetId,description,status,createDate)
+		values
+		(#{required.requiredId},#{required.getMoreId},#{required.zoneId},
+		#{required.typeIds},#{required.styleIds},#{required.budgetId},#{required.description}
+		,#{required.status},#{required.createDate})
+	</update>
+	
+	<update id="updateRequired">
+		update furniture_required set status=#{required.status} where requiredId=#{required.requiredId}
+	</update>
+	
+	<select id="getRequiredById"  resultMap="requiredDTO"> 
+		select r.requiredId,r.getMoreId,r.zoneId,z.zoneName,r.typeIds,r.styleIds,r.budgetId,b.startNum,b.endNum,r.description,r.status,r.createDate from furniture_required r
+		left join furniture_zone z on z.zoneId=r.zoneId and z.status='1' left join furniture_budget b on
+		b.budgetId=r.budgetId and b.status='1' where requiredId=#{id}
+	</select>
+	
+	<select id="getBudgetByPageAndParam" resultMap="requiredDTO" >
+		select r.requiredId,r.getMoreId,r.zoneId,z.zoneName,r.typeIds,r.styleIds,r.budgetId,b.startNum,b.endNum,r.description,
+		r.status,r.createDate from furniture_required r
+		left join furniture_zone z on z.zoneId=r.zoneId and z.status='1' left join furniture_budget b on
+		b.budgetId=r.budgetId and b.status='1' where 1=1
+		<if test="page.param.getMoreId !=null">
+			and r.getMoreId=#{page.param.getMoreId}
+		</if>
+		  and r.status!=0
+		 order by r.createDate desc
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getCountByParam" resultType="int">
+		select count(1) from furniture_required t where 1=1 
+		<if test="required.getMoreId !=null">
+			and t.getMoreId=#{required.getMoreId}
+		</if>
+		
+	</select>	
+</mapper>  

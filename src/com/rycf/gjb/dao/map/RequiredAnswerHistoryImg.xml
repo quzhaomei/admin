@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.RequiredAnswerHistoryImgDao">
+	<resultMap type="com.rycf.gjb.entity.RequiredAnswerHistoryImg" id="historyImg">
+		<id property="historyImgId" column="historyImgId" />
+		<result property="userId" column="userId" />
+		<result property="imgPath" column="imgPath" />
+		<result property="status" column="status" />
+		<result property="updateTime" column="updateTime" />
+	</resultMap>
+	<insert id="saveHistoryImg">
+		insert into required_answer_history_img
+		(historyImgId,userId,imgPath,status,updateTime)
+		values
+		(#{historyImg.historyImgId},#{historyImg.userId},
+		#{historyImg.imgPath},#{historyImg.status},#{historyImg.updateTime})
+	</insert>
+	<select id="getHistoryByUserId" resultMap="historyImg">
+		select historyImgId,userId,imgPath,status,updateTime
+		from required_answer_history_img where userId=#{userId} and status='1' order by updateTime desc limit 0,10
+	</select>
+	<update id="updateHistoryImg">
+		update required_answer_history_img set status=#{historyImg.status}
+		where historyImgId=#{historyImg.historyImgId}
+	
+	</update>
+</mapper>  

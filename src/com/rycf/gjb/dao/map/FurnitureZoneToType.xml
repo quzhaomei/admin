@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureZoneToTypeDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.entity.FurnitureZoneToType" id="zoneToType">
+		<id property="zoneToTypeId" column="zoneToTypeId" />
+		<result property="zoneId" column="zoneId" />
+		<result property="typeId" column="typeId" />
+		<result property="status" column="status" />
+	</resultMap>
+	<update id="saveZoneToType" flushCache="true">
+		insert into furniture_zone_to_type
+		(zoneToTypeId,zoneId,status,typeId)
+		values
+		(#{zoneToType.zoneToTypeId},#{zoneToType.zoneId},#{zoneToType.status},#{zoneToType.typeId})
+	</update>
+	
+	<update id="updateZoneToType" flushCache="true">
+		update furniture_zone_to_type z set
+			<if test="zoneToType.status !=null">
+				z.status=#{zoneToType.status},
+			</if>
+				z.zoneToTypeId=#{zoneToType.zoneToTypeId}
+			where z.zoneToTypeId=#{zoneToType.zoneToTypeId} 
+	</update>
+	
+	<select id="getZoneToTypeById"  resultMap="zoneToType" useCache="true"> 
+		select m.zoneToTypeId,m.zoneId,m.status,m.typeId from furniture_zone_to_type m 
+		where m.status='1' and m.zoneToTypeId=#{id}
+	</select>	
+	<select id="getByParam"  resultMap="zoneToType"> 
+		select m.zoneToTypeId,m.zoneId,m.status,m.typeId from furniture_zone_to_type m 
+		where 1=1 
+		<if test="zoneToType.status!=null">
+			and m.status=#{zoneToType.status}
+		</if>
+		
+		<if test="zoneToType.zoneId!=null">
+			and m.zoneId=#{zoneToType.zoneId}
+		</if>
+		<if test="zoneToType.typeId!=null">
+			and m.typeId=#{zoneToType.typeId}
+		</if>
+	</select>
+</mapper>  

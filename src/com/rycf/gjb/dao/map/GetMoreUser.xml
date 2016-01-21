@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.GetMoreUserDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.GetMoreUserDTO" id="userDTO">
+		<id property="getMoreId" column="getMoreId" />
+		<result property="userName" column="userName" />
+		<result property="loginName" column="loginName" />
+		<result property="password" column="password" />
+		<result property="code" column="code" />
+		<result property="phone" column="phone" />
+		<result property="photo" column="photo" />
+		<result property="type" column="type" />
+		<result property="createDate" column="createDate" />
+		<result property="status" column="status" />
+	</resultMap>
+	<insert id="saveGetMoreUser" flushCache="true" keyProperty="user.getMoreId" useGeneratedKeys="true">
+		insert into getmore_user(getMoreId,userName,loginName,password,phone,photo,type,createDate,status
+		,code)values(#{user.getMoreId},#{user.userName},#{user.loginName},#{user.password},#{user.phone},#{user.photo}
+		,#{user.type},#{user.createDate},#{user.status},#{user.code})
+	</insert>
+	
+	<update id="updateGetMoreUser" flushCache="true">
+		update getmore_user b set
+		<if test="user.status!=null">
+			 b.status=#{user.status},
+		</if>
+		<if test="user.createDate!=null">
+			 b.createDate=#{user.createDate},
+		</if>
+		<if test="user.type!=null">
+			 b.type=#{user.type},
+		</if>
+		<if test="user.photo!=null">
+			 b.photo=#{user.photo},
+		</if>
+		<if test="user.phone!=null">
+			 b.phone=#{user.phone},
+		</if>
+		<if test="user.userName!=null">
+			 b.userName=#{user.userName},
+		</if>
+		<if test="user.loginName!=null">
+			 b.loginName=#{user.loginName},
+		</if>
+		<if test="user.password!=null">
+			 b.password=#{user.password},
+		</if>
+		 b.getMoreId=#{user.getMoreId}
+		where b.getMoreId=#{user.getMoreId}
+	</update>
+	<select id="getCountByParam" resultType="int">
+		select count(*) from getmore_user where 1=1
+		<if test="user.status!=null">
+			and status=#{user.status}
+		</if>
+		<if test="user.type!=null">
+			and type=#{user.type}
+		</if>
+		<if test="user.code!=null">
+			and code=#{user.code}
+		</if>
+	</select>
+	<select id="getUserByParam" resultMap="userDTO">
+		select getMoreId,userName,loginName,password,phone,code,photo,type,createDate,status
+		from getmore_user 
+		where 1=1
+		<if test="user.getMoreId!=null">
+			and getMoreId=#{user.getMoreId}
+		</if>
+		<if test="user.loginName!=null">
+			and loginName=#{user.loginName}
+		</if>
+		<if test="user.password!=null">
+			and password=#{user.password}
+		</if>
+		<if test="user.type!=null">
+			and type=#{user.type}
+		</if>
+		<if test="user.status!=null">
+			and status=#{user.status}
+		</if>
+	</select>
+	<select id="getUsersByParam" resultMap="userDTO">
+		select getMoreId,userName,loginName,password,phone,code,photo,type,createDate,status
+		from getmore_user 
+		where 1=1
+		<if test="user.getMoreId!=null">
+			and getMoreId=#{user.getMoreId}
+		</if>
+		<if test="user.loginName!=null">
+			and loginName=#{user.loginName}
+		</if>
+		<if test="user.password!=null">
+			and password=#{user.password}
+		</if>
+		<if test="user.type!=null">
+			and type=#{user.type}
+		</if>
+		<if test="user.status!=null">
+			and status=#{user.status}
+		</if>
+		order by getMoreId
+	</select>
+	<select id="getUsersByPage" resultMap="userDTO">
+		select getMoreId,userName,loginName,password,phone,code,photo,type,createDate,status
+		from getmore_user 
+		where 1=1
+		<if test="page.param.getMoreId!=null">
+			and getMoreId=#{page.param.getMoreId}
+		</if>
+		<if test="page.param.loginName!=null">
+			and loginName=#{page.param.loginName}
+		</if>
+		<if test="page.param.password!=null">
+			and password=#{page.param.password}
+		</if>
+		<if test="page.param.type!=null">
+			and type=#{page.param.type}
+		</if>
+		<if test="page.param.status!=null">
+			and status=#{page.param.status}
+		</if>
+		order by getMoreId
+		limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+</mapper>  

@@ -1,0 +1,28 @@
+package com.rycf.gjb.service;
+
+import java.util.List;
+
+import com.rycf.gjb.dto.PageDTO;
+import com.rycf.gjb.dto.ThirdGuideCustomDTO;
+import com.rycf.gjb.dto.ThirdGuideDTO;
+import com.rycf.gjb.entity.ThirdGuide;
+
+public interface ThirdGuideService {
+	void save( ThirdGuide guide);
+	void update(ThirdGuide guide);
+	ThirdGuideDTO getById( Integer id);
+	ThirdGuideDTO getByGetMoreId(Integer getMoreId);
+	
+	PageDTO<List<ThirdGuideDTO>> getByPageAndParam( PageDTO<ThirdGuide> page);
+	
+	
+	List<ThirdGuideDTO> getList( ThirdGuide guide);
+	
+	int getCountByParam(ThirdGuide guide);
+	
+	List<ThirdGuideCustomDTO> getCustomByGuideId( Integer guideId);
+	
+	int getCustomCountByGuideId( Integer guideId);
+	
+	int getTalkCountByGetMoreId( Integer getMoreId);
+}

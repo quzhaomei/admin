@@ -1,0 +1,5 @@
+.pagination #page li a{color:#DF1008;border-color:#aaa;}
+.pagination #page li  select{border:1px solid #aaa !important;border-left:none !important;
+color:#147B16;text-align:center;font-weight:bold;}
+.pagination #page li.active a{background: #DF1008;color:#fff;border:1px solid #DF1008; }
+.pagination #page li.disabled a{color:#888;}

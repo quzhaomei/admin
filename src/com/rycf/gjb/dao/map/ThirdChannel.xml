@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.ThirdChannelDao">
+	<resultMap type="com.rycf.gjb.dto.ThirdChannelDTO" id="channelDTO">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="sex" column="sex" />
+		<result property="phone" column="phone" />
+		<result property="job" column="job" />
+		<result property="isCompany" column="isCompany" />
+		<result property="rate" column="rate" />
+		<result property="code" column="code" />
+		<result property="unpay" column="unpay" />
+		<result property="totalPay" column="totalPay" />
+		<result property="type" column="type" />
+		<result property="introImg" column="introImg" />
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+		<result property="updateUserId" column="updateUserId" />
+		<result property="description" column="description" />
+		
+		<association property="parent" column="parentId" javaType="com.rycf.gjb.dto.ThirdChannelDTO">
+		<id property="id" column="parentId"/>
+		<result property="name" column="parentName"/>
+		<result property="status" column="parentStatus"/>
+		</association>
+		<association property="userDTO" column="getMoreId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
+		<id property="getMoreId" column="getMoreId"/>
+		<result property="userName" column="userName"/>
+		</association>
+	</resultMap>
+	<resultMap type="com.rycf.gjb.entity.WechatUser" id="wechatUser">
+		<id property="openid" column="openid" />
+		<result property="nickname" column="nickname" />
+		<result property="getMoreId" column="getMoreId" />
+		<result property="sex" column="sex" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="country" column="country" />
+		<result property="headimgurl" column="headimgurl" />
+		<result property="createDate" column="createDate" />
+		
+		<result property="count" column="count" />
+	</resultMap>
+	<insert id="save" flushCache="true" keyProperty="channel.id" useGeneratedKeys="true">
+		insert into third_channel(id,parentId,getMoreId,name,sex,phone,job,type,introImg,createDate,status,
+		description,isCompany,rate,code
+		)values(#{channel.id},#{channel.parentId},#{channel.getMoreId},#{channel.name},
+		#{channel.sex},#{channel.phone},#{channel.job},#{channel.type},#{channel.introImg},#{channel.createDate}
+		,#{channel.status},#{channel.description},#{channel.isCompany},#{channel.rate}
+		,#{channel.code})
+	</insert>
+	
+	<update id="update">
+		update third_channel b set
+		<if test="channel.updateDate!=null">
+			 b.updateDate=#{channel.updateDate},
+		</if>
+		<if test="channel.updateUserId!=null">
+			 b.updateUserId=#{channel.updateUserId},
+		</if>
+		<if test="channel.unpay!=null">
+			 b.unpay=#{channel.unpay},
+		</if>
+		<if test="channel.job!=null">
+			 b.job=#{channel.job},
+		</if>
+		<if test="channel.totalPay!=null">
+			 b.totalPay=#{channel.totalPay},
+		</if>
+		<if test="channel.rate!=null">
+			 b.rate=#{channel.rate},
+		</if>
+		<if test="channel.parentId!=null">
+			 b.parentId=#{channel.parentId},
+		</if>
+		<if test="channel.description!=null">
+			 b.description=#{channel.description},
+		</if>
+		<if test="channel.phone!=null">
+			 b.phone=#{channel.phone},
+		</if>
+		<if test="channel.name!=null">
+			 b.name=#{channel.name},
+		</if>
+		<if test="channel.type!=null">
+			 b.type=#{channel.type},
+		</if>
+		<if test="channel.status!=null">
+			 b.status=#{channel.status},
+		</if>
+		<if test="channel.introImg!=null">
+			 b.introImg=#{channel.introImg},
+		</if>
+		b.id=#{channel.id}
+		where b.id=#{channel.id}
+	</update>
+	<select id="getById" resultMap="channelDTO">
+		select t.id,t.parentId,t.rate,t.getMoreId,g.userName,t.name,t.sex,t.phone,t.job,t.type,t.introImg
+		,t.createDate,t.status,t.isCompany,t.code,t.unpay,t.totalPay,
+		t.description,t.updateDate,t.updateUserId
+		,tc.name parentName,tc.status parentStatus from
+		third_channel t left join getmore_user g
+		on g.getMoreId=t.getMoreId
+		left join third_channel tc on tc.id=t.parentId
+		where t.id=#{id}
+	</select>
+	<select id="getByGetMoreId" resultMap="channelDTO"><!-- 非公司只能有一个 -->
+		select t.id,tc.id parentId,t.rate,t.getMoreId,g.userName,t.name,t.sex,t.phone,t.job,t.type,t.introImg
+		,t.createDate,t.status,t.isCompany,t.code,t.unpay,t.totalPay,
+		t.description,t.updateDate,t.updateUserId
+		,tc.name parentName,tc.status parentStatus from
+		third_channel t left join getmore_user g
+		on g.getMoreId=t.getMoreId
+		left join third_channel tc on tc.id=t.parentId
+		where t.getMoreId=#{getMoreId} and t.isCompany=0
+	</select>
+	<select id="getByPageAndParam" resultMap="channelDTO">
+		select t.id,t.parentId,t.rate,t.code,t.unpay,t.totalPay,t.getMoreId,g.userName,t.name,t.sex,t.phone,t.job,t.type,t.introImg
+		,t.createDate,t.status,t.isCompany,
+		t.description,t.updateDate,t.updateUserId
+		,tc.name parentName,tc.status parentStatus from
+		third_channel t left join getmore_user g on g.getMoreId=t.getMoreId 
+		left join third_channel tc on tc.id=t.parentId
+		where 1=1 
+		<if test="page.param.status!=null">
+			and t.status=#{page.param.status}
+		</if>
+		<if test="page.param.type!=null">
+			and t.type=#{page.param.type}
+		</if>
+		<if test="page.param.isCompany!=null">
+			and t.isCompany=#{page.param.isCompany}
+		</if>
+		<if test="page.param.parentId!=null">
+			and t.parentId=#{page.param.parentId}
+		</if>
+		order by createDate asc
+		limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getListByParam" resultMap="channelDTO">
+		select t.id,t.parentId,t.rate,t.code,t.unpay,t.totalPay,t.getMoreId,g.userName,t.name,t.sex,t.phone,t.job,t.type,t.introImg
+		,t.createDate,t.status,t.isCompany,
+		t.description,t.updateDate,t.updateUserId
+		,tc.name parentName,tc.status parentStatus from
+		third_channel t left join getmore_user g on g.getMoreId=t.getMoreId 
+		left join third_channel tc on tc.id=t.parentId
+		where t.status!=2<!-- 排除审核退回 --> 
+		<if test="channel.status!=null">
+			and t.status=#{channel.status}
+		</if>
+		<if test="channel.type!=null">
+			and t.type=#{channel.type}
+		</if>
+		<if test="channel.isCompany!=null">
+			and t.isCompany=#{channel.isCompany}
+		</if>
+		<if test="channel.parentId!=null">
+			and t.parentId=#{channel.parentId}
+		</if>
+		order by createDate asc
+	</select>
+	<select id="getCountByParam" resultType="int">
+		select count(*) from
+		third_channel t  where 1=1 
+		<if test="channel.status!=null">
+			and t.status=#{channel.status}
+		</if>
+		<if test="channel.type!=null">
+			and t.type=#{channel.type}
+		</if>
+		<if test="channel.isCompany!=null">
+			and t.isCompany=#{channel.isCompany}
+		</if>
+		<if test="channel.parentId!=null">
+			and t.parentId=#{channel.parentId}
+		</if>
+		<if test="channel.code!=null">
+			and t.code=#{channel.code}
+		</if>
+	</select>
+	
+	<select id="getFriendByChannelId" resultMap="wechatUser">
+	select wu.getMoreId,wu.nickname,wu.headimgurl,count(fo.orderId) count from 
+	getmore_user gu 
+	left join third_channel tc  on gu.code=tc.code 
+	left join wechat_user wu on wu.getMoreId=gu.getMoreId 
+	left join fur_order fo on fo.getMoreId=wu.getMoreId 
+	where tc.id=#{channelId} GROUP by wu.getMoreId,wu.nickname,wu.headimgurl order by  wu.getMoreId
+	</select>
+	<select id="getFriendCount" resultType="int">
+	select count(*) from
+	getmore_user gu 
+	left join third_channel tc on gu.code=tc.code 
+	where tc.id=#{channelId} 
+	</select>
+</mapper>  

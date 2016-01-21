@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.BrandDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.BrandDTO" id="brandDTO">
+		<id property="brandId" column="brandId" />
+		<result property="brandName" column="brandName" />
+		<result property="imgPath" column="imgPath" />
+		<result property="status" column="status" />
+		<result property="pinying" column="pinying" />
+		<result property="indexWord" column="indexWord" />
+		<result property="rate" column="rate" />
+		<result property="brandRate" column="brandRate" />
+		<result property="introduce" column="introduce" />
+		<result property="proImgs" column="proImgs"/>
+
+		<result property="scanNum" column="scanNum"/>
+
+		<result property="brandTypeIds" column="brandTypeIds"/>
+		<association property="user" javaType="com.rycf.gjb.dto.SystemUserDTO" column="systemUserId">
+			<id property="systemUserId" column="systemUserId"/>
+			<result property="userName" column="userName"/>
+			<result property="phone" column="phone"/>
+			<result property="wechatId" column="wechatId"/>
+		</association>
+	</resultMap>
+	<update id="updateBrand" flushCache="true">
+		update brand b set
+		<if test="brand.brandName!=null">
+			 b.brandName=#{brand.brandName},
+		</if>
+		<if test="brand.pinying!=null">
+			 b.pinying=#{brand.pinying},
+		</if>
+		<if test="brand.rate!=null">
+			 b.rate=#{brand.rate},
+		</if>
+		<if test="brand.brandRate!=null">
+			 b.brandRate=#{brand.brandRate},
+		</if>
+		<if test="brand.indexWord!=null">
+			 b.indexWord=#{brand.indexWord},
+		</if>
+		<if test="brand.introduce!=null">
+			 b.introduce=#{brand.introduce},
+		</if>
+		<if test="brand.imgPath!=null">
+			 b.imgPath=#{brand.imgPath},
+		</if>
+		<if test="brand.proImgs!=null">
+			 b.proImgs=#{brand.proImgs},
+		</if>
+		<if test="brand.status!=null">
+			 b.status=#{brand.status},
+		</if>
+		<if test="brand.brandTypeIds!=null">
+			 b.brandTypeIds=#{brand.brandTypeIds},
+		</if>
+		<if test="brand.scanNum!=null">
+			 b.scanNum=#{brand.scanNum},
+		</if>
+		 b.brandId=#{brand.brandId}
+		where b.brandId=#{brand.brandId}
+	</update>
+	<insert id="saveBrand" flushCache="true">
+		insert into brand(brandId,brandTypeIds,brandName,introduce,imgPath,status,indexWord,rate,brandRate,pinying,proImgs,
+		createDate,createUserId)values(#{brand.brandId},#{brand.brandTypeIds},#{brand.brandName},#{brand.introduce}
+		,#{brand.imgPath},#{brand.status},#{brand.indexWord},#{brand.rate},#{brand.brandRate},#{brand.pinying},#{brand.proImgs}
+		,#{brand.createDate},#{brand.createUserId})
+	</insert>
+	<select id="getAllBrand" resultMap="brandDTO" useCache="true">
+		select brandId,brandName,proImgs,introduce,imgPath,scanNum,status,indexWord,rate,brandRate,pinying,brandTypeIds from brand 
+		order by pinying asc; 
+	</select>
+	<select id="getBrandByUserId" resultMap="brandDTO" useCache="false">
+		select b.brandId,b.brandName,b.proImgs,b.introduce,b.imgPath,b.status,b.indexWord,scanNum,
+		b.rate,b.brandRate,b.pinying,b.brandTypeIds
+		 from brand b
+		inner join brand_user bu on b.brandId=bu.brandId and bu.userId=#{userId} order by pinying asc; 
+	</select>
+	<select id="getBrandById" resultMap="brandDTO" useCache="false">
+		select b.brandId,b.brandTypeIds,b.brandName,b.proImgs,b.introduce,b.imgPath,b.status,b.indexWord,scanNum,b.rate,b.brandRate,b.pinying
+		,u.systemUserId,u.userName,u.phone,u.wechatId from brand b left join brand_user bu on bu.brandId=b.brandId and bu.status='1' left
+		 join system_user u on u.systemUserId=bu.userId and u.status='1' where b.brandId=#{brandId}
+	</select>
+	<select id="getBrandByName" resultMap="brandDTO" useCache="false">
+		select brandId,brandName,brandTypeIds,proImgs,introduce,imgPath,scanNum,status,indexWord,rate,brandRate,pinying from brand where  status='1'
+		and brandName=#{brandName}
+	</select>
+</mapper>  

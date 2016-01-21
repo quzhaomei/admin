@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+ 
+.icon-money:before { content: '\24'; } /* '$' */
+.icon-home-1:before { content: '\2302'; } /* '⌂' */
+.icon-heart-empty-1:before { content: '\2661'; } /* '♡' */
+.icon-heart-1:before { content: '\2665'; } /* '♥' */
+.icon-mail:before { content: '\2709'; } /* '✉' */
+.icon-cancel:before { content: '\2715'; } /* '✕' */
+.icon-wallet:before { content: '\e02c'; } /* '' */
+.icon-location:before { content: '\e724'; } /* '' */
+.icon-down-open-1:before { content: '\e75c'; } /* '' */
+.icon-left-open-1:before { content: '\e75d'; } /* '' */
+.icon-right-open-1:before { content: '\e75e'; } /* '' */
+.icon-up-open-1:before { content: '\e75f'; } /* '' */
+.icon-down-open-big:before { content: '\e764'; } /* '' */
+.icon-left-open-big:before { content: '\e765'; } /* '' */
+.icon-right-open-big:before { content: '\e766'; } /* '' */
+.icon-up-open-big:before { content: '\e767'; } /* '' */
+.icon-dot:before { content: '\e78b'; } /* '' */
+.icon-camera:before { content: '\e800'; } /* '' */
+.icon-ok-1:before { content: '\e801'; } /* '' */
+.icon-megaphone:before { content: '\e802'; } /* '' */
+.icon-bookmark-empty:before { content: '\f097'; } /* '' */
+.icon-menu-1:before { content: '\f0c9'; } /* '' */
+.icon-mail-alt:before { content: '\f0e0'; } /* '' */
+.icon-angle-double-left:before { content: '\f100'; } /* '' */
+.icon-angle-double-right:before { content: '\f101'; } /* '' */
+.icon-angle-double-up:before { content: '\f102'; } /* '' */
+.icon-angle-double-down:before { content: '\f103'; } /* '' */
+.icon-mobile-1:before { content: '\f10b'; } /* '' */
+.icon-circle:before { content: '\f111'; } /* '' */
+.icon-angle-circled-left:before { content: '\f137'; } /* '' */
+.icon-angle-circled-right:before { content: '\f138'; } /* '' */
+.icon-angle-circled-up:before { content: '\f139'; } /* '' */
+.icon-angle-circled-down:before { content: '\f13a'; } /* '' */
+.icon-users:before { content: '👥'; } /* '\1f465' */
+.icon-phone-1:before { content: '📞'; } /* '\1f4de' */
+.icon-megaphone-1:before { content: '📣'; } /* '\1f4e3' */
+.icon-search-1:before { content: '🔍'; } /* '\1f50d' */
+.icon-bookmark-1:before { content: '🔖'; } /* '\1f516' */

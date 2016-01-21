@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.ThirdGuideDao">
+	<resultMap type="com.rycf.gjb.dto.ThirdGuideDTO" id="guideDTO">
+		<id property="guideId" column="guideId" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+		<result property="status" column="status" />
+		
+		<result property="name" column="name" />
+		<result property="sex" column="sex" />
+		<result property="phone" column="phone" />
+		<result property="job" column="job" />
+		
+		
+		
+		<association property="store" column="storeId" javaType="com.rycf.gjb.dto.StoreDTO">
+		<id property="storeId" column="storeId"/>
+		<result property="storeName" column="storeName"/>
+		<result property="address" column="address"/>
+		<result property="doorCode" column="doorCode"/>
+		</association>
+		
+		<association property="brand" column="brandId" javaType="com.rycf.gjb.dto.BrandDTO">
+		<id property="brandId" column="brandId"/>
+		<result property="brandName" column="brandName"/>
+		</association>
+		
+		<association property="getMoreUser" column="getMoreId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
+		<id property="getMoreId" column="getMoreId"/>
+		<result property="userName" column="userName"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.rycf.gjb.dto.ThirdGuideCustomDTO" id="guideCustomDTO">
+		<id property="getMoreId" column="getMoreId"/>
+		<result property="guideId" column="guideId"/>
+		<result property="nickname" column="nickname"/>
+		<result property="headimgurl" column="headimgurl"/>
+		<result property="phone" column="phone"/>
+		<result property="orderCount" column="orderCount"/>
+		<result property="totalPay" column="totalPay"/>
+		<result property="uncheckCount" column="uncheckCount"/>
+	</resultMap>
+	<insert id="save" flushCache="true" keyProperty="guide.guideId" useGeneratedKeys="true">
+		insert into third_guide(guideId,getMoreId,storeId,name,sex,phone,job,status,createDate,updateDate
+		)values(#{guide.guideId},#{guide.getMoreId},#{guide.storeId},#{guide.name},#{guide.sex},
+		#{guide.phone},#{guide.job},#{guide.status},
+		#{guide.createDate},#{guide.updateDate})
+	</insert>
+	
+	<update id="update">
+		update third_guide b set
+		<if test="guide.updateDate!=null">
+			 b.updateDate=#{guide.updateDate},
+		</if>
+		<if test="guide.status!=null">
+			 b.status=#{guide.status},
+		</if>
+		b.guideId=#{guide.guideId}
+		where b.guideId=#{guide.guideId}
+	</update>
+	<select id="getById" resultMap="guideDTO">
+		select t.guideId,t.createDate,t.updateDate,t.status,
+		b.brandId,b.brandName,
+		gu.getMoreId,gu.userName
+		from third_guide t
+		left join brand b on b.brandId=t.brandId
+		left join getmore_user gu on gu.getMoreId=t.getMoreId
+		where t.guideId=#{id}
+	</select>
+	<select id="getByGetMoreId" resultMap="guideDTO"><!-- 非公司只能有一个 -->
+		select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,s.address,s.doorCode,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId
+			left join getmore_user gu on gu.getMoreId=t.getMoreId 
+			where t.getMoreId=#{getMoreId}
+	</select>
+	<select id="getByPageAndParam" resultMap="guideDTO">
+	<!-- 如果是管理员查询 -->
+		<if test="page.param.userId==null">
+			select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+		</if>
+		<!-- 如果是品牌管理员或者店长查询 -->
+		<if test="page.param.userId!=null">
+			select a.* from(
+			select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId 
+			left join brand_user bu on bu.brandId=b.brandId and bu.userId=#{page.param.userId}
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+			where bu.brandUserId is not null
+			union
+			select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId and s.keeperId=#{page.param.userId}
+			left join brand b on b.brandId=s.brandId 
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+			where s.keeperId is not null
+			) a
+		</if>
+		where 1=1
+		order by createDate asc
+		limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getListByParam" resultMap="guideDTO">
+		select t.guideId,t.createDate,t.updateDate,t.status,
+		b.brandId,b.brandName,
+		gu.getMoreId,gu.userName
+		from third_guide t
+		left join brand b on b.brandId=t.brandId
+		left join getmore_user gu on gu.getMoreId=t.getMoreId
+		where 1=1 
+		<if test="guide.status!=null">
+			and t.status=#{guide.status}
+		</if>
+		<if test="guide.brandId!=null">
+			and t.brandId=#{guide.brandId}
+		</if>
+		order by createDate asc
+	</select>
+	<select id="getCountByParam" resultType="int">
+		<!-- 如果是管理员查询 -->
+		<if test="guide.userId==null">
+			select  count(*)
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+		</if>
+		<!-- 如果是品牌管理员或者店长查询 -->
+		<if test="guide.userId!=null">
+		select  count(*) from(
+			select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,
+			s.storeId,s.storeName,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId 
+			left join brand_user bu on bu.brandId=b.brandId and bu.userId=#{guide.userId}
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+			where bu.brandUserId is not null
+			union
+			select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,
+			s.storeId,s.storeName,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId and s.keeperId=#{guide.userId}
+			left join brand b on b.brandId=s.brandId 
+			left join getmore_user gu on gu.getMoreId=t.getMoreId
+			where s.keeperId is not null
+			) a
+		</if>
+	</select>
+	<select id="getCustomByGuideId" resultMap="guideCustomDTO">
+		select gu.guideId,gu.phone,wu.getMoreId,wu.nickname,wu.headimgurl,
+		(select count(*) from fur_order fo where fo.getMoreId=wu.getMoreId) orderCount,
+		(select sum(fo.hasPay) from fur_order fo where fo.getMoreId=wu.getMoreId) totalPay,
+		(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=wu.getMoreId 
+		and gch.toId=tg.getMoreId and gch.status=0 group by fromId) uncheckCount,
+		(SELECT max(gc.createDate) from guide_chat_history gc WHERE gc.toId=wu.getMoreId) newDate
+		from wechat_user wu 
+		left join getmore_user gu on gu.getMoreId=wu.getMoreId
+		left join third_guide tg on tg.guideId=gu.guideId
+		where gu.guideId=#{guideId} order by uncheckCount desc,newDate desc
+	</select>
+	<select id="getCustomCountByGuideId" resultType="int">
+		select count(*)
+		from wechat_user wu 
+		left join getmore_user gu on gu.getMoreId=wu.getMoreId
+		where gu.guideId=#{guideId}
+	</select>
+	<select id="getTalkCountByGetMoreId" resultType="int">
+	select count(*) from (SELECT distinct fromId FROM guide_chat_history 
+	WHERE toId=#{getMoreId} group by fromId) a
+	</select>
+</mapper>  

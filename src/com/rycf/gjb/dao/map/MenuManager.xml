@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.MenuManagerDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.MenuManagerDTO" id="menuDTO">
+		<id property="menuId" column="menuId" />
+		<result property="menuName" column="menuName" />
+		<result property="url" column="url" />
+		<result property="parentId" column="parentId" />
+		<result property="status" column="status" />
+		<result property="type" column="type" />
+		<result property="hasPower" column="hasPower"/>
+	</resultMap>
+	<select id="getMenuById"  resultMap="menuDTO"  useCache="false">  
+		select  menuId,menuName,url,parentId,status,type from menu_manager where status='1' and menuId=#{id}
+	</select>
+	<select id="findAllMenu"  resultMap="menuDTO" useCache="true"> 
+		select  menuId,menuName,url,parentId,status,type from menu_manager where status='1'
+	</select>
+	<select id="findMenuByRole"  resultMap="menuDTO" useCache="true"> 
+		select m.menuId,m.menuName,m.url,
+		m.parentId,m.status,m.type,r.status hasPower from menu_manager m left join role_menus r on m.menuId=r.menuId 
+		and r.roleId=#{roleId}
+		where m.status='1' order by m.menuId
+	</select>
+	
+	<select id="findMenuByParentId" resultType="int"  useCache="false">
+		select count(1) from role_menus where parentId=#{parentId} and status='1'
+	</select>
+	
+	<update id="saveMenu" flushCache="true" >
+		insert into menu_manager
+		(menuId,menuName,url,parentId,status,createDate,createUserId,type)
+		values
+		(#{menu.menuId},#{menu.menuName},#{menu.url},#{menu.parentId},#{menu.status},
+		#{menu.createDate},#{menu.createUserId},#{menu.type}
+		)
+	</update>
+	<update id="updateMenu" flushCache="true">
+		update menu_manager m set
+			<if test="menu.url !=null">
+				 m.url=#{menu.url},
+			</if>
+			<if test="menu.menuName !=null">
+				m.menuName=#{menu.menuName},
+			</if>
+			<if test="menu.status !=null">
+				m.status=#{menu.status},
+			</if>
+			<if test="menu.updateDate !=null">
+				m.updateDate=#{menu.updateDate},
+			</if>
+			<if test="menu.updateUserId !=null">
+				m.updateUserId=#{menu.updateUserId},
+			</if>
+			<if test="menu.type !=null">
+				m.type=#{menu.type},
+			</if>
+				m.menuId=#{menu.menuId}
+			where m.menuId=#{menu.menuId} 
+	</update>
+	
+</mapper>  

@@ -1,0 +1,77 @@
+@font-face {
+	font-family: "Flaticon";
+	src: url("flaticon.eot");
+	src: url("flaticon.eot#iefix") format("embedded-opentype"),
+	url("flaticon.woff") format("woff"),
+	url("flaticon.ttf") format("truetype"),
+	url("flaticon.svg") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+	font-family: Flaticon;
+font-style: normal;
+}.flaticon-armchair1:before {
+	content: "\e000";
+}
+.flaticon-bathtub3:before {
+	content: "\e001";
+}
+.flaticon-beds12:before {
+	content: "\e002";
+}
+.flaticon-beds6:before {
+	content: "\e003";
+}
+.flaticon-boy46:before {
+	content: "\e004";
+}
+.flaticon-chair26:before {
+	content: "\e005";
+}
+.flaticon-clothes20:before {
+	content: "\e006";
+}
+.flaticon-ebook19:before {
+	content: "\e007";
+}
+.flaticon-furniture25:before {
+	content: "\e008";
+}
+.flaticon-furniture39:before {
+	content: "\e009";
+}
+.flaticon-furniture41:before {
+	content: "\e00a";
+}
+.flaticon-furniture8:before {
+	content: "\e00b";
+}
+.flaticon-lamp25:before {
+	content: "\e00c";
+}
+.flaticon-livingroom:before {
+	content: "\e00d";
+}
+.flaticon-livingroom8:before {
+	content: "\e00e";
+}
+.flaticon-modern13:before {
+	content: "\e00f";
+}
+.flaticon-office8:before {
+	content: "\e010";
+}
+.flaticon-park10:before {
+	content: "\e011";
+}
+.flaticon-queen6:before {
+	content: "\e012";
+}
+.flaticon-shelves:before {
+	content: "\e013";
+}
+.flaticon-sofa7:before {
+	content: "\e014";
+}

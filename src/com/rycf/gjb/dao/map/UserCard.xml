@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.UserCardDao">
+	<resultMap type="com.rycf.gjb.dto.UserCardDTO" id="cardDTO">
+		<id property="userCardId" column="userCardId" />
+		<result property="accountAddr" column="accountAddr" />
+		<result property="getMoreId" column="getMoreId" />
+		<result property="bankName" column="bankName" />
+		<result property="username" column="username" />
+		<result property="cardNo" column="cardNo" />
+		<result property="statu" column="statu" />
+	</resultMap>
+	<update id="batchUpdate">
+	update user_card set statu='0' where getMoreId=#{card.getMoreId};
+	</update>
+	
+	<insert id="saveCard">
+		insert into user_card(userCardId,getMoreId,bankName,accountAddr,cardNo,username,createDate,
+		updatedate,statu)values(#{card.userCardId},#{card.getMoreId},#{card.bankName},#{card.accountAddr},#{card.cardNo},
+		#{card.username},#{card.createDate}
+		,#{card.updatedate},#{card.statu})
+	</insert>
+	<update id="updateCard">
+		update user_card set
+		<if test="card.bankName!=null">
+			bankName=#{card.bankName},
+		</if>
+		<if test="card.accountAddr!=null">
+			accountAddr=#{card.accountAddr},
+		</if>
+		<if test="card.cardNo!=null">
+			cardNo=#{card.cardNo},
+		</if>
+		<if test="card.username!=null">
+			username=#{card.username},
+		</if>
+		<if test="card.statu!=null">
+			statu=#{card.statu},
+		</if>
+		userCardId=#{card.userCardId}
+		where userCardId=#{card.userCardId}
+	</update>
+	<select id="getCardByGetMoreId" resultMap="cardDTO">
+		select userCardId,getMoreId,bankName,username,cardNo,statu,accountAddr from user_card where statu='1' and getMoreId=#{getMoreId}
+	</select>
+	<select id="getListByGetMoreId" resultMap="cardDTO">
+		select userCardId,getMoreId,bankName,username,cardNo,statu,accountAddr 
+		from user_card  where getMoreId=#{getMoreId}
+	</select>
+</mapper>  

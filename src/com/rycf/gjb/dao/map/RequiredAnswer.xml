@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.RequiredAnswerDao">
+	<resultMap type="com.rycf.gjb.dto.RequiredAnswerDTO" id="requiredDTO">
+		<id property="requiredAnswerId" column="requiredAnswerId" />
+		<result property="requiredId" column="requiredId" />
+		<result property="zoneIds" column="zoneIds" />
+		<result property="typeIds" column="typeIds" />
+		<result property="styleIds" column="styleIds" />
+		<result property="imgs" column="imgs" />
+		<result property="description" column="description" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate"/>
+		<result property="status" column="status"/>
+		<association property="user" javaType="com.rycf.gjb.dto.SystemUserDTO" column="userId">
+			<id property="systemUserId" column="userId"/>
+		</association>
+		<association property="brand" javaType="com.rycf.gjb.dto.BrandDTO" column="brandId">
+			<id property="brandId" column="brandId"/>
+			<id property="brandName" column="brandName"/>
+		</association>
+	</resultMap>
+	<resultMap type="com.rycf.gjb.dto.BrandDTO" id="brandDTO">
+		<id property="brandId" column="brandId" />
+		<result property="brandName" column="brandName" />
+	</resultMap>
+	<insert id="saveAnswer">
+		insert into required_answer(requiredAnswerId,userId,brandId,requiredId,zoneIds,typeIds,
+		styleIds,description,createDate,status,imgs)
+		values(#{answer.requiredAnswerId},#{answer.userId},#{answer.brandId},#{answer.requiredId},#{answer.zoneIds},
+		#{answer.typeIds},#{answer.styleIds}
+		,#{answer.description},#{answer.createDate},#{answer.status},#{answer.imgs})
+	</insert>
+	<select id="getAnswerByRequiredId" resultMap="requiredDTO">
+		select ra.requiredAnswerId,ra.userId,ra.requiredId,ra.zoneIds,ra.typeIds,
+		ra.styleIds,ra.description,ra.createDate,ra.updateDate,ra.status,ra.imgs,b.brandName,b.brandId from 
+		required_answer ra left join brand b on b.brandId=ra.brandId where requiredId=#{requiredId}
+	</select>
+	<select id="getAnswerByOpenId" resultMap="requiredDTO">
+		select a.requiredAnswerId,a.userId,a.requiredId,a.zoneIds,a.typeIds,
+		a.styleIds,a.description,a.createDate,a.updateDate,a.status,a.imgs from 
+		required_answer a inner join furniture_required r on a.requiredId=r.requiredId
+		 and r.openId=#{openId}
+	</select>
+	<!-- 根据用户ID获取品牌下的所有回答 -->
+	<select id="getAnswerByUserId" resultMap="requiredDTO">
+		(select ra.requiredAnswerId,ra.requiredId,ra.zoneIds,ra.typeIds,ra.styleIds,
+		ra.imgs,ra.description,ra.createDate
+		,bu.userId,b.brandId,b.brandName from brand_user bu inner join brand b on b.brandId=bu.brandId and b.status='1'
+		inner join required_answer ra on ra.brandId=bu.brandId and ra.requiredId=#{answer.requiredId} where bu.status='1' and bu.userId=#{answer.userId} 
+		 order by ra.createDate desc)
+		union
+		(select a.requiredAnswerId,a.requiredId,a.zoneIds,a.typeIds,
+		a.styleIds,a.imgs,a.description,a.createDate,a.userId,b.brandId,b.brandName from 
+		required_answer a inner join store s on s.brandId=a.brandId and s.brandId in (select brandId from store where keeperId=#{answer.userId}) and s.status='1' 
+		 left join brand b on b.brandId = s.brandId where a.requiredId=#{answer.requiredId}
+		order by a.createDate desc)
+	</select>
+	<select id="getUserNoAnswerBrand" resultMap="brandDTO">
+		(select b.brandId,b.brandName from brand_user bu inner join brand b on b.brandId=bu.brandId and b.status='1'
+		left join required_answer ra on ra.brandId=bu.brandId and ra.requiredId=#{answer.requiredId} where bu.status='1' and bu.userId=#{answer.userId} and ra.requiredAnswerId is  null
+		 order by a.createDate desc)
+		union
+		(select b.brandId,b.brandName from 
+		store s inner join brand b on b.brandId=s.brandId  left join required_answer a on a.brandId=b.brandId  and a.requiredId=#{answer.requiredId}
+		where  s.status='1' and s.brandId in 
+		(select brandId from store where keeperId=#{answer.userId}) and a.requiredAnswerId is  null
+		order by a.createDate desc)
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 备用 -->
+	<select id="getAnswerByBrandId" resultMap="requiredDTO">
+		select a.requiredAnswerId,a.userId,a.requiredId,a.zoneIds,a.typeIds,
+		a.styleIds,a.description,a.createDate,a.updateDate,a.status,a.imgs,s.brandId from 
+		required_answer a inner join store s on s.keeperId=a.userId and s.status='1'
+		  where s.brandId=#{brandId}
+	</select>
+	<select id="getAnswerByUserOfStore" resultMap="requiredDTO">
+		select a.requiredAnswerId,a.userId,a.requiredId,a.zoneIds,a.typeIds,
+		a.styleIds,a.description,a.createDate,a.updateDate,a.status,a.imgs from 
+		required_answer a inner join store s on s.brandId=a.brandId and s.userId=#{requiredAnswer.userId} where a.requiredId=#{requiredAnswer.requiredId}
+	</select>
+	<select id="getNoAnswerBrandByBrandUserId" resultMap="brandDTO">
+		select b.brandId,b.brandName from brand_user bu inner join brand b on b.status='1' and b.brandId=bu.brandId  
+		left join required_answer ra on b.brandId=ra.brandId inner join furniture_required fr on fr.requiredId=ra.requiredId 
+		and fr.requiredId=#{requiredAnswer.requiredId} where ra.requiredAnswerId is  null
+		bu.userId=#{requiredAnswer.userId}
+	</select>
+</mapper>  

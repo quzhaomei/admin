@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.OrderDao">
+	<resultMap type="com.rycf.gjb.dto.OrderDTO" id="orderDTO">
+		<id property="orderId" column="orderId" />
+		<result property="orderImg" column="orderImg" />
+		<result property="getMoreId" column="getMoreId" />
+		<result property="status" column="o_status" />
+		<result property="username" column="username" />
+		<result property="buyDate" column="buyDate" />
+		
+		
+		
+		<result property="hasPay" column="hasPay" />
+		<result property="phone" column="phone" />
+		<result property="fare" column="fare" />
+		<result property="backType" column="backType" />
+		<result property="info" column="info" />
+		<result property="createDate" column="createDate" />
+		<result property="getMorePay" column="getMorePay" />
+		
+		<result property="externalid" column="externalid" />
+		<association property="store" column="storeId" javaType="com.rycf.gjb.dto.StoreDTO">
+			<id property="storeId" column="storeId" />
+			<result property="storeName" column="storeName" />
+			<result property="address" column="address" />
+		</association>
+		<association property="brand" column="brandId" javaType="com.rycf.gjb.dto.BrandDTO">
+			<id property="brandId" column="brandId" />
+			<result property="brandName" column="brandName" />
+			<result property="imgPath" column="imgPath" />
+			<result property="status" column="status" />
+			<result property="rate" column="rate" />
+			<result property="brandRate" column="brandRate" />
+		</association>
+	</resultMap>
+	<update id="saveOrder">
+		insert into fur_order(orderId,getMoreId,username,phone,
+		storeId,buyDate,fare,hasPay,orderImg,status,createDate,orderNum,orderAddress,backType)
+		values(#{order.orderId},#{order.getMoreId},#{order.username},#{order.phone},#{order.storeId},
+		#{order.buyDate},#{order.fare},#{order.hasPay}
+		,#{order.orderImg},#{order.status},#{order.createDate},#{order.orderNum},#{order.orderAddress},#{order.backType})
+	</update>
+	<update id="updateOrder">       
+		update fur_order o set 
+		<if test="order.username!=null">
+		o.username=#{order.username},
+		</if>
+		<if test="order.phone!=null">
+		o.phone=#{order.phone},
+		</if>
+		<if test="order.storeId!=null">
+		o.storeId=#{order.storeId},
+		</if>
+		<if test="order.fare!=null">
+		o.fare=#{order.fare},
+		</if>
+		<if test="order.hasPay!=null">
+		o.hasPay=#{order.hasPay},
+		</if>
+		<if test="order.backType!=null">
+		o.backType=#{order.backType},
+		</if>
+		<if test="order.status!=null">
+		o.status=#{order.status},
+		</if>
+		<if test="order.info!=null">
+		o.info=#{order.info},
+		</if>
+		<if test="order.getMorePay!=null">
+		o.getMorePay=#{order.getMorePay},
+		</if>
+		<if test="order.externalid!=null">
+		o.externalid=#{order.externalid},
+		</if>
+		o.orderId=#{order.orderId} where o.orderId=#{order.orderId}
+	</update>
+	<select id="getOrderByGetMoreId" resultMap="orderDTO">
+		select 
+		b.brandId,b.brandName,b.brandRate,b.imgPath,o.status o_status,o.getMoreId,o.externalid,o.username,o.phone,o.fare,o.backType,o.info,o.orderImg,
+		o.createDate,o.buyDate,o.getMorePay,o.orderId,o.hasPay,b.rate
+		,s.storeId,s.storeName 
+		from fur_order o left join store s on s.storeId=o.storeId 
+		left join brand b on b.brandId=s.brandId where o.getMoreId=#{getMoreId} and o.status!='5' order by o.createDate
+		 desc
+	</select>
+	<select id="getOrderById" resultMap="orderDTO">
+		select 
+		b.brandId,b.brandName,b.brandRate,b.imgPath,b.status,o.getMoreId,o.externalid,
+		o.username,o.phone,o.fare,o.backType,o.buyDate,o.status o_status,
+		o.orderImg,o.createDate,o.getMorePay,o.orderId,o.hasPay,b.rate
+		,s.storeId,s.storeName
+		from fur_order o left join store s on s.storeId=o.storeId 
+		left join brand b on b.brandId=s.brandId where o.orderId=#{id}
+	</select>
+	<select id="getCountByParam" resultType="int">
+		select count(*) from fur_order o left join store s on s.storeId=o.storeId 
+		left join brand b on b.brandId=s.brandId
+		where 1=1
+		<if test="order.storeId!=null">
+			and s.storeId=#{order.storeId}
+		</if>
+		<if test="order.status!=null">
+			 and o.status=#{order.status}
+		</if>
+		<if test="order.backType!=null">
+			 and o.backType=#{order.backType}
+		</if>
+		<if test="order.userId!=null" >
+			and s.brandId in(select brandId from brand_user where userId=#{order.userId}
+			)
+		</if>
+	</select>
+	<select id="getOrderByPageAndParam" resultMap="orderDTO">
+		select 
+		b.brandId,b.brandName,b.imgPath,b.brandRate,o.getMoreId,o.username,o.externalid,
+		o.phone,o.fare,o.buyDate,o.backType,o.orderImg,o.info,o.createDate,o.getMorePay,o.status o_status,
+		o.orderId,o.hasPay,b.rate
+		,s.storeId,s.storeName from fur_order o left join store s on s.storeId=o.storeId 
+		left join brand b on b.brandId=s.brandId 
+		where 1=1 
+		<if test="page.param.storeId!=null">
+			and s.storeId=#{page.param.storeId}
+		</if>
+		<if test="page.param.status!=null">
+			 and o.status=#{page.param.status}
+		</if>
+		<if test="page.param.backType!=null">
+			 and o.backType=#{page.param.backType}
+		</if>
+		<if test="page.param.userId!=null">
+			and s.brandId in(select brandId from brand_user where userId=#{page.param.userId}
+			)
+		</if>
+		 order by o.createDate
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getAllOrder" resultMap="orderDTO">
+		select 
+		b.brandId,b.brandName,b.imgPath,b.brandRate,o.getMoreId,o.username,o.externalid,
+		o.phone,o.fare,o.buyDate,o.backType,o.orderImg,o.info,o.createDate,o.getMorePay,o.status o_status,
+		o.orderId,o.hasPay,b.rate
+		,s.storeId,s.storeName from fur_order o left join store s on s.storeId=o.storeId 
+		left join brand b on b.brandId=s.brandId 
+		 order by o.createDate
+		 
+	</select>
+	<select id="getUserTotalPay" resultType="int">
+		select COALESCE(sum(o.hasPay),0) from fur_order o where o.getMoreId=#{getMoreId} and o.status='3'
+	</select>
+</mapper>  

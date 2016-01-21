@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.SystemUserDao">
+	<resultMap type="com.rycf.gjb.dto.SystemUserDTO" id="systemUserDTO">
+		<id property="systemUserId" column="systemUserId" />
+		<result property="userName" column="userName" />
+		<result property="loginname" column="loginname" />
+		<result property="phone" column="phone" />
+		<result property="status" column="status" />
+		<result property="wechatId" column="wechatId" />
+		<result property="email" column="email" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+		<result property="rolesArrStr" column="rolesArrStr" />
+		<result property="description" column="description" />
+		<association property="createUserDTO" column="createUserId" javaType="com.rycf.gjb.dto.SystemUserDTO">
+		<id property="systemUserId" column="createUserId"/>
+		</association>
+		<association property="updateUserDTO" column="updateUserId" javaType="com.rycf.gjb.dto.SystemUserDTO">
+		<id property="systemUserId" column="createUserId"/>
+		</association>
+	</resultMap>
+	<update id="saveSystemUser" flushCache="true">
+		insert into system_user (systemUserId,userName,loginname,password,phone,email,status,
+		rolesArrStr,description,createDate,createUserId,wechatId)
+		values
+		(#{systemUser.systemUserId},#{systemUser.userName},#{systemUser.loginname}
+		,#{systemUser.password},#{systemUser.phone},#{systemUser.email}
+		,#{systemUser.status},#{systemUser.rolesArrStr},#{systemUser.description},
+		#{systemUser.createDate},#{systemUser.createUserId},#{systemUser.wechatId})
+	</update>
+	<select id="getUserByPage" resultMap="systemUserDTO" useCache="true">
+		select a.wechatId,a.email,a.systemUserId,a.userName,a.loginname,a.phone,a.status,a.createDate,a.updateDate,a.rolesArrStr
+		,a.description,a.createUserId,a.updateUserId from system_user a where a.status!='0' 
+		<if test="page.param.rolesArrStr !=null">
+			and a.rolesArrStr like '%${page.param.rolesArrStr}%'
+		</if>
+		order by a.createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getAllUser" resultMap="systemUserDTO" useCache="true">
+		select a.userName
+		,a.phone ,a.rolesArrStr from system_user a where a.status=1
+		order by a.createDate 
+	</select>
+	<select id="getCountByParam" resultType="int" useCache="true">
+		select count(1) from system_user t where t.status!='0'
+		<if test="systemUser.loginname !=null">
+			and t.loginname=#{systemUser.loginname }
+		</if>
+		<if test="systemUser.phone !=null">
+			and t.phone=#{systemUser.phone}
+		</if>
+		<if test="systemUser.rolesArrStr !=null">
+			and t.rolesArrStr like '%${systemUser.rolesArrStr}%'
+		</if>
+	</select>
+	<select id="getSystemUserById" resultMap="systemUserDTO"  useCache="false">
+		select a.wechatId,a.systemUserId,a.email,a.userName,a.loginname,a.phone,a.status,a.createDate,a.updateDate,a.rolesArrStr
+		,a.description,a.createUserId,a.updateUserId from system_user a where a.status!='0' 
+		and a.systemUserId=#{id}
+	</select>
+	<select id="getUserByParam" resultMap="systemUserDTO"  useCache="false">
+		select a.wechatId,a.systemUserId,a.email,a.userName,a.loginname,a.phone,a.status,a.createDate,a.updateDate,a.rolesArrStr
+		,a.description,a.createUserId,a.updateUserId from system_user a where a.status!='0' 
+		<if test=" systemUser.loginname!=null">
+			and binary a.loginname=#{systemUser.loginname}
+		</if>
+		<if test=" systemUser.password!=null">
+			and binary a.password=#{systemUser.password}	
+		</if>
+		<if test=" systemUser.phone!=null">
+			and binary a.phone=#{systemUser.phone}	
+		</if>
+	</select>
+	<update id="updateSystemUser" flushCache="true" >
+		update system_user set
+		<if test="systemUser.rolesArrStr !=null">
+			rolesArrStr=#{systemUser.rolesArrStr},
+		</if>
+		<if test="systemUser.userName !=null">
+			userName=#{systemUser.userName},
+		</if>
+		<if test="systemUser.loginname !=null">
+			loginname=#{systemUser.loginname},
+		</if>
+		<if test="systemUser.phone !=null">
+			phone=#{systemUser.phone},
+		</if>
+		
+		<if test="systemUser.email !=null">
+			email=#{systemUser.email},
+		</if>
+		<if test="systemUser.description !=null">
+			description=#{systemUser.description},
+		</if>
+		<if test="systemUser.status !=null">
+			status=#{systemUser.status },
+		</if>
+		<if test="systemUser.password !=null">
+			password=#{systemUser.password},
+		</if>
+		<if test="systemUser.updateUserId !=null">
+			updateUserId=#{systemUser.updateUserId},
+		</if>
+		<if test="systemUser.updateDate !=null">
+			updateDate=#{systemUser.updateDate},
+		</if>
+		<if test="systemUser.wechatId !=null">
+			wechatId=#{systemUser.wechatId},
+		</if>
+		 systemUserId=#{systemUser.systemUserId} where systemUserId=#{systemUser.systemUserId}
+	</update>
+</mapper>  

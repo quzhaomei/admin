@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.WechatUserDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.entity.WechatUser" id="wechatUser">
+		<id property="openid" column="openid" />
+		<result property="nickname" column="nickname" />
+		<result property="getMoreId" column="getMoreId" />
+		<result property="sex" column="sex" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="country" column="country" />
+		<result property="headimgurl" column="headimgurl" />
+		<result property="createDate" column="createDate" />
+	</resultMap>
+	<insert id="saveWechatUser" flushCache="true">
+		insert into wechat_user(openid,getMoreId,nickname,sex,province,city,country,headimgurl,createDate)
+		values(#{wechatUser.openid},#{wechatUser.getMoreId},#{wechatUser.nickname},#{wechatUser.sex},#{wechatUser.province},
+		#{wechatUser.city}
+		,#{wechatUser.country},#{wechatUser.headimgurl},#{wechatUser.createDate})
+	</insert>
+	
+	<update id="updateWechatUser" flushCache="true">
+		update wechat_user set openid=openid
+		<if test="wechatUser.nickname!=null">
+			, nickname=#{wechatUser.nickname}
+		</if>
+		<if test="wechatUser.sex!=null">
+			, sex=#{wechatUser.sex}
+		</if>
+		<if test="wechatUser.province!=null">
+			, province=#{wechatUser.province}
+		</if>
+		<if test="wechatUser.city!=null">
+			, city=#{wechatUser.city}
+		</if>
+		<if test="wechatUser.country!=null">
+			, country=#{wechatUser.country}
+		</if>
+		<if test="wechatUser.headimgurl!=null">
+			, headimgurl=#{wechatUser.headimgurl}
+		</if>
+		where 1=1
+		<if test="wechatUser.openid!=null">
+		 and openid=#{wechatUser.openid} 
+		</if>
+		<if test="wechatUser.getMoreId!=null">
+		 and getMoreId=#{wechatUser.getMoreId} 
+		</if>
+	</update>
+	
+	<select id="getWechatUserByOpenId" resultMap="wechatUser">
+		select openid,getMoreId,nickname,sex,province,city,country,headimgurl,createDate from
+		wechat_user where openid=#{openId}
+	</select>
+	<select id="getWechatUserByGetMoreId" resultMap="wechatUser">
+		select openid,getMoreId,nickname,sex,province,city,country,headimgurl,createDate from
+		wechat_user where getMoreId=#{getMoreId}
+	</select>
+	
+	<select id="getListByParam" resultMap="wechatUser" useCache="true">
+		select openid,getMoreId,nickname,sex,province,city,country,headimgurl,createDate from
+		wechat_user 
+		order by createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	<select id="getCountByParam" resultType="int" useCache="true">
+		select count(openid) from wechat_user 
+	</select>
+</mapper>  

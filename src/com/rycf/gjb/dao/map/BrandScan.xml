@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.BrandScanDao">
+	<resultMap type="com.rycf.gjb.dto.BrandScanDTO" id="scanDTO">
+		<id property="brandScanId" column="brandScanId" />
+		<result property="seeDate" column="seeDate" />
+		<result property="time" column="time" />
+		
+		<association property="user" column="getMoreId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
+		<id property="getMoreId" column="getMoreId"/>
+		<result property="userName" column="userName"/>
+		</association>
+		
+		<association property="brand" column="brandId" javaType="com.rycf.gjb.dto.BrandDTO">
+		<id property="brandId" column="brandId"/>
+		<result property="brandName" column="brandName"/>
+		<result property="imgPath" column="imgPath"/>
+		</association>
+	</resultMap>
+	<insert id="saveScan">
+		insert into brand_scan(brandScanId,getMoreId,brandId,seeDate,time)
+		values(#{scan.brandScanId},#{scan.getMoreId},#{scan.brandId},
+		#{scan.seeDate},#{scan.time})
+	</insert>
+	
+	<update id="updateScan">
+		update brand_scan set brandScanId=#{scan.brandScanId}
+		<if test="scan.time!=null">
+			,time=#{scan.time}
+		</if>
+		<if test="scan.brandId!=null">
+			,brandId=#{scan.brandId}
+		</if>
+		<if test="scan.getMoreId!=null">
+			,getMoreId=#{scan.getMoreId}
+		</if>
+		<if test="scan.seeDate!=null">
+			,seeDate=#{scan.seeDate}
+		</if>
+		where brandScanId=#{scan.brandScanId}
+	</update>
+	
+	<select id="getCountByParam" resultType="int">
+		select count(*) from  brand_scan where 1=1
+		<if test="scan.brandId!=null">
+			and brandId=#{scan.brandId}
+		</if>
+		<if test="scan.getMoreId!=null">
+			and getMoreId=#{scan.getMoreId}
+		</if>
+	</select>
+	
+	<select id="getScanByParam" resultMap="scanDTO">
+		select bs.brandScanId,bs.getMoreId,bs.brandId,bs.seeDate,
+		b.brandName,b.imgPath,gu.userName
+		from brand_scan bs 
+		left join brand b on b.brandId=bs.brandId
+		left join getmore_user gu on gu.getMoreId=bs.getMoreId
+		where 1=1
+		<if test="scan.brandId!=null">
+			and bs.brandId=#{scan.brandId}
+		</if>
+		<if test="scan.brandId==null">
+			and bs.brandId is null
+		</if>
+		<if test="scan.time!=null">
+			and bs.time=#{scan.time}
+		</if>
+		<if test="scan.getMoreId!=null">
+			and bs.getMoreId=#{scan.getMoreId}
+		</if>
+		
+	</select>
+	<select id="getScanById" resultMap="scanDTO">
+		select bs.brandScanId,bs.getMoreId,bs.brandId,bs.seeDate,bs.time,
+		b.brandName,b.imgPath,gu.userName
+		from brand_scan bs 
+		left join brand b on b.brandId=bs.brandId
+		left join getmore_user gu on gu.getMoreId=bs.getMoreId
+		where 1=1
+			and bs.brandScanId=#{id}
+		
+	</select>
+	
+	<delete id="deleteScan" >
+		delete from brand_scan  where brandScanId=#{id}
+	</delete>
+	
+	<select id="getGetMoreCountByParam" resultType="int">
+		select count(*) from  brand_scan where brandId is null
+		<if test="scan.getMoreId!=null">
+			and getMoreId=#{scan.getMoreId}
+		</if>
+	</select>
+	
+	<select id="getGetMoreScanByPage" resultMap="scanDTO">
+		select bs.brandScanId,bs.getMoreId,bs.brandId,bs.seeDate,
+		b.brandName,b.imgPath,gu.userName
+		from brand_scan bs 
+		left join brand b on bs.brandId=b.brandId
+		left join getmore_user gu on gu.getMoreId=bs.getMoreId
+		where bs.brandId is null
+		<if test="page.param.getMoreId!=null">
+			and bs.getMoreId=#{page.param.getMoreId}
+		</if>
+		order by bs.seeDate desc
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getScanByPage" resultMap="scanDTO">
+		select bs.brandScanId,bs.getMoreId,bs.brandId,bs.seeDate,
+		b.brandName,b.imgPath,gu.userName
+		from brand_scan bs 
+		left join brand b on bs.brandId=b.brandId
+		left join getmore_user gu on gu.getMoreId=bs.getMoreId
+		where 1=1
+		<if test="page.param.brandId!=null">
+			and bs.brandId=#{page.param.brandId}
+		</if>
+		<if test="page.param.getMoreId!=null">
+			and bs.getMoreId=#{page.param.getMoreId}
+		</if>
+		and bs.brandId is not null
+		order by bs.seeDate desc
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+</mapper>  

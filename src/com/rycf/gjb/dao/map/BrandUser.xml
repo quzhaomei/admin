@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.BrandUserDao">
+<resultMap type="com.rycf.gjb.entity.BrandUser" id="brandUser">
+		<id property="brandUserId" column="brandUserId" />
+		<result property="brandId" column="brandId" />
+		<result property="userId" column="userId" />
+		<result property="status" column="status" />
+	</resultMap>
+	<insert id="saveBrand">
+		insert into brand_user(brandUserId,brandId,userId,status)values(#{brandUser.brandUserId},
+		#{brandUser.brandId},#{brandUser.userId},#{brandUser.status})
+	</insert>
+	<update id="updateBrand">
+		update brand_user set status=#{brandUser.status} where brandUserId=#{brandUser.brandUserId}
+	</update>
+	<select id="getBrandUserByParam" resultMap="brandUser">
+		select brandUserId,brandId,userId,status from brand_user
+		where brandId=#{brandUser.brandId} 
+		<if test="brandUser.userId!=null">
+		and userId=#{brandUser.userId}
+		</if>
+		<if test="brandUser.status!=null">
+			and status=#{brandUser.status}
+		</if>
+	</select>
+	<select id="getBrandByUserId" resultMap="brandUser">
+		select brandUserId,brandId,userId,status from brand_user
+		where  userId=#{userId}
+		and status='1'
+	</select>
+</mapper>  

@@ -1,0 +1,135 @@
+body {
+	font-family: Arial, "Microsoft Yahei", sans-serif;
+
+}
+
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+a, a img {
+	border: 0px;
+}
+
+
+
+.bottomstrip {
+	background-color: #C40000;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	 right: 0px;
+	 height: 80px;
+}
+
+.bottomstrip .container {
+	width: 1200px;
+	margin: auto;
+	
+}
+
+.bottomstrip .container {
+	color: white;
+	padding: 20px 0px;
+		text-align: center;
+
+}
+
+.bottomstrip .container label {
+	margin-right: 10px;
+}
+
+.bottomstrip .container input[type="text"] {
+	margin-right: 30px;
+	height: 20px;
+	width: 150px;
+	padding: 5px;
+	border: 0px;
+	border-radius: 2px;
+	font-size: 18px;
+	color: black;
+}
+
+.bottomstrip .container .submit {
+	height: 40px;
+	vertical-align: middle;
+	margin-left: 30px;
+	cursor: pointer;
+	display: inline-block;
+}
+
+.bottomstrip .container .submit img {
+	height: 40px;
+	width: auto;
+}
+
+.imgs {
+	width: 1024px;
+	margin: auto;
+	padding-bottom: 100px;
+}
+
+.mobileimgs {
+	padding: 0px 10px;
+	padding-top: 200px;
+}
+
+.imgs img,.mobileimgs img  {
+	width: 100%;
+	display: inline-block;
+}
+.topstrip {
+	background-color: #C20C15;
+	padding: 20px;
+	text-align: center;
+	position: fixed;
+	color: white;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.topstrip input {
+	border: 0px;
+	height: 20px;
+	padding: 5px;
+	width: 180px;
+	font-size: 16px;
+}
+
+.topstrip label {
+	margin-right: 10px;
+
+}
+
+.row {
+	margin-bottom: 10px;
+}
+
+.topstrip .submit {
+	height: 35px;
+	margin-right: 10px;
+
+}
+.topstrip .submit img {
+	height: 35px;
+	width: auto;
+}
+
+.topstrip span {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.text {
+	width: 120px;
+	color: #FFE700;
+	text-align: left;
+}
+
+.text img {
+	width: 120px;
+	height: auto;
+}
+

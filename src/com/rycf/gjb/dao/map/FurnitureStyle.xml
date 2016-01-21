@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureStyleDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.FurnitureStyleDTO" id="styleDTO">
+		<id property="styleId" column="styleId" />
+		<result property="styleName" column="styleName" />
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+	</resultMap>
+	<update id="saveStyle" flushCache="true">
+		insert into furniture_style
+		(styleId,styleName,status,createDate,createUserId)
+		values
+		(#{style.styleId},#{style.styleName},#{style.status},#{style.createDate},#{style.createUserId})
+	</update>
+	
+	<update id="updateStyle" flushCache="true">
+		update furniture_style z set
+			<if test="style.styleName !=null">
+				 z.styleName=#{style.styleName},
+			</if>
+			<if test="style.status !=null">
+				z.status=#{style.status},
+			</if>
+			<if test="style.updateDate !=null">
+				z.updateDate=#{style.updateDate},
+			</if>
+			<if test="style.updateUserId !=null">
+				z.updateUserId=#{style.updateUserId},
+			</if>
+				z.styleId=#{style.styleId}
+			where z.styleId=#{style.styleId} 
+	</update>
+	
+	<select id="getStyleById"  resultMap="styleDTO"  useCache="false"> 
+		select m.styleId,m.styleName,m.status,m.createDate from furniture_style m 
+		where m.status='1' and m.styleId=#{id}
+	</select>
+	
+	<select id="getStyleByPageAndParam" resultMap="styleDTO"  useCache="false">
+		select m.styleId,m.styleName,m.status,m.createDate from furniture_style m  where m.status!=0 order by m.createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getCountByParam" resultType="int" useCache="true">
+		select count(1) from furniture_style t where t.status!='1'
+	</select>
+	
+	<select id="getAllStyle" resultMap="styleDTO" useCache="true">
+		select m.styleId,m.styleName,m.status,m.createDate from furniture_style m where m.status='1'
+	</select>
+	
+</mapper>  

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<title>吉盛伟邦新年促销活动</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+  	<script type="text/javascript" src="js/jquery.fullPage.min.js"></script>
+  	<link href='css/style.css' rel='stylesheet' type='text/css'>
+	<link href='css/jquery.fullPage.css' rel='stylesheet' type='text/css'>
+	<script type="text/javascript">
+			window.onload = function(){
+			   $('body').addClass('loaded');
+			   $('#fullpage').fullpage({
+    			anchors: ['page01', 'page02', 'page03', 'page04', 'page05', 'lastPage'],
+    			afterRender: function () {
+		            setInterval(function () {
+		                $.fn.fullpage.moveSlideRight();
+		            }, 2500);
+		        }
+		    	});
+		    	$('.arrow').on('click', '', function(){
+				  $.fn.fullpage.moveSectionDown();
+
+				});
+
+		};		
+
+		$(document).ready(function() {
+
+				$('.map').on('click', '', function(event) {
+					event.preventDefault();
+					$('#map').removeClass('offstage');
+					$('#map .close').one('click', function(event) {
+						$('#map').addClass('offstage');
+					});
+				});
+				
+				$("#addSubmit").on("click",function(){
+			var name=$("#add_name").val();
+			var phone=$("#add_phone").val();
+			if(!name){
+				alert("请输入姓名");
+				return;
+			}
+			if(!phone){
+				alert("请输入手机");
+				return;
+			}else if(!/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(phone)){
+				alert("请输入正确的手机号码");
+				return;
+			}
+			var param={};
+			param.name=name;
+			param.phone=phone;
+			var _this=this;
+			
+			$(_this).attr("disabled","disabled");
+			
+			$.post("../year.html",param,function(json){
+			$(_this).removeAttr("disabled");
+			
+				if(json.status==0){
+					alert(json.message);
+				}else{
+					alert(json.message);
+					window.location.reload();
+				}
+			},"json")
+		});
+				
+
+		});
+	</script>
+</head>
+
+<body>
+
+<!-- 预加载文件 -->
+	<div class="imgpreload hide">
+		<img src="images/snowbg.png" alt="">
+		<img src="images/bg01.png" alt="">
+		<img src="images/bg02.jpg" alt="">
+		<img src="images/bg02txt.png" alt="">
+		<img src="images/bg03txt.png" alt="">
+		<img src="images/bg04.jpg" alt="">
+		<img src="images/bg05.jpg" alt="">
+		<img src="images/map.jpg" alt="">
+		<img src="images/item01.jpg" alt="">
+		<img src="images/item01.png" alt="">
+		<img src="images/item02.jpg" alt="">
+		<img src="images/item03.jpg" alt="">	
+		<img src="images/item04.jpg" alt="">	
+		<img src="images/item05.jpg" alt="">
+		<img src="images/item06.jpg" alt="">
+		<img src="images/item07.jpg" alt="">
+		<img src="images/item08.jpg" alt="">
+		<img src="images/qrcode.png" alt="">
+		
+
+	</div>
+
+	<!-- 预加载页面开始 -->
+	<div id="loader-wrapper">
+      <div id="loader">
+        <div class="spinner">
+          <div class="dot1"></div>
+          <div class="dot2"></div>
+        </div>
+      </div>
+      <div class="logo"><img src="images/getmore.png"></div>
+      <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+   	</div>
+   	<!-- 预加载页面结束 -->
+
+<div id="fullpage">
+    <div class="section" id="section0">
+    	<div class="page border">
+    		<div class="content">
+    			<button data-menuanchor="lastPage"><a href="#lastPage">立刻报名</a></button>
+    		</div>
+    	</div>
+    </div>
+    <div class="section" id="section1">
+    	<button class="map">
+    		签到地图
+    	</button>
+    	
+    		
+    	
+    	<div class="txt">
+    		您可于<strong>2016年1月1日～2日</strong>两天，凭凯特猫邀约短信至卖场活动签到处免费领取价值100元的签到礼，<strong>500份</strong>签到礼先到先得，送完即止
+    	</div>
+    	<span data-menuanchor="lastPage" class="common"><a href="#lastPage">立刻<br>报名</a></span>
+    </div>
+    <div class="section" id="section2">
+    		  <div class="page">
+    		  	 <div class="content">
+    		  	 	<span data-menuanchor="page04"><a href="#page04">单品预告</a></span>
+    		  	 </div>
+    		  </div>
+   			   
+		    <span data-menuanchor="lastPage" class="common"><a href="#lastPage">立刻<br>报名</a></span>
+
+    </div>
+    <div class="section" id="section3">
+    	<div class="slide">
+			<div class="img">
+				<img src="images/item08.jpg">
+			</div>
+		</div>
+		  <div class="slide">
+			<div class="img">
+				<img src="images/item01.jpg">
+			</div>
+
+		</div>
+	    <div class="slide">
+			<div class="img">
+				<img src="images/item02.jpg">
+			</div>
+
+		</div>
+	    <div class="slide">
+			<div class="img">
+				<img src="images/item03.jpg">
+			</div>
+		</div>
+		<div class="slide">
+			<div class="img">
+				<img src="images/item04.jpg">
+			</div>
+		</div>
+		<div class="slide">
+			<div class="img">
+				<img src="images/item05.jpg">
+			</div>
+		</div>
+		<div class="slide">
+			<div class="img">
+				<img src="images/item06.jpg">
+			</div>
+		</div>
+		<div class="slide">
+			<div class="img">
+				<img src="images/item07.jpg">
+			</div>
+		</div>
+
+		<div class="bg"></div>
+		<button>
+			<a href="http://mp.weixin.qq.com/s?__biz=MzAwMzMyNTAyMw==&mid=401033751&idx=1&sn=fdb13dbd4f4dd89f8921dc82c42e61de&scene=0#wechat_redirect" target="_blank">更多单品<br>请点击</a>
+		</button>
+		<div class="txt">
+			<img src="images/bg03txt.png" alt="">
+		</div>
+
+		<span data-menuanchor="lastPage" class="common"><a href="#lastPage">立刻<br>报名</a></span>
+
+    </div>
+    <div class="section" id="section4">
+    	<span data-menuanchor="lastPage" class="common"><a href="#lastPage">立刻<br>报名</a></span>
+		
+    </div>
+    <div class="section" id="section5">
+    	
+    	<span class="qrcode">
+    		<img src="images/qrcode.png" alt="">
+    	</span>
+    	<span class="txt">
+    		1. <strong>1月1～3日</strong>现场购物获得<strong>10%-15%</strong>折扣<br>
+    		2. 微信关注凯特猫公众号 <strong>ktm666888</strong><br>
+    		3. 拍摄并上传订单获得额外<strong>2%</strong>的返利
+    	</span>
+    	<div class="formarea">
+    		<div class="outline">
+    			<input type="text" id="add_name" maxlength="5" placeholder="请输入真实姓名">
+    		</div>
+    		<div class="outline">
+    			<input type="number" id="add_phone" placeholder="请输入您的手机号">
+    		</div>
+    		
+    		
+    		<button id="addSubmit">报名参加</button>
+    	</div>
+    </div>
+   
+</div>
+ 
+
+ <div class="arrow animated bounce">
+	
+</div>
+
+<div id="map" class="offstage">
+	<img src="images/map.jpg" alt="">
+
+	<div class="txt">
+		黄圈区域为活动卖场签到处，请至<strong>D2-3</strong>楼领取签到礼
+	</div>
+	<div class="back">
+		<span class="close">
+			<img src="images/close.png" alt="">
+		</span>
+		<br>返回 
+	</div>
+	
+
+</div>
+	
+
+</body>
+</html>

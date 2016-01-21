@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.FurnitureTypeDao">
+<cache eviction="LRU" flushInterval="60000" size="1024" readOnly="true"/> 
+	<resultMap type="com.rycf.gjb.dto.FurnitureTypeDTO" id="typeDTO">
+		<id property="typeId" column="typeId" />
+		<result property="typeName" column="typeName" />
+		<result property="status" column="status" />
+		<result property="createDate" column="createDate" />
+		<collection property="zones" ofType="com.rycf.gjb.dto.FurnitureZoneDTO" >
+			<id property="zoneId" column="zoneId"/>
+			<id property="zoneName" column="zoneName"/>
+		</collection>
+	</resultMap>
+	<update id="saveType" flushCache="true">
+		insert into furniture_type
+		(typeId,typeName,status,createDate,createUserId)
+		values
+		(#{type.typeId},#{type.typeName},#{type.status},#{type.createDate},#{type.createUserId}
+		)
+	</update>
+	
+	<update id="updateType" flushCache="true">
+		update furniture_type z set
+			<if test="type.typeName !=null">
+				 z.typeName=#{type.typeName},
+			</if>
+			<if test="type.status !=null">
+				z.status=#{type.status},
+			</if>
+			<if test="type.updateDate !=null">
+				z.updateDate=#{type.updateDate},
+			</if>
+			<if test="type.updateUserId !=null">
+				z.updateUserId=#{type.updateUserId},
+			</if>
+				z.typeId=#{type.typeId}
+			where z.typeId=#{type.typeId} 
+	</update>
+	
+	<select id="getTypeById"  resultMap="typeDTO"  useCache="false"> 
+		select t.typeId,t.typeName,t.status,t.createDate 
+		,z.zoneId,z.zoneName
+		from furniture_type t
+		left join furniture_zone_to_type zt on t.typeId=zt.typeId and t.status=1 
+		and zt.status=1 left join furniture_zone z on z.status=1 and z.zoneId=zt.zoneId
+		where t.typeId=#{id}
+		
+	</select>
+	
+	<select id="getTypeByPageAndParam" resultMap="typeDTO"  useCache="false">
+		select m.typeId,m.typeName,m.status,m.createDate from furniture_type m  where m.status!=0 order by m.createDate 
+		 limit ${(page.pageIndex-1)*page.pageSize},${page.pageSize}
+	</select>
+	
+	<select id="getCountByParam" resultType="int"  useCache="true">
+		select count(1) from furniture_type t where t.status!='1'
+	</select>
+	
+	<select id="getAllType" resultMap="typeDTO" useCache="true">
+		select t.typeId,t.typeName,t.status,t.createDate 
+		,z.zoneId,z.zoneName
+		from furniture_type t
+		left join furniture_zone_to_type zt on t.typeId=zt.typeId and zt.status='1'
+		 left join furniture_zone z on z.zoneId=zt.zoneId and z.status='1'
+		where t.status='1' order by t.createDate
+	</select>
+	<select id="getTypeByZone" resultMap="typeDTO" useCache="true">
+		select t.typeId,t.typeName
+		from furniture_type t
+		left join furniture_zone_to_type zt on t.typeId=zt.typeId and zt.status='1'
+		 left join furniture_zone z on z.zoneId=zt.zoneId and z.status='1'
+		where t.status='1' and z.zoneId=#{zoneId} order by t.createDate
+	</select>
+	
+</mapper>  
