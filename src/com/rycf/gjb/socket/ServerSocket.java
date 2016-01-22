@@ -17,7 +17,7 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.rycf.gjb.util.JSONUtil;
 
-@Repository
+//@Repository
 public class ServerSocket {
 	private Map<String,SocketIOClient> socketMap=new HashMap<String, SocketIOClient>();
 	private SocketIOServer server=null;
