@@ -1,15 +1,21 @@
+var user;
+
 /**
  * socket 公共js
  */
-jQuery.getScript("../js/socket/socket.io-1.3.4.js");//导入socket文件
-var user;
-$(function(){
+jQuery.getScript("../js/socket/socket.io-1.3.4.js",function(){
 	//userInfo 获取
 	$.post("socketLogin.html",function(json){
 		user=new TalkingUser(json.getMoreId,json.userName,json.photo,
 				"http://127.0.0.1:14080");
 		user.login();//登录
 	},"json");
+	
+	
+});//导入socket文件
+
+$(function(){
+	
 	
 });
 //聊天用户对象,在首页创建
