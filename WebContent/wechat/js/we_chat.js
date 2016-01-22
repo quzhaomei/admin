@@ -79,6 +79,7 @@ chat.htmlEncode=function (str)
   return s;
 }
 chat.sendText=function(text,obj){
+	
 	//转译
 	text=chat.htmlEncode(text);
 	//发送信息
@@ -89,9 +90,13 @@ chat.sendText=function(text,obj){
 	$.post("guideSay.html",param,function(json){
 		$(obj).removeAttr("disabled");
 		if(json.status=="1"){
+			//socket转发
+			if(user){
+				user.speak(json.data.toUser.getMoreId,text,json.data.timeStamp);
+			}
 			$("#talk-content").val("");
 			chat.speakHtml(text,json.data.fromUser.headimgurl,
-					new Date(parseInt(json.data.timeStamp)))
+					new Date(parseInt(json.data.timeStamp)));
 		}else{
 			alert(json.message);
 		}
@@ -173,4 +178,16 @@ $(function(){
 		}
 		return false;
 	})
+	//socket 接受到聊天信息
+	var task=setInterval(function(){
+		if(user){
+			alert("设置回调");
+			user.callback=function(data){
+				chat.getHtml(data.message,data.fromUser.imgPath
+						,new Date(parseInt(data.datatime)));
+			}
+		}
+		clearInterval(task);
+	}, 500);
+	
 });
