@@ -51,9 +51,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 			boolean test=true;
 			String getmoreId=request.getParameter("getId");
 			if(test&&getmoreId!=null&&getmoreId.matches("\\d+")){
-					loginUser = new GetMoreUserDTO();
-					loginUser.setGetMoreId(Integer.parseInt(getmoreId));
-					loginUser.setCreateDate(new Date());
+					loginUser=getMoreUserService.getUserById(Integer.parseInt(getmoreId));
 					request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);// 保存session
 					return true;
 			}

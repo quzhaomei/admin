@@ -43,6 +43,17 @@
 		<result property="totalPay" column="totalPay"/>
 		<result property="uncheckCount" column="uncheckCount"/>
 	</resultMap>
+	
+	<resultMap type="com.rycf.gjb.dto.ThirdGuideHistoryDTO" id="guideHistoryDTO">
+		<id property="getMoreId" column="getMoreId"/>
+		<result property="guideId" column="guideId"/>
+		<result property="nickname" column="nickname"/>
+		<result property="headimgurl" column="headimgurl"/>
+		
+		<result property="isFriend" column="isFriend"/>
+		<result property="lastTime" column="lastTime"/>
+	</resultMap>
+	
 	<insert id="save" flushCache="true" keyProperty="guide.guideId" useGeneratedKeys="true">
 		insert into third_guide(guideId,getMoreId,storeId,name,sex,phone,job,status,createDate,updateDate
 		)values(#{guide.guideId},#{guide.getMoreId},#{guide.storeId},#{guide.name},#{guide.sex},
@@ -62,13 +73,15 @@
 		where b.guideId=#{guide.guideId}
 	</update>
 	<select id="getById" resultMap="guideDTO">
-		select t.guideId,t.createDate,t.updateDate,t.status,
-		b.brandId,b.brandName,
-		gu.getMoreId,gu.userName
-		from third_guide t
-		left join brand b on b.brandId=t.brandId
-		left join getmore_user gu on gu.getMoreId=t.getMoreId
-		where t.guideId=#{id}
+		select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,s.address,s.doorCode,
+			b.brandId,b.brandName,
+			gu.getMoreId,gu.userName
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId
+			left join getmore_user gu on gu.getMoreId=t.getMoreId 
+			where t.guideId=#{id}
 	</select>
 	<select id="getByGetMoreId" resultMap="guideDTO"><!-- 非公司只能有一个 -->
 		select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
@@ -174,8 +187,24 @@
 			) a
 		</if>
 	</select>
+	
+	<select id="getHistoryGuideId" resultMap="guideHistoryDTO">
+		select tg.guideId,wu.getMoreId,wu.nickname,wu.headimgurl,
+		(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=wu.getMoreId 
+		and gch.toId=tg.getMoreId and gch.status=0 group by fromId) uncheckCount,
+		(select count(*) from use_to_guide utg where utg.guideId=tg.guideId and utg.getMoreId=
+		utg )isFriend,
+		(SELECT max(gc.createDate) from guide_chat_history gc WHERE gc.toId=wu.getMoreId) lastTime
+		from wechat_user wu 
+		left join getmore_user gu on gu.getMoreId=wu.getMoreId
+		left join user_to_guide utg on utg.getMoreId=gu.getMoreId
+		left join third_guide tg on tg.guideId=utg.guideId
+		where tg.guideId=#{guideId} order by uncheckCount desc,lastTime desc
+	</select>
+	
+	
 	<select id="getCustomByGuideId" resultMap="guideCustomDTO">
-		select gu.guideId,gu.phone,wu.getMoreId,wu.nickname,wu.headimgurl,
+		select tg.guideId,gu.phone,wu.getMoreId,wu.nickname,wu.headimgurl,
 		(select count(*) from fur_order fo where fo.getMoreId=wu.getMoreId) orderCount,
 		(select sum(fo.hasPay) from fur_order fo where fo.getMoreId=wu.getMoreId) totalPay,
 		(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=wu.getMoreId 
@@ -183,17 +212,38 @@
 		(SELECT max(gc.createDate) from guide_chat_history gc WHERE gc.toId=wu.getMoreId) newDate
 		from wechat_user wu 
 		left join getmore_user gu on gu.getMoreId=wu.getMoreId
-		left join third_guide tg on tg.guideId=gu.guideId
-		where gu.guideId=#{guideId} order by uncheckCount desc,newDate desc
+		left join user_to_guide utg on utg.getMoreId=gu.getMoreId
+		left join third_guide tg on tg.guideId=utg.guideId
+		where tg.guideId=#{guideId} order by uncheckCount desc,newDate desc
 	</select>
 	<select id="getCustomCountByGuideId" resultType="int">
 		select count(*)
 		from wechat_user wu 
-		left join getmore_user gu on gu.getMoreId=wu.getMoreId
-		where gu.guideId=#{guideId}
+		left join user_to_guide utg on utg.getMoreId=wu.getMoreId
+		where utg.guideId=#{guideId}
 	</select>
 	<select id="getTalkCountByGetMoreId" resultType="int">
 	select count(*) from (SELECT distinct fromId FROM guide_chat_history 
 	WHERE toId=#{getMoreId} group by fromId) a
+	</select>
+	
+	
+	<insert id="userSetGuide" >
+		insert into user_to_guide(guideId,getMoreId)
+		values(#{guideId},#{getMoreId})
+	</insert>
+	
+	<select id="check" resultType="int">
+	select count(*) from user_to_guide where getMoreId=#{getMoreId} and guideId=#{guideId}
+	</select>
+	
+	<select id="checkByBrandId" resultType="int">
+	select count(*) from 
+	user_to_guide utg 
+	left join  third_guide tg on utg.guideId=tg.guideId
+	left join  store s on tg.storeId=s.storeId
+	where s.brandId=#{brandId}
+	and utg.getMoreId=#{getMoreId}
+	
 	</select>
 </mapper>  

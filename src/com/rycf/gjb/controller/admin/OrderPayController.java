@@ -1,6 +1,7 @@
 package com.rycf.gjb.controller.admin;
 
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,44 +136,43 @@ public class OrderPayController extends BaseController{
 				}else{
 					money=orderDTO.getBrand().getRate()*orderDTO.getHasPay();//已分为单位
 				}
-				boolean successTag=true;
 				String message=null;
-				while(money>=200){
+				if(money>200){
 					RedPaper redPaper= redPaperFactory.getInstance(openId, 200, request,wish);
 					SendResult sendResult=SendUtil.sendPaper(redPaper);
-					try {
-						Thread.sleep(30000);//休眠2秒，再发第二个
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if(SendResult.SUCCESS.equals(sendResult.getReturn_code())){//如果发送成功
+					
+					if(SendResult.SUCCESS.equals(sendResult.getReturn_code())){//如果发送成功\
 						money=money-200;
+						
+						Float fixed=((int)(money*100))/100f;
+						message="单人每分钟只能发送一个红包，单次发送最高限额200元，本次以发送200元，"
+								+ "余下的"+ fixed+"元，请于一分钟后再次分批发送！";
+						
 					}else{//发送失败
 						message=sendResult.getReturn_msg();
-						successTag=false;
-						break;//停止发送
 					}
 					
-				}
-				if(successTag){//前面支付200 都没有问题时候，支付余下的。
-					if(money>=1){
-						RedPaper redPaper= redPaperFactory.getInstance(openId, money, request,wish);
-						SendResult sendResult=SendUtil.sendPaper(redPaper);
-						if(SendResult.FAIL.equals(sendResult.getReturn_code())){//如果发送成功
-							message="支付剩下"+money+" 元时："+sendResult.getReturn_msg();
-							successTag=false;
-						}
+				}else{
+					RedPaper redPaper= redPaperFactory.getInstance(openId, money, request,wish);
+					SendResult sendResult=SendUtil.sendPaper(redPaper);
+					if(SendResult.FAIL.equals(sendResult.getReturn_code())){//如果发送fail
+						message="支付剩下"+money+" 元时："+sendResult.getReturn_msg();
+					}else{//success
+						money=0;
+						message=sendResult.getReturn_msg();
 					}
 				}
 				  
-				if(successTag){
+				if(money==0f){
 					param.setStatus(status);
 					param.setGetMorePay(0.0f);//凯特猫还需返还的红包数量为0
+					param.setUpdateDate(new Date());
 					orderService.updateOrder(param);
 					jsonObject.setStatus("ok");
 				}else{
 					//更新返回的数量
 					param.setGetMorePay(money);
+					param.setUpdateDate(new Date());
 					orderService.updateOrder(param);//直接更新
 					
 					jsonObject.setStatus("no");
@@ -188,5 +188,4 @@ public class OrderPayController extends BaseController{
 		model.addAttribute("json", JSONUtil.object2json(jsonObject));
 		return "json";
 	}
-
 }

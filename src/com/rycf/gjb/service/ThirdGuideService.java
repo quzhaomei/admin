@@ -5,6 +5,7 @@ import java.util.List;
 import com.rycf.gjb.dto.PageDTO;
 import com.rycf.gjb.dto.ThirdGuideCustomDTO;
 import com.rycf.gjb.dto.ThirdGuideDTO;
+import com.rycf.gjb.dto.ThirdGuideHistoryDTO;
 import com.rycf.gjb.entity.ThirdGuide;
 
 public interface ThirdGuideService {
@@ -25,4 +26,12 @@ public interface ThirdGuideService {
 	int getCustomCountByGuideId( Integer guideId);
 	
 	int getTalkCountByGetMoreId( Integer getMoreId);
+	
+	int check(Integer getMoreId,Integer guideId);
+	
+	int checkByBrandId(Integer getMoreId,String brandId);
+
+	void userSetGuide(Integer getMoreId,Integer guideId);
+	
+	List<ThirdGuideHistoryDTO> getHistoryGuideId(Integer getMoreId);
 }

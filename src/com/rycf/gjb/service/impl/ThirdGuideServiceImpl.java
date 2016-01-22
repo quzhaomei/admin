@@ -11,6 +11,7 @@ import com.rycf.gjb.dao.ThirdGuideDao;
 import com.rycf.gjb.dto.PageDTO;
 import com.rycf.gjb.dto.ThirdGuideCustomDTO;
 import com.rycf.gjb.dto.ThirdGuideDTO;
+import com.rycf.gjb.dto.ThirdGuideHistoryDTO;
 import com.rycf.gjb.entity.ThirdGuide;
 import com.rycf.gjb.service.ThirdGuideService;
 
@@ -80,6 +81,26 @@ public class ThirdGuideServiceImpl implements ThirdGuideService {
 	@Override
 	public int getTalkCountByGetMoreId(Integer getMoreId) {
 		return guideDao.getTalkCountByGetMoreId(getMoreId);
+	}
+
+	@Override
+	public int check(Integer getMoreId, Integer guideId) {
+		return guideDao.check(getMoreId, guideId);
+	}
+
+	@Override
+	public int checkByBrandId(Integer getMoreId, String brandId) {
+		return guideDao.checkByBrandId(getMoreId, brandId);
+	}
+
+	@Override
+	public void userSetGuide(Integer getMoreId, Integer guideId) {
+		guideDao.userSetGuide(getMoreId, guideId);
+	}
+
+	@Override
+	public List<ThirdGuideHistoryDTO> getHistoryGuideId(Integer getMoreId) {
+		return guideDao.getHistoryGuideId(getMoreId);
 	}
 
 }

@@ -54,6 +54,7 @@ import com.rycf.gjb.dto.StoreDTO;
 import com.rycf.gjb.dto.ThirdChannelDTO;
 import com.rycf.gjb.dto.ThirdGuideCustomDTO;
 import com.rycf.gjb.dto.ThirdGuideDTO;
+import com.rycf.gjb.dto.ThirdGuideHistoryDTO;
 import com.rycf.gjb.dto.UserCardDTO;
 import com.rycf.gjb.entity.Brand;
 import com.rycf.gjb.entity.BrandScan;
@@ -1071,7 +1072,21 @@ public class WechatController extends BaseController {
 		model.addAttribute("guide", guide);
 		return "wechat/guide";
 	}
-
+	// 导购员历史页面
+	@RequestMapping(value = "/guideHistory")
+	public String guideTalkHistory(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
+				.getAttribute(LOGIN_USER);
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser
+				.getGetMoreId());
+		List<ThirdGuideHistoryDTO> guideHistory = thirdGuideService
+				.getHistoryGuideId(guide.getGuideId());
+		
+		model.addAttribute("guideHistory", guideHistory);
+		return "wechat/guideHistory";
+	}
+		
 	// 导购员客户页面
 	@RequestMapping(value = "/guideCustom")
 	public String guideCustom(HttpServletRequest request,
@@ -1100,16 +1115,64 @@ public class WechatController extends BaseController {
 		return "json";
 	}
 	
+	// 添加导购
+	@RequestMapping(value = "/getGuide")
+	public synchronized String getGuide(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
+				.getAttribute(LOGIN_USER);
+		String guideId=request.getParameter("guideId");//导购员id
+		JsonObject json=new JsonObject();
+		if(guideId!=null&&guideId.matches("\\d+")){
+			ThirdGuideDTO guide=thirdGuideService.getById(Integer.parseInt(guideId));
+			//检测是否已添加该导购
+			int count=thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
+			
+			if(guide!=null&&count==0){
+				//检测该品牌下是否已经添加了导购员
+				String brandId=guide.getBrand().getBrandId();
+				int brandcheck=thirdGuideService.checkByBrandId(loginUser.getGetMoreId(), brandId);
+				if(brandcheck>0){
+					json.setStatus("0").setMessage("该品牌下已经有导购员了。");
+				}else{
+					try {
+						thirdGuideService.userSetGuide(loginUser.getGetMoreId(), Integer.parseInt(guideId));
+						json.setStatus("1").setMessage("添加导购成功！");
+					} catch (Exception e) {
+						e.printStackTrace();
+						json.setStatus("0").setMessage("添加导购失败，请稍后再试！");
+					}
+				}
+			}else{
+				json.setStatus("0").setMessage("非法操作！");
+			}
+		}else{
+			json.setStatus("0").setMessage("数据错误！");
+		}
+		model.addAttribute("json", JSONUtil.object2json(json));
+		return "json";
+	}
 	// 导购员对话页面
 	@RequestMapping(value = "/guideChat")
 	public String guideChat(HttpServletRequest request,
 			HttpServletResponse response, Model model) {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
 				.getAttribute(LOGIN_USER);
-		model.addAttribute("guide",
-				thirdGuideService.getByGetMoreId(loginUser.getGetMoreId()));
-		String toId = request.getParameter("toId");
-		if (toId!=null&&toId.matches("\\d+")) {
+		
+		
+		String toId = request.getParameter("toId");//导购员给谁说话
+		String guideId=request.getParameter("guideId");//导购员id
+		if (guideId!=null&&guideId.matches("\\d+")) {//初始化导购信息
+			model.addAttribute("toguide",
+					thirdGuideService.getById(Integer.parseInt(guideId)));
+			toId=guideId;//
+			//检测是否已添加导购
+			int count=thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
+			model.addAttribute("check", count);
+		}
+		if (toId!=null&&toId.matches("\\d+")) {//我是导购
+			model.addAttribute("guide",
+					thirdGuideService.getByGetMoreId(loginUser.getGetMoreId()));
 			model.addAttribute("toId", toId);
 			//查询未接受的历史信息数据
 			int pageIndex=1;

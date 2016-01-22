@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.rycf.gjb.dto.PageDTO;
 import com.rycf.gjb.dto.ThirdGuideCustomDTO;
 import com.rycf.gjb.dto.ThirdGuideDTO;
+import com.rycf.gjb.dto.ThirdGuideHistoryDTO;
 import com.rycf.gjb.entity.ThirdGuide;
 
 public interface ThirdGuideDao {
@@ -25,4 +26,12 @@ public interface ThirdGuideDao {
 	int getCustomCountByGuideId(@Param(value = "guideId") Integer guideId);
 	
 	int getTalkCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	
+	int check(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
+	
+	int checkByBrandId(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "brandId") String brandId);
+
+	void userSetGuide(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
+
+	List<ThirdGuideHistoryDTO> getHistoryGuideId(@Param(value = "getMoreId") Integer getMoreId);
 }
