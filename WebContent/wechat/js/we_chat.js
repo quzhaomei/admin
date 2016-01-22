@@ -112,6 +112,11 @@ chat.sendHtml=function(html,obj){
 	$.post("guideSay.html",param,function(json){
 		$(obj).removeAttr("disabled");
 		if(json.status=="1"){
+			//socket转发
+			if(user){
+				user.speak(json.data.toUser.getMoreId,html,json.data.timeStamp);
+			}
+			
 			$("#talk-content").val("");
 			chat.speakHtml(html,json.data.fromUser.headimgurl,
 					new Date(parseInt(json.data.timeStamp)))
@@ -181,13 +186,25 @@ $(function(){
 	//socket 接受到聊天信息
 	var task=setInterval(function(){
 		if(user){
-			alert("设置回调");
 			user.callback=function(data){
 				chat.getHtml(data.message,data.fromUser.imgPath
 						,new Date(parseInt(data.datatime)));
+				chat.scollToButtom();
 			}
 		}
 		clearInterval(task);
 	}, 500);
-	
+	//add guide
+	$(".addguider").on("click",function(){
+		var guideId=$(this).attr("guideId");
+		var param={};
+		param.guideId=guideId;
+		$.post("getGuide.html",param,function(json){
+			if(json.status){
+				$('.chatnotice').html(json.message).addClass('shown');
+				setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
+			}
+			
+		},"json");
+	});
 });

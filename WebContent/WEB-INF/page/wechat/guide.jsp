@@ -58,7 +58,7 @@
 		
 		<div class="listset">
 			<div class="listitem arrowright">
-				<a href="guideChat.html"><i class="icon-wallet"></i> 导购记录 
+				<a href="guideHistory.html"><i class="icon-wallet"></i> 导购记录 
 				<span class="label label_red">${talkNum }</span></a>
 			</div>
 			<div class="listitem arrowright">

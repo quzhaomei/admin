@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>导购 :: ${guide.name }</title>
+	<title>导购 :: 李大海</title>
      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <meta name="format-detection" content="telephone=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -20,8 +20,22 @@
 	<input type="hidden" id="pageIndex" value="${pageIndex }"/>
 	<input type="hidden" id="totalPage" value="${totalPage }"/>
 		<div class="topbar bar_red navback">
-			<a href="guide.html"><i class="icon-arrow-left"></i>  返回个人中心 </a>
+			<a href="guide.html"><i class="icon-cross"></i></a>
+			<div class="centertitle">导购 :: 李大海</div>
+			<div class="rightele">
+				<i class="icon-users withlabel morechat">
+					<span>
+						12
+					</span>
+				</i>
+			</div>
 		</div>
+		<c:if test="${not empty toguide&&check==0 }">
+			<div class="chatnotice anime_l">
+			该导购员不是您的品牌专属导购，只能向您主动发送2条信息，如需进一步咨询，请 
+			<span class="addguider" guideId="${toguide.guideId }"> <i class="icon-plus"></i>添加TA为您的品牌导购</span>
+			</div>
+		</c:if>
 		<div id="chatui">
 		<ul class="chatarea" id="talking-container">
 			<!-- <li>
@@ -153,6 +167,60 @@
 
 
 
+		<div class="chatselect anime">
+			<div class="row">
+				<div class="col-3">
+					<a href="">
+					<img src="images/avatar.jpg" alt="">
+					<span>王二麻子</span>
+					<span class="count">
+						3
+					</span>
+					</a>
+				</div>
+				<div class="col-3">
+					<a href="">
+					<img src="images/avatar2.jpg" alt="">
+					<span>李莫愁</span>
+					<span class="count">
+						13
+					</span>
+					</a>
+				</div>
+				<div class="col-3">
+					<a href="">
+					<img src="images/avatar.jpg" alt="">
+					<span>李莫愁</span>
+					<span class="count">
+						35
+					</span>
+					</a>
+				</div>
+				<div class="col-3">
+					<a href="">
+					<img src="images/avatar2.jpg" alt="">
+					<span>李莫愁</span>
+					<span class="count">
+						5
+					</span>
+					</a>
+				</div>
+				<div class="col-3">
+					<a href="">
+					<img src="images/avatar.jpg" alt="">
+					<span>Claire</span>
+					<span class="count">
+						123
+					</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="close">
+				<i class="icon-arrow_drop_up"></i>
+			</div>
+		</div>
+
 
 <script src="js/jquery.min.js"></script>
 <script src="../js/socket/p-talk.js"></script>
@@ -183,6 +251,23 @@
 				});
 			}
 		});
+		
+		$('.morechat').on('click', '', function(event) {
+			event.preventDefault();
+			$('.chatselect').toggleClass('shown');
+		});
+
+		$('.chatselect').on('click', '.close', function(event) {
+			event.preventDefault();
+			$('.chatselect').removeClass('shown');
+		});
+
+		if($('.chatnotice')[0]){
+			$('.chatnotice').addClass('shown');
+
+			setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
+		}
+		
 	
 		
 	});	
