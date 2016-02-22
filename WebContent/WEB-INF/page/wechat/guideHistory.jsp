@@ -24,17 +24,30 @@
 			<c:forEach items="${guideHistory }" var="history">
 			<div class="listitem clearfix">
 				<div class="avatar left">
-					<a href="chat.html"><img src="images/avatar.jpg"></a>
+					<a href="guideChat.html?toId=${history.getMoreId }"><img src="${history.headimgurl }"></a>
 				</div>
 				<div class="contents right">
 					<div class="basicinfo">
-						<span class="nickname">李莫愁</span>
-						<span class="customer"><i class="icon-heart4"></i></span>
-						<span class="chat"><a href="chat.html">新问询: 5</a></span>
+						<span class="nickname">${history.nickname }</span>
+						<c:if test="${history.isFriend>0 }">
+							<span class="customer"><i class="icon-heart4"></i></span>
+						</c:if>
+						
+						<span class="chat">
+						<c:if test="${history.uncheckCount>0 }">
+						<a href="guideChat.html?toId=${history.getMoreId }">新问询: ${history.uncheckCount }</a>
+						</c:if>
+						<c:if test="${history.uncheckCount==0 }">
+						<a href="guideChat.html?toId=${history.getMoreId }">历史消息</a>
+						</c:if>
+						</span>
 					</div>
 					<div class="extendinfo">
 						<span class="lasttime">
-							<i class="icon-clock4"></i> 最近更新: 2016-01-22 10:35</a>
+							<c:if test="${not empty history.lastTime}">
+							<i class="icon-clock4"></i> 最近更新:
+							<fmt:formatDate value="${history.lastTime }" pattern="YYYY-MM-DD hh:mm"/>
+							</c:if>
 						</span>
 					</div>
 				</div>
@@ -43,7 +56,7 @@
 			
 
 
-			<!--  div class="listitem clearfix">
+			<!--div class="listitem clearfix">
 				<div class="avatar left">
 					<a href="chat.html"><img src="images/avatar.jpg"></a>
 				</div>
@@ -77,7 +90,7 @@
 					</div>
 				</div>
 				
-			</div-->
+			</div -->
 			
 
 		</div>

@@ -17,14 +17,14 @@
 	<div class="bg_white">
 		<div class="mini_info clearfix">
 			<div class="avatar">
-				<img src="${wechat.headimgurl }" class="rd">
+				<img src="${user.photo }" class="rd">
 			</div>
 			<div class="info_contents">
 				<div class="name">
-					${wechat.nickname } <span class="fav"><i class="icon-heart4"></i> 23</span>
+					${guide.name } <span class="fav"><i class="icon-heart4"></i> ${customNum }</span>
 				</div>
 				<div class="gm_number">
-					<strong>凯特号:</strong> ${wechat.getMoreId }
+					<strong>凯特号:</strong> ${user.getMoreId }
 				</div>
 				<div class="identity">
 					<!-- 不同状态请替换不同身份及class，审核通过后class替换为verified，文字改为xx品牌导购员／如导购同时为店长，文字改为xx品牌xx店店长-->
@@ -78,7 +78,7 @@
 		<div class="listset">
 			
 			<div class="listitem arrowright">
-				<a href="perinfo_guider.html"><i class="icon-v-card"></i> 个人资料  <span class="info">信息更改后将重新审核</span></a>
+				<a href="guideInfo.html"><i class="icon-v-card"></i> 个人资料  <span class="info">信息更改后将重新审核</span></a>
 			</div>
 		</div>
 

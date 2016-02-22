@@ -126,7 +126,38 @@ chat.sendHtml=function(html,obj){
 	},"json");
 	
 }
-
+//提示其余人信息
+chat.showOther=function(imgPath,getMoreId,username){
+	//处理标题
+	var number=$(".morechat span.number_chat").text();
+	if(number&&number.match(/^\d+$/)&&
+			!$(".chatselect .col-3[getmoreid='"+getMoreId+"']")[0]){//新用户
+		number=parseInt(number, "10");
+		number=number+1;
+		$(".morechat span.number_chat").text(number)
+	}else if(!number){
+		$(".morechat").append($("<span>").addClass("number_chat")
+				.text(1));
+	}
+	//内部显示
+	if(!$(".chatselect .col-3[getmoreid='"+getMoreId+"']")[0]){
+		$(".chatselect .row").prepend(
+		'<div class="col-3" getmoreid="'+getMoreId+'">'+
+		'<a href="#">'+
+		'<img src="'+imgPath+'" alt="">'+
+		'<span>'+username+'</span>'+
+		'<span class="count">1</span>'+
+		'</a></div>');
+	}else{//数量+1
+		var number=$(".chatselect .col-3[getmoreid='"+getMoreId+"'] .count").text();
+		//如果有则+1
+		if(number&&number.match(/^\d+$/)){
+			number=parseInt(number, "10")+1;
+			$(".chatselect .col-3[getmoreid='"+getMoreId+"'] .count").text(number);
+		}
+		
+	}
+}
 
 //TODO 待编写
 function loadHis(toId,pageIndex,pageSize,status){
@@ -145,6 +176,7 @@ function loadHis(toId,pageIndex,pageSize,status){
 }
 //加载未接受信息，以及历史信息数目
 function loadUnCheckHis(toId){
+	$("#talking-container").html("");//清空
 	var param={};
 	param.toId=toId;
 	$.post("loadUncheck.html",param,function(json){
@@ -187,13 +219,43 @@ $(function(){
 	var task=setInterval(function(){
 		if(user){
 			user.callback=function(data){
-				chat.getHtml(data.message,data.fromUser.imgPath
-						,new Date(parseInt(data.datatime)));
-				chat.scollToButtom();
+				if(data.fromUser.getMoreId==$("#toId").val()){//如果接受到的信息是来至这个人，则显示
+					chat.getHtml(data.message,data.fromUser.imgPath
+							,new Date(parseInt(data.datatime)));
+					chat.scollToButtom();
+				}else{
+					//置顶显示
+					chat.showOther(data.fromUser.imgPath,data.fromUser.getMoreId,
+							data.fromUser.username);
+				}
 			}
 		}
 		clearInterval(task);
 	}, 500);
+	
+	//切换聊天用户
+	$(".chatselect .row").on("click",'div.col-3[getMoreId]',function(){
+		$('.chatselect').removeClass('shown');
+		$(this).remove();//移除，
+		//处理顶部消息条数
+		var number=$(".morechat span.number_chat").text();
+		if(number&&number.match(/^\d+$/)){//新用户
+			number=parseInt(number, "10");
+			number=number-1;
+			if(number>0){
+				$(".morechat span.number_chat").text(number);
+			}else{
+				$(".morechat span.number_chat").remove();
+			}
+		}
+		
+		var getMoreId=$(this).attr("getMoreId");
+		if(getMoreId){//进行切换
+			$("#toId").val(getMoreId)
+			loadUnCheckHis($("#toId").val());
+		}
+	});
+	
 	//add guide
 	$(".addguider").on("click",function(){
 		var guideId=$(this).attr("guideId");

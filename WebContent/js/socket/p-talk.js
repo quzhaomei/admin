@@ -3,19 +3,20 @@ var user;
 /**
  * socket 公共js
  */
-jQuery.getScript("../js/socket/socket.io-1.3.4.js",function(){
+	
+window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,errorObj) {
+    alert("错误信息："+ errorMessage+
+      ",出错文件：" +scriptURI+","+lineNumber+","+columnNumber+","+errorObj);
+   }	
+	
+
+$(function(){
 	//userInfo 获取
 	$.post("socketLogin.html",function(json){
 		user=new TalkingUser(json.getMoreId,json.userName,json.photo,
-				"http://127.0.0.1:14080");
+				"http://192.168.1.108:14080");
 		user.login();//登录
 	},"json");
-	
-	
-});//导入socket文件
-
-$(function(){
-	
 	
 });
 //聊天用户对象,在首页创建

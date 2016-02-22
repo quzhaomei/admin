@@ -16,14 +16,14 @@
 	<div class="bg_white">
 		<div class="mini_info clearfix">
 			<div class="avatar">
-				<img src="${wechat.headimgurl }" class="rd">
+				<img src="${user.photo}" class="rd">
 			</div>
 			<div class="info_contents">
 				<div class="name">
-					${wechat.nickname }
+					${user.userName }
 				</div>
 				<div class="gm_number">
-					<strong>凯特号:</strong> ${wechat.getMoreId }
+					<strong>凯特号:</strong> ${user.getMoreId }
 				</div>
 				<div class="identity">
 					<!-- 不同状态请替换不同身份及class，审核通过后class替换为verified，文字改为凯特猫渠道商-->

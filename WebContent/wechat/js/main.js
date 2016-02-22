@@ -15,7 +15,7 @@ function showProgress(status,msg,fn) {
 
 	if(msg != '') {
 		progresstext = msg;
-	} else {
+	} else { 
 		switch(status)
 		{
 			case 'submitting':

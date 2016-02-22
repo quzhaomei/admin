@@ -8,7 +8,6 @@ import java.util.Date;
  */
 public class ThirdGuideHistoryDTO {
 	private Integer getMoreId;
-	private Integer guideId;
 	private String nickname;
 	private String headimgurl;
 	
@@ -31,12 +30,6 @@ public class ThirdGuideHistoryDTO {
 		this.isFriend = isFriend;
 	}
 	
-	public Integer getGuideId() {
-		return guideId;
-	}
-	public void setGuideId(Integer guideId) {
-		this.guideId = guideId;
-	}
 	public Integer getGetMoreId() {
 		return getMoreId;
 	}

@@ -108,16 +108,13 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/index")
-	public String index(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		if(request.getParameter("out")!=null){//如果是从外部请求
+	public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		if (request.getParameter("out") != null) {// 如果是从外部请求
 			request.setAttribute("uri", request.getParameter("out"));
 		}
 		// 更新凯特猫的浏览记录
-		String timeFormat = new SimpleDateFormat("yyyy-MM-dd")
-				.format(new Date());
+		String timeFormat = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		BrandScan param = new BrandScan();
 		param.setGetMoreId(loginUser.getGetMoreId());
 		param.setTime(timeFormat);
@@ -148,7 +145,7 @@ public class WechatController extends BaseController {
 		model.addAttribute("timestamp", timestamp);
 		model.addAttribute("signature", sign);
 		model.addAttribute("nonceStr", nonceStr);
-		if(request.getParameter("out")!=null){//如果是从外部请求
+		if (request.getParameter("out") != null) {// 如果是从外部请求
 			request.setAttribute("uri", request.getParameter("out"));
 		}
 		// 查询是否需要内部跳转
@@ -159,8 +156,7 @@ public class WechatController extends BaseController {
 				request.setAttribute("timestamp", timestamp);
 				request.setAttribute("signature", sign);
 				request.setAttribute("nonceStr", nonceStr);
-				request.getRequestDispatcher(goto_uri).forward(request,
-						response);
+				request.getRequestDispatcher(goto_uri).forward(request, response);
 				return null;
 			} catch (ServletException e) {
 				e.printStackTrace();
@@ -176,8 +172,7 @@ public class WechatController extends BaseController {
 		page.setPageSize(4);
 		page.setParam(scan);
 
-		List<BrandScanDTO> scanHistory = scanService.getScanByPage(page)
-				.getParam();
+		List<BrandScanDTO> scanHistory = scanService.getScanByPage(page).getParam();
 
 		List<BrandDTO> brands = brandService.getAllBrand();
 		model.addAttribute("brands", brands);
@@ -187,25 +182,21 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/test")
-	public String test(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String test(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/test";
 	}
 
 	// 返利流程
 	@RequestMapping(value = "/help")
-	public String help(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String help(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/help";
 	}
 
 	// 查询品牌详情
 	@RequestMapping(value = "/brandDetail")
-	public String brandDetail(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String brandDetail(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String brandId = request.getParameter("brandId");
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		// 保存浏览记录
 		BrandScan param = new BrandScan();
@@ -239,8 +230,7 @@ public class WechatController extends BaseController {
 		page.setPageSize(4);
 		page.setParam(scan);
 
-		List<BrandScanDTO> scanHistory = scanService.getScanByPage(page)
-				.getParam();
+		List<BrandScanDTO> scanHistory = scanService.getScanByPage(page).getParam();
 
 		model.addAttribute("brand", brand);
 		model.addAttribute("scanHistory", scanHistory);
@@ -249,17 +239,14 @@ public class WechatController extends BaseController {
 
 	// 摇一摇
 	@RequestMapping(value = "/shake")
-	public String shake(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String shake(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		return "wechat/shake";
 	}
 
 	@RequestMapping(value = "/nearStore")
-	public String getNearStore(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String getNearStore(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String lng = request.getParameter("lng");// 维度
 		String lat = request.getParameter("lat");// 经度
@@ -324,14 +311,12 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/addrequirement")
-	public String addrequirement(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String addrequirement(HttpServletRequest request, HttpServletResponse response, Model model) {
 		// 功能区域和品类由JS控制
 		// 获取所有的样式
 		List<FurnitureStyleDTO> styleList = furnitureStyleService.getAllStyle();
 		// 获取所有预算
-		List<FurnitureBudgetDTO> budgetList = furnitureBudgetService
-				.getAllBudget();
+		List<FurnitureBudgetDTO> budgetList = furnitureBudgetService.getAllBudget();
 		model.addAttribute("styles", styleList);
 		model.addAttribute("budgets", budgetList);
 		return "wechat/addrequirement";
@@ -339,10 +324,8 @@ public class WechatController extends BaseController {
 
 	// 进行添加需求操作
 	@RequestMapping(value = "/doAddRequire")
-	public String doAddRequire(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String doAddRequire(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String zoneId = request.getParameter("zones");
 		String types = request.getParameter("types");
 		String styles = request.getParameter("styles");
@@ -366,8 +349,7 @@ public class WechatController extends BaseController {
 
 	// 进行添加删除操作
 	@RequestMapping(value = "/doDelRequire")
-	public String doDelRequire(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String doDelRequire(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		String requiredId = request.getParameter("requiredId");
 		FurnitureRequired required = new FurnitureRequired();
@@ -382,16 +364,13 @@ public class WechatController extends BaseController {
 
 	// 进行添加需求询问操作
 	@RequestMapping(value = "/doAddRequire2")
-	public String doAddRequire2(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String doAddRequire2(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/addreq2";
 	}
 
 	@RequestMapping(value = "/myrequirement")
-	public String myrequirement(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String myrequirement(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String pageIndex = request.getParameter("pageIndex");
 		String pageSize = request.getParameter("pageSize");
@@ -409,8 +388,7 @@ public class WechatController extends BaseController {
 		param.setParam(required);
 		param.setPageIndex(Integer.parseInt(pageIndex));
 		param.setPageSize(Integer.parseInt(pageSize));
-		PageDTO<List<FurnitureRequiredDTO>> result = furnitureRequiredService
-				.getRequiredByPageAndParam(param);
+		PageDTO<List<FurnitureRequiredDTO>> result = furnitureRequiredService.getRequiredByPageAndParam(param);
 		if (initTag) {// 初始化页面
 			model.addAttribute("page", result);
 			return "wechat/myrequirement";
@@ -421,10 +399,8 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/myplan")
-	public String myplan(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String myplan(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String pageIndex = request.getParameter("pageIndex");
 		String pageSize = request.getParameter("pageSize");
@@ -442,8 +418,7 @@ public class WechatController extends BaseController {
 		param.setParam(required);
 		param.setPageIndex(Integer.parseInt(pageIndex));
 		param.setPageSize(Integer.parseInt(pageSize));
-		PageDTO<List<FurnitureRequiredDTO>> result = furnitureRequiredService
-				.getRequiredByPageAndParam(param);
+		PageDTO<List<FurnitureRequiredDTO>> result = furnitureRequiredService.getRequiredByPageAndParam(param);
 		if (initTag) {// 初始化页面
 			model.addAttribute("page", result);
 			return "wechat/myplan";
@@ -454,11 +429,9 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/myplan2")
-	public String myplan2(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String myplan2(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String requiredId = request.getParameter("requiredId");
-		List<RequiredAnswerDTO> result = requiredAnswerService
-				.getAnswerByRequiredId(requiredId);
+		List<RequiredAnswerDTO> result = requiredAnswerService.getAnswerByRequiredId(requiredId);
 		for (RequiredAnswerDTO temp : result) {// 处理方案图
 			String imgs = temp.getImgs();
 			imgs = imgs.split(",")[0];
@@ -470,8 +443,7 @@ public class WechatController extends BaseController {
 
 	// 增加订单
 	@RequestMapping(value = "/addorder")
-	public String addOrder(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String addOrder(HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<BrandDTO> allBrands = brandService.getAllBrand();
 		model.addAttribute("brands", allBrands);
 		return "wechat/addorder";
@@ -479,21 +451,17 @@ public class WechatController extends BaseController {
 
 	// 查询订单
 	@RequestMapping(value = "/myorders")
-	public String myOrders(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String myOrders(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
-		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser
-				.getGetMoreId());
+		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
 		model.addAttribute("orders", allOrders);
 		return "wechat/myorder";
 	}
 
 	// 删除订单
 	@RequestMapping(value = "/doDelOrder.html")
-	public String doDelOrder(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String doDelOrder(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String orderId = request.getParameter("orderId");
 		OrderDTO orderDTO = orderService.getOrderById(orderId);
 		String status = orderDTO.getStatus();// 0-确定支付方式中，1-凯特猫审核中，2-品牌审核中，3-返利完成，4-删除,5-个人删除中
@@ -514,12 +482,10 @@ public class WechatController extends BaseController {
 
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/saveOrder")
-	public String saveOrder(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String saveOrder(HttpServletRequest request, HttpServletResponse response, Model model) {
 		JsonObject json = new JsonObject();
 
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String username = request.getParameter("username");
 		String phone = request.getParameter("phone");
@@ -591,8 +557,7 @@ public class WechatController extends BaseController {
 
 	// 确认支付方式
 	@RequestMapping(value = "/saveOrder2")
-	public String saveOrder2(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String saveOrder2(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String orderId = request.getParameter("orderId");
 		OrderDTO temp = orderService.getOrderById(orderId);
 		model.addAttribute("order", temp);
@@ -601,15 +566,12 @@ public class WechatController extends BaseController {
 
 	// 确认银行卡信息
 	@RequestMapping(value = "/saveOrder3")
-	public String saveOrder3(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String saveOrder3(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String orderId = request.getParameter("orderId");
 		String backType = request.getParameter("backType");
-		UserCardDTO card = userCardService.getCardByGetMoreId(loginUser
-				.getGetMoreId());
+		UserCardDTO card = userCardService.getCardByGetMoreId(loginUser.getGetMoreId());
 		Order order = new Order();
 		order.setOrderId(orderId);
 		order.setBackType(backType);
@@ -628,24 +590,19 @@ public class WechatController extends BaseController {
 
 	// 管理我的银行卡号
 	@RequestMapping(value = "/userCard")
-	public String userCard(HttpServletRequest request,
-			HttpServletResponse response, Model model)
+	public String userCard(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws UnsupportedEncodingException {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		UserCardDTO card = userCardService.getCardByGetMoreId(loginUser
-				.getGetMoreId());
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		UserCardDTO card = userCardService.getCardByGetMoreId(loginUser.getGetMoreId());
 		model.addAttribute("card", card);
 		return "wechat/userCard";
 	}
 
 	// 确认银行卡信息
 	@RequestMapping(value = "/saveCard")
-	public String saveCard(HttpServletRequest request,
-			HttpServletResponse response, Model model)
+	public String saveCard(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws UnsupportedEncodingException {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String tag = request.getParameter("tag");
 		String userCardId = request.getParameter("userCardId");
 		String bankName = request.getParameter("bankName");
@@ -674,8 +631,7 @@ public class WechatController extends BaseController {
 		userCard.setUsername(cardUsername);
 		if (userCardId != null) {// 更新
 			userCard.setUserCardId(userCardId);
-			if (bankName != null || bankAddress != null || cardNum != null
-					|| cardUsername != null) {
+			if (bankName != null || bankAddress != null || cardNum != null || cardUsername != null) {
 				userCardService.updateCard(userCard);
 			}
 		} else {// 保存
@@ -683,8 +639,7 @@ public class WechatController extends BaseController {
 			userCardService.saveCard(userCard);
 		}
 		if (tag != null) {// 如果是卡号维护
-			UserCardDTO card = userCardService.getCardByGetMoreId(loginUser
-					.getGetMoreId());
+			UserCardDTO card = userCardService.getCardByGetMoreId(loginUser.getGetMoreId());
 			model.addAttribute("card", card);
 			return "wechat/userCard";
 		}
@@ -693,8 +648,7 @@ public class WechatController extends BaseController {
 
 	// 根据品牌获取店铺
 	@RequestMapping(value = "/getStoreByBrand")
-	public String getStoreByBrand(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String getStoreByBrand(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String brandId = request.getParameter("brandId");
 		List<StoreDTO> stores = storeService.getStoreByBrandId(brandId);
 		model.addAttribute("json", JSONUtil.object2json(stores));
@@ -703,8 +657,7 @@ public class WechatController extends BaseController {
 
 	// 获得家具的所有功能区域，与家具品类
 	@RequestMapping(value = "/allZoneAndType")
-	public String allZoneAndType(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String allZoneAndType(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String param = request.getParameter("param");
 		// 查询所有的功能区域
 		List<FurnitureZoneDTO> zoneList = furnitureZoneService.getAllZone();
@@ -713,8 +666,7 @@ public class WechatController extends BaseController {
 			Map<String, Object> result = new HashMap<String, Object>();
 			result.put("zoneName", zone.getZoneName());
 			result.put("zoneId", zone.getZoneId());
-			result.put("types",
-					furnitureTypeService.getTypeByZone(zone.getZoneId()));
+			result.put("types", furnitureTypeService.getTypeByZone(zone.getZoneId()));
 			jsonList.add(result);
 		}
 		model.addAttribute("json", JSONUtil.object2json(jsonList));
@@ -724,74 +676,56 @@ public class WechatController extends BaseController {
 
 	// 个人中心跳转
 	@RequestMapping(value = "/center")
-	public String center(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String center(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/center";
 	}
 
 	// 普通个人中心
 	@RequestMapping(value = "/toNormal")
-	public String toNormal(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+	public String toNormal(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		model.addAttribute("user", loginUser);
 		// 订单总数
-		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser
-				.getGetMoreId());
-		model.addAttribute("orderCount",
-				allOrders == null ? 0 : allOrders.size());
-		model.addAttribute("totalPay",
-				orderService.getUserTotalPay(loginUser.getGetMoreId()));
+		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
+		model.addAttribute("orderCount", allOrders == null ? 0 : allOrders.size());
+		model.addAttribute("totalPay", orderService.getUserTotalPay(loginUser.getGetMoreId()));
 		return "wechat/normal";
 	}
 
 	// 渠道商个人中心
 	@RequestMapping(value = "/channel")
-	public String channel(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channel(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		model.addAttribute("channel", channelDTO);
 		// 查询推荐的总人数
 		GetMoreUser param = new GetMoreUser();
 		param.setCode(channelDTO.getCode());
-		List<UserCardDTO> cards = userCardService.getListByGetMoreId(loginUser
-				.getGetMoreId());
+		List<UserCardDTO> cards = userCardService.getListByGetMoreId(loginUser.getGetMoreId());
 
 		model.addAttribute("accounts", cards.size());
-		model.addAttribute("count",
-				channelService.getFriendCount(channelDTO.getId()));
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("count", channelService.getFriendCount(channelDTO.getId()));
+		model.addAttribute("user", loginUser);
 		model.addAttribute("peoples", getMoreUserService.getCountByParam(param));
-		model.addAttribute("total",
-				orderChannelService.getCount(channelDTO.getId()));
+		model.addAttribute("total", orderChannelService.getCount(channelDTO.getId()));
 		return "wechat/channel";
 	}
 
 	// 渠道商佣金记录个人中心
 	@RequestMapping(value = "/channelHistory")
-	public String channelHistory(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channelHistory(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		PageDTO<Order> page = new PageDTO<Order>();
 		page.setPageIndex(1);
 		page.setPageSize(100);// 前100条
 		Order param = new Order();
 		page.setParam(param);
-		PageDTO<List<OrderDTO>> result = orderChannelService
-				.getOrderByChannelIdAndPageForRead(page, channelDTO.getId());
+		PageDTO<List<OrderDTO>> result = orderChannelService.getOrderByChannelIdAndPageForRead(page,
+				channelDTO.getId());
 		model.addAttribute("pageResult", result);
 		model.addAttribute("channel", channelDTO);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
 		return "wechat/channelHistory";
 	}
 
@@ -815,17 +749,15 @@ public class WechatController extends BaseController {
 
 	// 更换个人头像
 	@RequestMapping(value = "/headImgInfo")
-	public String headImgInfo(HttpServletRequest request,
-			HttpServletResponse response, Model model,
+	public String headImgInfo(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(value = "headImg") MultipartFile headImg) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		JsonObject json = new JsonObject();
 		// 单独更新头像
 		String temp = UuidUtils.getImgUUID();
-		String introImgPath = imgPath + "/channel/" + temp;
+		String introImgPath = imgPath + "/headImg/" + temp;
 
-		File parent = new File(imgPath + "/channel");
+		File parent = new File(imgPath + "/headImg");
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
@@ -835,13 +767,16 @@ public class WechatController extends BaseController {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		introImgPath = "/imgStore/channel/" + temp;
-		WechatUser wechatUser = new WechatUser();
-		wechatUser.setGetMoreId(loginUser.getGetMoreId());
-		wechatUser.setHeadimgurl(introImgPath);
+		introImgPath = "/imgStore/headImg/" + temp;
+		GetMoreUser user=new GetMoreUser();
+		user.setGetMoreId(loginUser.getGetMoreId());
+		user.setPhoto(introImgPath);
+		//刷新session
 		try {
-			wechatUserService.update(wechatUser);// 更新头像
+			getMoreUserService.updateGetMoreUser(user);
 			json.setStatus("1").setMessage("更新头像成功");
+			loginUser=getMoreUserService.getUserById(loginUser.getGetMoreId());
+			request.getSession().setAttribute(LOGIN_USER, loginUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			json.setStatus("0").setMessage("更新头像失败");
@@ -852,16 +787,11 @@ public class WechatController extends BaseController {
 
 	// 渠道商个人信息
 	@RequestMapping(value = "/channelInfo")
-	public String channelInfo(
-			HttpServletRequest request,
-			HttpServletResponse response,
-			Model model,
+	public String channelInfo(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(value = "introImg", required = false) MultipartFile introImg) {
 		// 信息展示
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		String operator = request.getParameter("operator");
 		if ("update".equals(operator)) {// 如果是修改
 			JsonObject json = new JsonObject();
@@ -911,37 +841,28 @@ public class WechatController extends BaseController {
 		List<ThirdChannelDTO> companys = channelService.getList(company);
 		model.addAttribute("companys", companys);
 
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("user", loginUser);
 		model.addAttribute("channel", channelDTO);
 		return "wechat/channelInfo";
 	}
 
 	// 渠道商账户
 	@RequestMapping(value = "/channelAccount")
-	public String channelAccount(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
-		List<UserCardDTO> cards = userCardService.getListByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channelAccount(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
+		List<UserCardDTO> cards = userCardService.getListByGetMoreId(loginUser.getGetMoreId());
 
 		model.addAttribute("cards", cards);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
 		return "wechat/channelAccount";
 	}
 
 	// 渠道商账户增加
 	@RequestMapping(value = "/channelCard")
-	public String channelCard(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channelCard(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		String operator = request.getParameter("operator");
 		String bankName = request.getParameter("bankName");
 		String cardNo = request.getParameter("cardNo");
@@ -950,8 +871,7 @@ public class WechatController extends BaseController {
 		String userCardId = request.getParameter("userCardId");
 
 		JsonObject json = new JsonObject();
-		if ("save".equals(operator) && bankName != null && cardNo != null
-				&& cardNo.matches("\\d{16}")) {
+		if ("save".equals(operator) && bankName != null && cardNo != null && cardNo.matches("\\d+")) {
 			UserCard newCard = new UserCard();
 			newCard.setBankName(bankName);
 			newCard.setCardNo(cardNo);
@@ -983,45 +903,34 @@ public class WechatController extends BaseController {
 
 	// 渠道商推荐好友
 	@RequestMapping(value = "/channelFriend")
-	public String channelFriend(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channelFriend(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		// 微信好友
-		List<WechatUser> weList = channelService
-				.getFriendByChannelId(channelDTO.getId());
+		List<WechatUser> weList = channelService.getFriendByChannelId(channelDTO.getId());
 
 		model.addAttribute("weList", weList);
 		model.addAttribute("channel", channelDTO);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
 		return "wechat/channelFriend";
 	}
 
 	// 渠道商推广
 	@RequestMapping(value = "/channelBroad")
-	public String channelBroad(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String channelBroad(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		// 生成二维码
 		model.addAttribute("channel", channelDTO);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
 		return "wechat/channelBroad";
 	}
 
 	// 渠道商推广
 	@RequestMapping(value = "/getCode")
-	public void getCode(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public void getCode(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String code = request.getParameter("code");
-		String text = "http://51getmore.cn/wechat/index.html?channelCode="
-				+ code;
+		String text = "http://51getmore.cn/wechat/index.html?channelCode=" + code;
 		int width = 300;
 		int height = 300;
 		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
@@ -1029,8 +938,7 @@ public class WechatController extends BaseController {
 		hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
 		BitMatrix bitMatrix = null;
 		try {
-			bitMatrix = new MultiFormatWriter().encode(text,
-					BarcodeFormat.QR_CODE, width, height, hints);
+			bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height, hints);
 		} catch (WriterException e1) {
 			e1.printStackTrace();
 		}
@@ -1053,88 +961,116 @@ public class WechatController extends BaseController {
 
 	// 导购信息页面
 	@RequestMapping(value = "/guide")
-	public String guide(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+	public String guide(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		model.addAttribute("user",loginUser);
 		// 导购
-		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser
-				.getGetMoreId());
-		//导购数目
-		model.addAttribute("talkNum", thirdGuideService.
-				getTalkCountByGetMoreId(loginUser.getGetMoreId()));
-		
-		//客户数目
-		model.addAttribute("customNum",
-				thirdGuideService.getCustomCountByGuideId(guide.getGuideId()));
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
+		// 导购数目
+		model.addAttribute("talkNum", thirdGuideService.getTalkCountByGetMoreId(loginUser.getGetMoreId()));
+
+		// 客户数目
+		model.addAttribute("customNum", thirdGuideService.getCustomCountByGuideId(guide.getGuideId()));
 		model.addAttribute("guide", guide);
 		return "wechat/guide";
 	}
+
+	// 导购详细信息页面
+	@RequestMapping(value = "/guideInfo")
+	public String guideInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
+		model.addAttribute("user",loginUser);
+		model.addAttribute("guide", guide);
+		
+		model.addAttribute("brands", brandService.getAllBrand());
+		return "wechat/guideInfo";
+	}
+	@RequestMapping(value = "/guideUpdate")
+	public String guideUpdate(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		String cphone=request.getParameter("cphone");
+		String cshop=request.getParameter("cshop");
+		String cposition=request.getParameter("cposition");
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
+		JsonObject json=new JsonObject();
+		if(guide==null){
+			json.setStatus("0");
+			json.setMessage("该导购不存在！");
+		}else{
+			ThirdGuide param=new ThirdGuide();
+			param.setGuideId(guide.getGuideId());
+			param.setPhone(cphone);
+			param.setJob(cposition);
+			param.setStoreId(cshop);
+			param.setStatus(0);//需要重新审核
+			try {
+				thirdGuideService.update(param);
+				json.setStatus("1");
+				json.setMessage("信息更新成功");
+			} catch (Exception e) {
+				json.setStatus("0");
+				json.setMessage("更新过程中失败");
+				e.printStackTrace();
+			}
+			
+		}
+		model.addAttribute("json", JSONUtil.object2json(json));
+		
+		return "json";
+	}
+
 	// 导购员历史页面
 	@RequestMapping(value = "/guideHistory")
-	public String guideTalkHistory(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser
-				.getGetMoreId());
-		List<ThirdGuideHistoryDTO> guideHistory = thirdGuideService
-				.getHistoryGuideId(guide.getGuideId());
-		
+	public String guideTalkHistory(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
+		List<ThirdGuideHistoryDTO> guideHistory = thirdGuideService.getHistoryGuideId(guide.getGuideId());
+
 		model.addAttribute("guideHistory", guideHistory);
 		return "wechat/guideHistory";
 	}
-		
+
 	// 导购员客户页面
 	@RequestMapping(value = "/guideCustom")
-	public String guideCustom(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		model.addAttribute("wechat", wechatUserService
-				.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
+	public String guideCustom(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
 		// 订单总数
-		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser
-				.getGetMoreId());
-		List<ThirdGuideCustomDTO> guideCustom = thirdGuideService
-				.getCustomByGuideId(guide.getGuideId());
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
+		List<ThirdGuideCustomDTO> guideCustom = thirdGuideService.getCustomByGuideId(guide.getGuideId());
 		model.addAttribute("guide", guide);
 		model.addAttribute("guideCustom", guideCustom);
 		return "wechat/guideCustom";
 	}
-	//获取用户信息
+
+	// 获取用户信息
 	@RequestMapping(value = "/socketLogin")
-	public String userinfo(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		loginUser=getMoreUserService.getUserById(loginUser.getGetMoreId());
+	public String userinfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
 		model.addAttribute("json", JSONUtil.object2json(loginUser));
 		return "json";
 	}
-	
+
 	// 添加导购
 	@RequestMapping(value = "/getGuide")
-	public synchronized String getGuide(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		String guideId=request.getParameter("guideId");//导购员id
-		JsonObject json=new JsonObject();
-		if(guideId!=null&&guideId.matches("\\d+")){
-			ThirdGuideDTO guide=thirdGuideService.getById(Integer.parseInt(guideId));
-			//检测是否已添加该导购
-			int count=thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
-			
-			if(guide!=null&&count==0){
-				//检测该品牌下是否已经添加了导购员
-				String brandId=guide.getBrand().getBrandId();
-				int brandcheck=thirdGuideService.checkByBrandId(loginUser.getGetMoreId(), brandId);
-				if(brandcheck>0){
+	public synchronized String getGuide(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		String guideId = request.getParameter("guideId");// 导购员id
+		JsonObject json = new JsonObject();
+		if (guideId != null && guideId.matches("\\d+")) {
+			ThirdGuideDTO guide = thirdGuideService.getById(Integer.parseInt(guideId));
+			// 检测是否已添加该导购
+			int count = thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
+
+			if (guide != null && count == 0) {
+				// 检测该品牌下是否已经添加了导购员
+				String brandId = guide.getBrand().getBrandId();
+				int brandcheck = thirdGuideService.checkByBrandId(loginUser.getGetMoreId(), brandId);
+				if (brandcheck > 0) {
 					json.setStatus("0").setMessage("该品牌下已经有导购员了。");
-				}else{
+				} else {
 					try {
 						thirdGuideService.userSetGuide(loginUser.getGetMoreId(), Integer.parseInt(guideId));
 						json.setStatus("1").setMessage("添加导购成功！");
@@ -1143,49 +1079,47 @@ public class WechatController extends BaseController {
 						json.setStatus("0").setMessage("添加导购失败，请稍后再试！");
 					}
 				}
-			}else{
+			} else {
 				json.setStatus("0").setMessage("非法操作！");
 			}
-		}else{
+		} else {
 			json.setStatus("0").setMessage("数据错误！");
 		}
 		model.addAttribute("json", JSONUtil.object2json(json));
 		return "json";
 	}
+
 	// 导购员对话页面
 	@RequestMapping(value = "/guideChat")
-	public String guideChat(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		
-		
-		String toId = request.getParameter("toId");//导购员给谁说话
-		String guideId=request.getParameter("guideId");//导购员id
-		if (guideId!=null&&guideId.matches("\\d+")) {//初始化导购信息
-			model.addAttribute("toguide",
-					thirdGuideService.getById(Integer.parseInt(guideId)));
-			toId=guideId;//
-			//检测是否已添加导购
-			int count=thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
+	public String guideChat(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+
+		String toId = request.getParameter("toId");// 导购员给谁说话
+		String guideId = request.getParameter("guideId");// 导购员id
+		if (guideId != null && guideId.matches("\\d+")) {// 初始化导购信息
+			ThirdGuideDTO toguide = thirdGuideService.getById(Integer.parseInt(guideId));
+			model.addAttribute("toguide", toguide);
+
+			toId = toguide.getGetMoreUser().getGetMoreId() + "";//
+			// 检测是否已添加导购
+			int count = thirdGuideService.check(loginUser.getGetMoreId(), Integer.parseInt(guideId));
 			model.addAttribute("check", count);
 		}
-		if (toId!=null&&toId.matches("\\d+")) {//我是导购
-			model.addAttribute("guide",
-					thirdGuideService.getByGetMoreId(loginUser.getGetMoreId()));
+		if (toId != null && toId.matches("\\d+")) {// 我是导购
+			model.addAttribute("guide", thirdGuideService.getByGetMoreId(loginUser.getGetMoreId()));
 			model.addAttribute("toId", toId);
-			//查询未接受的历史信息数据
-			int pageIndex=1;
-			int pageSize=5;
-			GuideChatHistory param=new GuideChatHistory();
+			// 查询未接受的历史信息数据
+			int pageIndex = 1;
+			int pageSize = 5;
+			GuideChatHistory param = new GuideChatHistory();
 			param.setStatus(1);
 			param.setToId(Integer.parseInt(toId));
 			param.setFromId(loginUser.getGetMoreId());
-			PageDTO<GuideChatHistory> page=new PageDTO<GuideChatHistory>();
+			PageDTO<GuideChatHistory> page = new PageDTO<GuideChatHistory>();
 			page.setPageSize(pageSize);
 			page.setPageIndex(pageIndex);
 			page.setParam(param);
-			
+
 			model.addAttribute("pageIndex", 1);
 			model.addAttribute("pageSize", 5);
 			model.addAttribute("totalPage", chatService.loadCountByParam(page));
@@ -1195,56 +1129,54 @@ public class WechatController extends BaseController {
 
 	// 加载所有未接受历史信息
 	@RequestMapping(value = "/loadUncheck")
-	public String loadUncheck(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		String toId=request.getParameter("toId");
-		JsonObject json=new JsonObject();
-		if(toId.matches("\\d+")){
-			GuideChatHistory param=new GuideChatHistory();
-			param.setStatus(0);//未接受
+	public String loadUncheck(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		String toId = request.getParameter("toId");
+		JsonObject json = new JsonObject();
+		if (toId.matches("\\d+")) {
+			GuideChatHistory param = new GuideChatHistory();
+			param.setStatus(0);// 未接受
 			param.setToId(Integer.parseInt(toId));
 			param.setFromId(loginUser.getGetMoreId());
-			
-			List<GuideChatHistoryDTO> result=chatService.loadListByParam(param);
-			if(result!=null){
-				for(GuideChatHistoryDTO temp:result){
+
+			List<GuideChatHistoryDTO> result = chatService.loadListByParam(param);
+			if (result != null) {
+				for (GuideChatHistoryDTO temp : result) {
 					temp.setTimeStamp(temp.getCreateDate().getTime());
 				}
 			}
 			json.setStatus("1").setData(result);
-		}else{
+		} else {
 			json.setStatus("0").setMessage("数据异常！");
 		}
 		model.addAttribute("json", JSONUtil.object2json(json));
 		return "json";
 
 	}
+
 	// 加载历史信息
 	@RequestMapping(value = "/loadSay")
-	public String loadSay(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String loadSay(HttpServletRequest request, HttpServletResponse response, Model model) {
 		// TODO
-		String toId=request.getParameter("toId");
-		String pageIndex=request.getParameter("pageIndex");
-		String pageSize=request.getParameter("pageSize");
-		JsonObject json=new JsonObject();
-		if(toId.matches("//d+")&&pageIndex.matches("//d+")&&pageSize.matches("//d+")){
-			GuideChatHistory param=new GuideChatHistory();
+		String toId = request.getParameter("toId");
+		String pageIndex = request.getParameter("pageIndex");
+		String pageSize = request.getParameter("pageSize");
+		JsonObject json = new JsonObject();
+		if (toId.matches("//d+") && pageIndex.matches("//d+") && pageSize.matches("//d+")) {
+			GuideChatHistory param = new GuideChatHistory();
 			param.setStatus(1);
-			PageDTO<GuideChatHistory> page=new PageDTO<GuideChatHistory>();
+			PageDTO<GuideChatHistory> page = new PageDTO<GuideChatHistory>();
 			page.setPageSize(Integer.parseInt(pageSize));
 			page.setPageIndex(Integer.parseInt(pageIndex));
 			page.setParam(param);
-			PageDTO<List<GuideChatHistoryDTO>> result=chatService.loadByParam(page);
-			if(result!=null&&result.getParam()!=null){
-				for(GuideChatHistoryDTO temp:result.getParam()){
+			PageDTO<List<GuideChatHistoryDTO>> result = chatService.loadByParam(page);
+			if (result != null && result.getParam() != null) {
+				for (GuideChatHistoryDTO temp : result.getParam()) {
 					temp.setTimeStamp(temp.getCreateDate().getTime());
 				}
 			}
 			json.setStatus("1").setData(result);
-		}else{
+		} else {
 			json.setStatus("0").setMessage("数据异常！");
 		}
 		model.addAttribute("json", JSONUtil.object2json(json));
@@ -1253,11 +1185,9 @@ public class WechatController extends BaseController {
 
 	// 导购对话
 	@RequestMapping(value = "/guideSay")
-	public String guideSay(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String guideSay(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String toId = request.getParameter("toId");
 		String content = request.getParameter("content");
 		JsonObject json = new JsonObject();
@@ -1270,8 +1200,7 @@ public class WechatController extends BaseController {
 			chatHistory.setStatus(0);// 处于未接受状态
 			try {
 				chatService.save(chatHistory);
-				GuideChatHistoryDTO history = chatService.getById(chatHistory
-						.getHistoryId());
+				GuideChatHistoryDTO history = chatService.getById(chatHistory.getHistoryId());
 				// 转换时间戳
 				history.setTimeStamp(chatHistory.getCreateDate().getTime());
 				json.setStatus("1").setMessage("发送成功！");
@@ -1290,17 +1219,13 @@ public class WechatController extends BaseController {
 
 	// 导购页面
 	@RequestMapping(value = "/toGuide")
-	public String toGuide(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String toGuide(HttpServletRequest request, HttpServletResponse response, Model model) {
 		// 查询是否已经是导购
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser
-				.getGetMoreId());
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
 		if (guide != null) {
 			try {
-				request.getRequestDispatcher("guide.html").forward(request,
-						response);
+				request.getRequestDispatcher("guide.html").forward(request, response);
 				return null;
 			} catch (ServletException e) {
 				e.printStackTrace();
@@ -1315,10 +1240,8 @@ public class WechatController extends BaseController {
 
 	// 申请导购
 	@RequestMapping(value = "/saveGuide")
-	public String saveGuide(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+	public String saveGuide(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 
 		String name = request.getParameter("name");
 		String phone = request.getParameter("phone");
@@ -1327,8 +1250,7 @@ public class WechatController extends BaseController {
 		String job = request.getParameter("job");
 
 		JsonObject json = new JsonObject();
-		if (name != null && phone != null && sex != null && sex.matches("[01]")
-				&& storeId != null && job != null) {
+		if (name != null && phone != null && sex != null && sex.matches("[01]") && storeId != null && job != null) {
 			ThirdGuide guide = new ThirdGuide();
 			guide.setCreateDate(new Date());
 			guide.setGetMoreId(loginUser.getGetMoreId());
@@ -1356,16 +1278,12 @@ public class WechatController extends BaseController {
 
 	// 渠道商页面
 	@RequestMapping(value = "/toChannel")
-	public String toChannel(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
-		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser
-				.getGetMoreId());
+	public String toChannel(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		if (channelDTO != null) {// 如果渠道不为空，则重定向到渠道商个人中心
 			try {
-				request.getRequestDispatcher("channel.html").forward(request,
-						response);
+				request.getRequestDispatcher("channel.html").forward(request, response);
 			} catch (ServletException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -1384,11 +1302,9 @@ public class WechatController extends BaseController {
 
 	// 渠道商申请
 	@RequestMapping(value = "/saveChannel")
-	public String saveChannel(HttpServletRequest request,
-			HttpServletResponse response, Model model,
+	public String saveChannel(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(value = "introImg") MultipartFile introImg) {
-		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession()
-				.getAttribute(LOGIN_USER);
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String temp = UuidUtils.getImgUUID();
 		String introImgPath = imgPath + "/channel/" + temp;
 
@@ -1413,17 +1329,11 @@ public class WechatController extends BaseController {
 		String parentId = request.getParameter("company");// 公司ID
 		JsonObject result = new JsonObject();
 		// 拦截数据
-		if (!StringUtils.isEmptyOrWhitespaceOnly(name)
-				&& name.length() <= 10
-				&& !StringUtils.isEmptyOrWhitespaceOnly(job)
-				&& !StringUtils.isEmptyOrWhitespaceOnly(sex)
-				&& sex.matches("[01]")
-				&& !StringUtils.isEmptyOrWhitespaceOnly(phone)
-				&& phone.matches("\\d+")
-				&& !StringUtils.isEmptyOrWhitespaceOnly(type)
-				&& type.matches("[01]")
-				&& (companyName != null || (parentId != null && parentId
-						.matches("\\d+")))) {
+		if (!StringUtils.isEmptyOrWhitespaceOnly(name) && name.length() <= 10
+				&& !StringUtils.isEmptyOrWhitespaceOnly(job) && !StringUtils.isEmptyOrWhitespaceOnly(sex)
+				&& sex.matches("[01]") && !StringUtils.isEmptyOrWhitespaceOnly(phone) && phone.matches("\\d+")
+				&& !StringUtils.isEmptyOrWhitespaceOnly(type) && type.matches("[01]")
+				&& (companyName != null || (parentId != null && parentId.matches("\\d+")))) {
 			ThirdChannel saveParam = new ThirdChannel();
 			saveParam.setName(name);
 			saveParam.setSex(Integer.parseInt(sex));
@@ -1459,16 +1369,14 @@ public class WechatController extends BaseController {
 	}
 
 	@RequestMapping(value = "/miniorder")
-	public String miniorder(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public String miniorder(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Date putDate = time.get("ticket_time");
 		Long dual = new Date().getTime() - putDate.getTime();
 		if (dual > 7200 * 900) {// 重置ticket
 			initJsapiSign();
 		}
 		String queryString = request.getQueryString();
-		String url = request.getRequestURL().toString()
-				.replace("miniorder", "index");
+		String url = request.getRequestURL().toString().replace("miniorder", "index");
 		if (queryString != null) {
 			url = url + "?" + queryString;
 		}

@@ -7,12 +7,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>导购 :: 李大海</title>
+	<title>导购 :: ${empty toguide ?guide.name:toguide.name}</title>
      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <meta name="format-detection" content="telephone=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">
      <link rel="stylesheet" href="css/main.css">
+     
 </head>
 <body class="bg_white with_topbar">
 	<input type="hidden" id="toId" value="${toId }"/>
@@ -21,12 +22,10 @@
 	<input type="hidden" id="totalPage" value="${totalPage }"/>
 		<div class="topbar bar_red navback">
 			<a href="guide.html"><i class="icon-cross"></i></a>
-			<div class="centertitle">导购 :: 李大海</div>
+			<div class="centertitle">导购 :: ${empty toguide ?guide.name:toguide.name}</div>
 			<div class="rightele">
 				<i class="icon-users withlabel morechat">
-					<span>
-						12
-					</span>
+					<!-- <span class="number_chat"></span> -->
 				</i>
 			</div>
 		</div>
@@ -169,7 +168,7 @@
 
 		<div class="chatselect anime">
 			<div class="row">
-				<div class="col-3">
+				<!-- <div class="col-3">
 					<a href="">
 					<img src="images/avatar.jpg" alt="">
 					<span>王二麻子</span>
@@ -177,43 +176,7 @@
 						3
 					</span>
 					</a>
-				</div>
-				<div class="col-3">
-					<a href="">
-					<img src="images/avatar2.jpg" alt="">
-					<span>李莫愁</span>
-					<span class="count">
-						13
-					</span>
-					</a>
-				</div>
-				<div class="col-3">
-					<a href="">
-					<img src="images/avatar.jpg" alt="">
-					<span>李莫愁</span>
-					<span class="count">
-						35
-					</span>
-					</a>
-				</div>
-				<div class="col-3">
-					<a href="">
-					<img src="images/avatar2.jpg" alt="">
-					<span>李莫愁</span>
-					<span class="count">
-						5
-					</span>
-					</a>
-				</div>
-				<div class="col-3">
-					<a href="">
-					<img src="images/avatar.jpg" alt="">
-					<span>Claire</span>
-					<span class="count">
-						123
-					</span>
-					</a>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="close">
@@ -223,6 +186,7 @@
 
 
 <script src="js/jquery.min.js"></script>
+<script src="../js/socket/socket.io-1.3.4.js"></script>
 <script src="../js/socket/p-talk.js"></script>
 <script src="js/main.js"></script>
 <script src="js/we_chat.js"></script>
@@ -253,8 +217,14 @@
 		});
 		
 		$('.morechat').on('click', '', function(event) {
-			event.preventDefault();
-			$('.chatselect').toggleClass('shown');
+			var number=$(this).find("span.number_chat").text();
+			if(number&&number.match(/^\d+$/)){
+				number=parseInt(number, "10");
+				if(number>0){//如果有，则显示
+				event.preventDefault();
+				$('.chatselect').toggleClass('shown');
+				}
+			}
 		});
 
 		$('.chatselect').on('click', '.close', function(event) {
@@ -268,7 +238,7 @@
 			setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
 		}
 		
-	
+		
 		
 	});	
 </script>

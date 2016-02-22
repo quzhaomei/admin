@@ -93,7 +93,7 @@
 
 			</div>
 			<div class="form_row">
-				<input type="text" name="name" id="add_cardNo" placeholder="卡号" maxlength="16">
+				<input type="text" name="name" id="add_cardNo" placeholder="卡号" maxlength="30">
 			</div>
 			</fieldset>
 
@@ -220,7 +220,7 @@
 				alert("请选择银行");return;
 			}else if(!cardNo){
 				alert("银行卡号不能为空！");return;
-			}else if(!cardNo.match(/^\d{16}$/)){
+			}else if(!cardNo.match(/^\d+$/)){
 				alert("请输入正确的银行卡号");return;
 			}
 			var param={};
@@ -229,10 +229,10 @@
 			param.cardNo=cardNo;
 			$.post("channelCard.html",param,function(json){
 				if(json.status==1){
-					alert(json.message);
+					showProgress('success',json.message);
 					window.location.reload();
 				}else{
-					alert(json.message);
+					showProgress('error',json.message);
 				}
 			},"json");
 			

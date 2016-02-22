@@ -49,6 +49,7 @@
 		<result property="guideId" column="guideId"/>
 		<result property="nickname" column="nickname"/>
 		<result property="headimgurl" column="headimgurl"/>
+		<result property="uncheckCount" column="uncheckCount"/>
 		
 		<result property="isFriend" column="isFriend"/>
 		<result property="lastTime" column="lastTime"/>
@@ -63,6 +64,15 @@
 	
 	<update id="update">
 		update third_guide b set
+		<if test="guide.storeId!=null">
+			 b.storeId=#{guide.storeId},
+		</if>
+		<if test="guide.job!=null">
+			 b.job=#{guide.job},
+		</if>
+		<if test="guide.phone!=null">
+			 b.phone=#{guide.phone},
+		</if>
 		<if test="guide.updateDate!=null">
 			 b.updateDate=#{guide.updateDate},
 		</if>
@@ -189,17 +199,23 @@
 	</select>
 	
 	<select id="getHistoryGuideId" resultMap="guideHistoryDTO">
-		select tg.guideId,wu.getMoreId,wu.nickname,wu.headimgurl,
-		(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=wu.getMoreId 
-		and gch.toId=tg.getMoreId and gch.status=0 group by fromId) uncheckCount,
-		(select count(*) from use_to_guide utg where utg.guideId=tg.guideId and utg.getMoreId=
-		utg )isFriend,
-		(SELECT max(gc.createDate) from guide_chat_history gc WHERE gc.toId=wu.getMoreId) lastTime
-		from wechat_user wu 
-		left join getmore_user gu on gu.getMoreId=wu.getMoreId
-		left join user_to_guide utg on utg.getMoreId=gu.getMoreId
-		left join third_guide tg on tg.guideId=utg.guideId
-		where tg.guideId=#{guideId} order by uncheckCount desc,lastTime desc
+		select gu.getMoreId ,gu.userName nickname,gu.photo headimgurl,
+(select count(*)
+from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
+group by gch.fromId) uncheckCount,
+(select  max(gch.createDate)
+from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
+group by gch.fromId) lastTime,
+(select count(*)
+from user_to_guide utg where utg.guideId=#{guideId} and utg.getMoreId=gu.getMoreId) isFriend
+from 
+getmore_user gu where gu.getMoreId in
+(select gch.fromId 
+from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+where tg.guideId=#{guideId}
+group by gch.fromId) order by lastTime desc
 	</select>
 	
 	
@@ -223,8 +239,9 @@
 		where utg.guideId=#{guideId}
 	</select>
 	<select id="getTalkCountByGetMoreId" resultType="int">
-	select count(*) from (SELECT distinct fromId FROM guide_chat_history 
-	WHERE toId=#{getMoreId} group by fromId) a
+	select count(*) from(
+	select count(*) from guide_chat_history where toId=#{getMoreId}
+	group by fromId) a
 	</select>
 	
 	

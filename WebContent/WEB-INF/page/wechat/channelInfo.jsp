@@ -31,7 +31,7 @@
 				<span class="right info">
 				
 				  	  <input type="file"  capture="camera" accept="image/*" id="cavatar" />
-				   	  <span class="img"><img src="${wechat.headimgurl }" alt=""></span>
+				   	  <span class="img"><img src="${user.photo}" alt=""></span>
 				
 				</span>
 				</label>

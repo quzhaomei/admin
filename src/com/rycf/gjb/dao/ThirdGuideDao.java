@@ -33,5 +33,5 @@ public interface ThirdGuideDao {
 
 	void userSetGuide(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
 
-	List<ThirdGuideHistoryDTO> getHistoryGuideId(@Param(value = "getMoreId") Integer getMoreId);
+	List<ThirdGuideHistoryDTO> getHistoryGuideId(@Param(value = "guideId") Integer guideId);
 }
