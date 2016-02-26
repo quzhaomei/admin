@@ -62,13 +62,13 @@ var menuHtml=[
 		</c:when>
 	</c:choose>		
 					'<div class="col-4">',
-						'<a href="http://guider.51getmore.cn/">',
+						'<a href="http://guide.51getmore.cn/">',
 						'<i class="icon-image"></i>',
 						'<span>案例美图</span>',
 						'</a>',
 					'</div>',
 					'<div class="col-4">',
-						'<a href="http://guider.51getmore.cn/articles/">',
+						'<a href="http://guide.51getmore.cn/articles/">',
 						'<i class="icon-stack-2"></i>',
 						'<span>家装专栏</span>',
 						'</a>',
@@ -85,6 +85,6 @@ var menuHtml=[
 			'<i class="icon-plus anime"></i>',
 		'</div>'
 		].join("");
-if(menuHtml&&loginRole){
-$("body").append(menuHtml);
-}
+		
+(function(asdas){if(menuHtml&&loginRole){asdas("body").append(menuHtml)}})(jQuery);
+
