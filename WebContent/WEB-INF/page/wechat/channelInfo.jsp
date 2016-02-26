@@ -17,7 +17,7 @@
 <body class="bg_white with_topbar" id="personalinfo">
 	
 		<div class="topbar bar_red navback">
-			<a href="channel.html"><i class="icon-arrow-left"></i>  返回个人中心  </a>
+			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  </a>
 		</div>
 
 		<div class="title tcenter"><h2>基本信息</h2></div>

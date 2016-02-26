@@ -16,8 +16,8 @@
 <body>
 	<div class="bg_red with_topbar" id="rec_code">
 		<div class="topbar bar_red navback">
-			<a href="channel.html"><i class="icon-arrow-left"></i> 返回个人中心
-			<div class="avatar sm"><img src="${wechat.headimgurl } " alt=""></div>
+			<a href="center.html"><i class="icon-arrow-left"></i> 返回个人中心
+			<div class="avatar sm"><img src="${user.photo } " alt=""></div>
 			</a>
 		</div>
 		<div class="qrcode pad_narrow">

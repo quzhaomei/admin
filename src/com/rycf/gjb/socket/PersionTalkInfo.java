@@ -1,6 +1,7 @@
 package com.rycf.gjb.socket;
 
 public class PersionTalkInfo {
+	private Integer messageId;//信息id
 	private Integer toId;//来至
 	private String message;//信息
 	private Long datatime;//时间
@@ -22,6 +23,12 @@ public class PersionTalkInfo {
 	}
 	public void setDatatime(Long datatime) {
 		this.datatime = datatime;
+	}
+	public Integer getMessageId() {
+		return messageId;
+	}
+	public void setMessageId(Integer messageId) {
+		this.messageId = messageId;
 	}
 	
 }

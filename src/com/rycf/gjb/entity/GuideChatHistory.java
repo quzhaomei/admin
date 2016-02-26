@@ -9,6 +9,17 @@ public class GuideChatHistory {
 	private Date createDate;//创建
 	private String content;//内容
 	private Integer status;	//0-未接收，1-已接收，
+	
+	
+	private Integer tempId;//辅助查询内容
+	
+	
+	public Integer getTempId() {
+		return tempId;
+	}
+	public void setTempId(Integer tempId) {
+		this.tempId = tempId;
+	}
 	public Integer getHistoryId() {
 		return historyId;
 	}

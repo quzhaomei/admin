@@ -16,7 +16,7 @@
 <body class="bg_dark with_topbar">
 	
 		<div class="topbar bar_red navback">
-			<a href="channel.html"><i class="icon-arrow-left"></i>  返回个人中心  </a>
+			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  </a>
 		</div>
 		<div id="accountsarea">
 			<div class="wechat">
@@ -104,9 +104,9 @@
 		
 			</div>
 
-			<span class="close">
+		<!--  	<span class="close">
 				<i class="icon-close"></i>
-			</span>
+			</span>-->
 			
 			<div class="progress">
 				

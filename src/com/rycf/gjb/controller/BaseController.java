@@ -32,6 +32,7 @@ import com.rycf.gjb.service.StoreService;
 import com.rycf.gjb.service.SystemUserService;
 import com.rycf.gjb.service.ThirdChannelService;
 import com.rycf.gjb.service.ThirdGuideService;
+import com.rycf.gjb.service.ThirdNormalService;
 import com.rycf.gjb.service.UserCardService;
 import com.rycf.gjb.service.WechatUserService;
 import com.rycf.gjb.service.minisite.DesignApplyService;
@@ -133,6 +134,9 @@ public class BaseController {
 	
 	@Resource
 	protected DesignApplyService applyService;//
+	
+	@Resource
+	protected ThirdNormalService normalService;//普通用户
 	
 	
 }

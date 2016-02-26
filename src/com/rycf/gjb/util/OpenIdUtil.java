@@ -1,6 +1,7 @@
 package com.rycf.gjb.util;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -41,7 +42,6 @@ public class OpenIdUtil {
 		logger.info("微信图片=====token:"+token+" media_id: "+mediaId+","+bis);
 		return bis;
 	}
-	
 	//单独获取openId
 	public String getOpenIdByCode(String code) {
 		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="

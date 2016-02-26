@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>导购记录</title>
+	<title>需求及咨询记录</title>
      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">
@@ -35,12 +35,12 @@
 						
 						<c:if test="${history.uncheckCount>0 }">
 						<span class="chat">
-						<a href="guideChat.html?toId=${history.getMoreId }">新问询: ${history.uncheckCount }</a>
+						<a href="customerChat.html?guideId=${history.getMoreId }">新回复: ${history.uncheckCount }</a>
 						</span>
 						</c:if>
 						<c:if test="${empty history.uncheckCount||history.uncheckCount==0 }">
 						<span class="chat nonew">
-						<a href="guideChat.html?toId=${history.getMoreId }">历史消息</a>
+						<a href="customerChat.html?guideId=${history.getMoreId }">历史消息</a>
 						</span>
 						</c:if>
 					</div>

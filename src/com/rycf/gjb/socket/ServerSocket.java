@@ -1,6 +1,7 @@
 package com.rycf.gjb.socket;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +20,13 @@ import com.rycf.gjb.util.JSONUtil;
 
 @Repository
 public class ServerSocket {
-	private Map<String,SocketIOClient> socketMap=new HashMap<String, SocketIOClient>();
+	private static Map<String,SocketIOClient> socketMap=new Hashtable<String, SocketIOClient>();
+	public static boolean isOnline(Integer getMoreId){
+		if(getMoreId!=null){
+			return socketMap.get("user"+getMoreId)!=null;
+		}
+		return false;
+	}
 	private SocketIOServer server=null;
 	@PreDestroy
 	public void close(){
@@ -76,6 +83,7 @@ public class ServerSocket {
 				Integer toUserId=talk.getToId();
 				Map<String,Object> message=new HashMap<String,Object>();
 				if(socketMap.get("user"+toUserId )!=null){
+					message.put("messageId",talk.getMessageId());
 					message.put("message", talk.getMessage());
 					message.put("datatime", talk.getDatatime());
 					message.put("fromUser", socket.get("user"));

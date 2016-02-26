@@ -7,14 +7,14 @@
 		<result property="status" column="status"/>
 		<result property="createDate" column="createDate"/>
 				
-		<association property="fromUser" column="fromId" javaType="com.rycf.gjb.entity.WechatUser">
+		<association property="fromUser" column="fromId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
 		<id property="getMoreId" column="fromId"/>
-		<result property="headimgurl" column="headimgurl_f"/>
+		<result property="photo" column="photo_f"/>
 		</association>
 		
-		<association property="toUser" column="toId" javaType="com.rycf.gjb.entity.WechatUser">
+		<association property="toUser" column="toId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
 		<id property="getMoreId" column="toId"/>
-		<result property="headimgurl" column="headimgurl_t"/>
+		<result property="photo" column="photo_t"/>
 		</association>
 		
 	</resultMap>
@@ -28,24 +28,27 @@
 	<update id="update">
 		update guide_chat_history b set
 		<if test="history.status!=null">
-			 b.status=#{history.status!=null},
+			 b.status=#{history.status},
 		</if>
 		b.historyId=#{history.historyId}
 		where b.historyId=#{history.historyId}
 	</update>
 	<select id="getById" resultMap="historyDTO">
-		select gch.historyId,toId,gch.content,gch.status,gch.createDate, gch.fromId,wu.headimgurl headimgurl_f, gch.toId,tot.headimgurl headimgurl_t from guide_chat_history gch 
-		left join wechat_user wu on wu.getMoreId=gch.fromId 
-		left join wechat_user tot on tot.getMoreId=gch.toId where gch.historyId=#{id}
+		select gch.historyId,toId,gch.content,gch.status,gch.createDate, gch.fromId,wu.photo photo_f, gch.toId,tot.photo photo_t from guide_chat_history gch 
+		left join getmore_user wu on wu.getMoreId=gch.fromId 
+		left join getmore_user tot on tot.getMoreId=gch.toId where gch.historyId=#{id}
 	</select>
 	<select id="loadByParam" resultMap="historyDTO">
 		select gch.historyId,gch.toId,gch.content,gch.status,gch.createDate, 
-		gch.fromId,wu.headimgurl headimgurl_f, 
-		gch.toId,tot.headimgurl headimgurl_t 
+		gch.fromId,wu.photo photo_f, 
+		gch.toId,tot.photo photo_t 
 		from guide_chat_history gch 
-		left join wechat_user wu on wu.getMoreId=gch.fromId 
-		left join wechat_user tot on tot.getMoreId=gch.toId 
+		left join getmore_user wu on wu.getMoreId=gch.fromId 
+		left join getmore_user tot on tot.getMoreId=gch.toId 
 		where 1=1 
+		<if test="page.param.tempId!=null">
+			and gch.historyId &lt;= #{page.param.tempId}
+		</if>
 		<if test="page.param.status!=null">
 			and gch.status=#{page.param.status}
 		</if>
@@ -60,11 +63,11 @@
 	</select>
 	<select id="loadListByParam" resultMap="historyDTO">
 		select gch.historyId,gch.toId,gch.content,gch.status,gch.createDate, 
-		gch.fromId,wu.headimgurl headimgurl_f, 
-		gch.toId,tot.headimgurl headimgurl_t 
+		gch.fromId,wu.photo photo_f, 
+		gch.toId,tot.photo photo_t 
 		from guide_chat_history gch 
-		left join wechat_user wu on wu.getMoreId=gch.fromId 
-		left join wechat_user tot on tot.getMoreId=gch.toId 
+		left join getmore_user wu on wu.getMoreId=gch.fromId 
+		left join getmore_user tot on tot.getMoreId=gch.toId 
 		where 1=1 
 		<if test="history.status!=null">
 			and gch.status=#{history.status}
@@ -84,6 +87,9 @@
 		where 1=1 
 		<if test="history.status!=null">
 			and gch.status=#{history.status}
+		</if>
+		<if test="history.tempId!=null">
+			and gch.historyId &lt;= #{history.tempId}
 		</if>
 		and 
 		(

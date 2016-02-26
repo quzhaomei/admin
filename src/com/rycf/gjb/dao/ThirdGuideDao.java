@@ -27,6 +27,8 @@ public interface ThirdGuideDao {
 	
 	int getTalkCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
 	
+	int getQuestionCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	
 	int check(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
 	
 	int checkByBrandId(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "brandId") String brandId);
@@ -34,4 +36,8 @@ public interface ThirdGuideDao {
 	void userSetGuide(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
 
 	List<ThirdGuideHistoryDTO> getHistoryGuideId(@Param(value = "guideId") Integer guideId);
+	
+	List<ThirdGuideDTO> getGuideByUserId(@Param(value = "getMoreId") Integer getmoreId);
+	
+	List<ThirdGuideHistoryDTO> getHistoryGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
 }

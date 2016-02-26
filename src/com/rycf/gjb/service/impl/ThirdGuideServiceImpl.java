@@ -103,4 +103,19 @@ public class ThirdGuideServiceImpl implements ThirdGuideService {
 		return guideDao.getHistoryGuideId(getMoreId);
 	}
 
+	@Override
+	public List<ThirdGuideDTO> getGuideByUserId(Integer getmoreId) {
+		return guideDao.getGuideByUserId(getmoreId);
+	}
+
+	@Override
+	public int getQuestionCountByGetMoreId(Integer getMoreId) {
+		return guideDao.getQuestionCountByGetMoreId(getMoreId);
+	}
+
+	@Override
+	public List<ThirdGuideHistoryDTO> getHistoryGetMoreId(Integer getMoreId) {
+		return guideDao.getHistoryGetMoreId(getMoreId);
+	}
+
 }

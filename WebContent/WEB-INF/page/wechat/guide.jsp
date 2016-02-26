@@ -58,12 +58,29 @@
 		
 		<div class="listset">
 			<div class="listitem arrowright">
-				<a href="guideHistory.html"><i class="icon-wallet"></i> 导购记录 
-				<span class="label label_red">${talkNum }</span></a>
+				<a href="${guide.status==1?'guideHistory.html':'#' }"><i class="icon-wallet"></i> 导购记录 
+				<c:choose>
+					<c:when test="${talkNum==0 }">
+						<span class="label">${talkNum }</span>
+					</c:when>
+					<c:otherwise>
+						<span class="label label_red">${talkNum }</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
 			<div class="listitem arrowright">
-				<a href="guideCustom.html"><i class="icon-users"></i> 客户管理 
-				<span class="label label_gray">${customNum }</span></a>
+				<a href="${guide.status==1?'guideCustom.html':'#' }"><i class="icon-users"></i> 客户管理 
+				<c:choose>
+					<c:when test="${customNum==0 }">
+						<span class="label">${customNum }</span>
+					</c:when>
+					<c:otherwise>
+						<span class="label label_gray">${customNum }</span>
+					</c:otherwise>
+				</c:choose>
+				
+				</a>
 			</div>
 			
 
@@ -86,9 +103,9 @@
 	</div>
 
 
-	<div class="navbttn">
+	<!--  <div class="navbttn">
 		<i class="icon-plus"></i>
-	</div>
+	</div>-->
 
 <script src="js/jquery.min.js"></script>
 <script src="js/main.js"></script>

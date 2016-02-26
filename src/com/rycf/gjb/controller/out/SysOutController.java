@@ -35,6 +35,9 @@ public class SysOutController extends BaseController{
 	@RequestMapping(value="/getBrandByKey")
 	public String getBrandByKey(HttpServletRequest request,
 			HttpServletResponse response, Model model){
+		String host=request.getServerName();
+		int port=request.getServerPort();
+		String headUrl="http://"+host+":"+port+"/";
 		String key=request.getParameter("key");
 		Map<String,Object> data=new HashMap<String,Object>();
 		if(key==null){
@@ -51,6 +54,22 @@ public class SysOutController extends BaseController{
 					result.put("address", temp.getAddress());
 					result.put("phone", temp.getUser().getPhone());
 					result.put("wechatId", temp.getUser().getWechatId());
+					//获取所有店铺下的导购
+					ThirdGuide param=new ThirdGuide();
+					param.setStoreId(temp.getStoreId());
+					List<ThirdGuideDTO> guides=thirdGuideService.getList(param);
+					List<Map<String,Object>> guidesDate=new ArrayList<Map<String,Object>>();
+					if(guides!=null){
+						for(ThirdGuideDTO temp_:guides){
+							Map<String,Object> outMap=new HashMap<String, Object>();
+							outMap.put("guideId", temp_.getGuideId());
+							outMap.put("photo", temp_.getGetMoreUser().getPhoto());
+							outMap.put("name", temp_.getName());
+							outMap.put("url", headUrl+"wechat/customerChat.html?guideId="+temp_.getGuideId());
+							guidesDate.add(outMap);
+						}
+					}
+					result.put("guides", guidesDate);
 					remote.add(result);
 				}
 			}
@@ -66,6 +85,9 @@ public class SysOutController extends BaseController{
 	public String getGuirdeByStore(HttpServletRequest request,
 			HttpServletResponse response, Model model){
 		String storeId=request.getParameter("storeId");
+		String host=request.getServerName();
+		int port=request.getServerPort();
+		String headUrl="http://"+host+":"+port+"/";
 		Map<String,Object> data=new HashMap<String,Object>();
 		if(storeId==null){
 			data.put("status", 0);
@@ -81,7 +103,7 @@ public class SysOutController extends BaseController{
 					result.put("guideId", temp.getGuideId());
 					result.put("photo", temp.getGetMoreUser().getPhoto());
 					result.put("name", temp.getName());
-					result.put("url", "http://www.baidu.com");
+					result.put("url", headUrl+"wechat/customerChat.html?guideId="+temp.getGuideId());
 					remote.add(result);
 				}
 			}

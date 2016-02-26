@@ -12,7 +12,7 @@
 		<result property="phone" column="phone" />
 		<result property="job" column="job" />
 		
-		
+		<result property="uncheckCount" column="uncheckCount" />
 		
 		<association property="store" column="storeId" javaType="com.rycf.gjb.dto.StoreDTO">
 		<id property="storeId" column="storeId"/>
@@ -160,6 +160,9 @@
 		<if test="guide.storeId!=null">
 			and t.storeId=#{guide.storeId}
 		</if>
+		<if test="guide.brandName!=null">
+			and b.brandName like '${guide.brandName}%'
+		</if>
 		order by createDate asc
 	</select>
 	<select id="getCountByParam" resultType="int">
@@ -198,24 +201,45 @@
 		</if>
 	</select>
 	
+	<select id="getHistoryGetMoreId" resultMap="guideHistoryDTO">
+		select tgt.guideId getMoreId ,tgt.name nickname, gu.photo headimgurl,
+			(select count(*)
+			from guide_chat_history gch 
+			 where gch.fromId=gu.getMoreId and gch.toId=#{getMoreId}  and gch.status=0
+			group by gch.fromId) uncheckCount,
+			(select  max(gch.createDate)
+			from guide_chat_history gch where
+			gch.fromId=gu.getMoreId and gch.toId=#{getMoreId} group by gch.fromId) lastTime,
+			(select count(*)
+			from user_to_guide utg left join  third_guide tg on tg.guideId
+			=utg.guideId where utg.getMoreId=#{getMoreId} and tg.getMoreId=gu.getMoreId) isFriend
+			from 
+			getmore_user gu left join  third_guide tgt on tgt.getMoreId
+			=gu.getMoreId where gu.getMoreId in
+			(select gch.toId 
+			from guide_chat_history gch 
+			where gch.fromId=#{getMoreId}
+			group by gch.toId) order by lastTime desc
+	</select>
+	
 	<select id="getHistoryGuideId" resultMap="guideHistoryDTO">
 		select gu.getMoreId ,gu.userName nickname,gu.photo headimgurl,
-(select count(*)
-from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
-and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
-group by gch.fromId) uncheckCount,
-(select  max(gch.createDate)
-from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
-and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
-group by gch.fromId) lastTime,
-(select count(*)
-from user_to_guide utg where utg.guideId=#{guideId} and utg.getMoreId=gu.getMoreId) isFriend
-from 
-getmore_user gu where gu.getMoreId in
-(select gch.fromId 
-from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
-where tg.guideId=#{guideId}
-group by gch.fromId) order by lastTime desc
+			(select count(*)
+			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+			and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
+			group by gch.fromId) uncheckCount,
+			(select  max(gch.createDate)
+			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+			and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId 
+			group by gch.fromId) lastTime,
+			(select count(*)
+			from user_to_guide utg where utg.guideId=#{guideId} and utg.getMoreId=gu.getMoreId) isFriend
+			from 
+			getmore_user gu where gu.getMoreId in
+			(select gch.fromId 
+			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
+			where tg.guideId=#{guideId}
+			group by gch.fromId) order by lastTime desc
 	</select>
 	
 	
@@ -244,6 +268,12 @@ group by gch.fromId) order by lastTime desc
 	group by fromId) a
 	</select>
 	
+	<select id="getQuestionCountByGetMoreId" resultType="int">
+	select count(*) from(
+	select count(*) from guide_chat_history where fromId=#{getMoreId}
+	group by toId) a
+	</select>
+	
 	
 	<insert id="userSetGuide" >
 		insert into user_to_guide(guideId,getMoreId)
@@ -263,4 +293,20 @@ group by gch.fromId) order by lastTime desc
 	and utg.getMoreId=#{getMoreId}
 	
 	</select>
+	
+	<select id="getGuideByUserId" resultMap="guideDTO">
+		select t.guideId,t.createDate,t.updateDate,t.status,t.phone,t.name,t.job,
+			s.storeId,s.storeName,s.address,s.doorCode,
+			b.brandId,b.brandName,
+			(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=t.getMoreId
+		and gch.toId=#{getMoreId} and gch.status=0 group by fromId) uncheckCount,
+			gu.getMoreId,gu.userName,gu.photo
+			from third_guide t
+			left join store s on s.storeId=t.storeId
+			left join brand b on b.brandId=s.brandId
+			left join getmore_user gu on gu.getMoreId=t.getMoreId 
+			left join user_to_guide utg on t.`guideId`=utg.`guideId`
+			where utg.getMoreId=#{getMoreId}
+	</select>
+	
 </mapper>  

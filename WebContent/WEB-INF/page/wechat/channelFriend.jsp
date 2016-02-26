@@ -16,7 +16,7 @@
 <body class="bg_white with_topbar">
 	
 		<div class="topbar bar_red navback">
-			<a href="channel.html"><i class="icon-arrow-left"></i>  返回个人中心  
+			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  
 			<div class="avatar sm"><img src="${wechat.headimgurl } " alt=""></div>
 			</a>
 		</div>

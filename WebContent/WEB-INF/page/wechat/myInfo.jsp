@@ -36,41 +36,25 @@
 				</div>
 			</div>
 			<div class="listitem noarrow">
-				<div class="nolink"><i class="icon-user"></i>姓名 <span class="right info">${guide.name }</span></div>
+				<div class="nolink"><i class="icon-user"></i>姓名 <span class="right info">${user.userName }</span></div>
 			</div>
 			<div class="listitem noarrow">
-				<div class="nolink"><i class="icon-male"></i>性别 <span class="right info">${guide.sex==0?"女":"男" }</span></div>
+				<div class="nolink"><i class="icon-male"></i>性别 <span class="right info">
+				<c:choose >
+					<c:when test="${weuser.sex==1 }">男</c:when>
+					<c:when test="${weuser.sex==2 }">女</c:when>
+					<c:when test="${weuser.sex==0 }">不详</c:when>
+				</c:choose>
+				</span></div>
 			</div>
 			<div class="listitem arrowright">
 				<a href="#" class="callpopup" id="cphone" data-target="#changeinfo" data-title="修改手机号"><i class="icon-iphone"></i
-				>手机号 <span class="right info">${guide.phone }</span></a>
+				>手机号 <span class="right info">${user.phone }</span></a>
 			</div>
 			
 		</div>
 
-
-		<div class="title tcenter"><h2>职业信息</h2></div>
-
-		
-		<div class="listset">
-			
-			<div class="listitem arrowright">
-				<a href="#" class="callpopup" id="cbrand" data-target="#changeinfo" data-title="修改所属公司"><i class="icon-star"></i>所属品牌 <span class="right info">${guide.brand.brandName }</span></a>
-			</div>
-			<div class="listitem arrowright">
-				<a href="#" class="callpopup" id="cshop" data-target="#changeinfo" data-title="修改所属门店"><i class="icon-shop"></i>品牌门店 <span class="right info">${guide.store.storeName }</span></a>
-			</div>
-
-			<div class="listitem arrowright">
-				<a href="#" class="callpopup" id="cposition" data-target="#changeinfo" data-title="修改职位"><i class="icon-user-tie"></i>店内职位 <span class="right info">${guide.job }</span></a>
-			</div>
-			
-			
-		</div>
-
-
-
-
+	
 		<div class="popup anime bg_white offstage" id="changeinfo">
 		<header>
 			<span class="ptitle"></span>
@@ -80,29 +64,7 @@
 		</header>
 		<div class="contents formarea pad_narrow">
 				<fieldset>
-					<input type="number" name="tel" class="hide cphone formitem" placeholder="${guide.phone }" disabled="disalbed" id="phone" />
-					<select name="brand" class="hide cbrand formitem" disabled="disalbed" id="brand">
-						<option value="0">请选择品牌</option>
-						<c:forEach items="${brands }" var="brand">
-							<option value="${brand.brandId }">${brand.brandName }</option>
-						</c:forEach>
-					</select>
-
-					<select name="shop" class="hide cshop formitem" disabled="disalbed" id="store">
-						<option value="0">请选择门店</option>
-						<c:forEach items="${stores }" var="store">
-							<option value="${store.storeId }">${store.storeName }</option>
-						</c:forEach>
-					</select>
-
-					<select name="position" class="hide cposition formitem" disabled="disalbed">
-						<option value="0">请选择店内职务</option>
-						<option value="店长">店长</option>
-						<option value="销售">销售</option>
-						<option value="导购">导购</option>
-						
-					</select>
-					
+					<input type="text" maxlength="11" name="tel" class="hide cphone formitem" placeholder="${empty guide.phone?'请输入手机号码':guide.phone }" disabled="disalbed" id="phone" />
 				</fieldset>
 				
 				
@@ -137,6 +99,8 @@
 		
 			
 		</div>
+
+		
 
 
 		<div class="olay_dark overlay hide">
@@ -208,27 +172,9 @@
 					alert("请输入正确格式的手机号");
 					return;
 				}
-			}else if(param=="cbrand"){
-				if(value=="0"){
-					alert("请选择所属品牌");
-					return;
-				}else{//打开选择店铺页面
-					$('#personalinfo .listset a#cshop').click();
-				}
-					return;
-			}else if(param=="cshop"){
-				if(value=="0"){
-					alert("请选择所属店铺");
-					return;
-				}
-			}else if(param=="cposition"){
-				if(value=="0"){
-					alert("请选择所属职务");
-					return;
-				}
 			}
 			showProgress('submitting','');//更新中
-			$.post("guideUpdate.html",data,function(json){
+			$.post("customerUpdate.html",data,function(json){
 				if(json.status=="0"){//失败
 					showProgress('error',json.message);
 				}else{//成功

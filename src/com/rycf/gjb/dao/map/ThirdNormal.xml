@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rycf.gjb.dao.ThirdNormalDao">
+	<resultMap type="com.rycf.gjb.entity.ThirdNormal" id="normal">
+		<id property="id" column="id" />
+		<result property="getMoreId" column="getMoreId"/>
+	</resultMap>
+	
+	<insert id="save" flushCache="true" keyProperty="normal.id" useGeneratedKeys="true">
+		insert into third_normal(id,getMoreId)values
+		(#{normal.id},#{normal.getMoreId})
+	</insert>
+	
+	
+	<select id="getByGetMoreId" resultMap="normal">
+		select t.id,t.getMoreId
+		from third_normal t where
+		t.getMoreId=#{getMoreId} 
+	</select>
+	
+</mapper>  

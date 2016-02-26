@@ -13,8 +13,8 @@ window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,error
 $(function(){
 	//userInfo 获取
 	$.post("socketLogin.html",function(json){
-		user=new TalkingUser(json.getMoreId,json.userName,json.photo,
-				"http://192.168.1.108:14080");
+		user=new TalkingUser(json.user.getMoreId,json.user.userName,json.user.photo,
+				json.url);
 		user.login();//登录
 	},"json");
 	
@@ -56,8 +56,9 @@ function TalkingUser(getMoreId,username,imgPath,server){
 	};
 	//fromUser:  toUser:  message:  datatime:
 	
-	this.speak=function(toId,message,datatime){
+	this.speak=function(toId,message,datatime,messageId){
 		var data={};
+		data.messageId=messageId;
 		data.toId=toId;
 		data.message=message;
 		data.datatime=datatime;

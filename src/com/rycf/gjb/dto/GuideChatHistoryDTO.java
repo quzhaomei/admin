@@ -1,16 +1,14 @@
 package com.rycf.gjb.dto;
 
 import java.util.Date;
-
-import com.rycf.gjb.entity.WechatUser;
 /**
  * 聊天记录
  * @author Administrator
  */
 public class GuideChatHistoryDTO {
 	private Integer historyId;//主键
-	private WechatUser fromUser;
-	private WechatUser toUser;
+	private GetMoreUserDTO fromUser;
+	private GetMoreUserDTO toUser;
 	private Date createDate;//创建
 	private String content;//内容
 	private Integer status;	//0-未接收，1-已接收，
@@ -22,24 +20,24 @@ public class GuideChatHistoryDTO {
 	public void setHistoryId(Integer historyId) {
 		this.historyId = historyId;
 	}
-	public WechatUser getFromUser() {
+	
+	public GetMoreUserDTO getFromUser() {
 		return fromUser;
 	}
-	
+	public void setFromUser(GetMoreUserDTO fromUser) {
+		this.fromUser = fromUser;
+	}
+	public GetMoreUserDTO getToUser() {
+		return toUser;
+	}
+	public void setToUser(GetMoreUserDTO toUser) {
+		this.toUser = toUser;
+	}
 	public long getTimeStamp() {
 		return timeStamp;
 	}
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
-	}
-	public void setFromUser(WechatUser fromUser) {
-		this.fromUser = fromUser;
-	}
-	public WechatUser getToUser() {
-		return toUser;
-	}
-	public void setToUser(WechatUser toUser) {
-		this.toUser = toUser;
 	}
 	public Date getCreateDate() {
 		return createDate;

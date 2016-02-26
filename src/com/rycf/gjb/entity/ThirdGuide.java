@@ -26,7 +26,17 @@ public class ThirdGuide {
 
 	//查询辅助条件
 	private String userId;
+	private String brandName;
 	
+	
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
 	public String getUserId() {
 		return userId;
 	}

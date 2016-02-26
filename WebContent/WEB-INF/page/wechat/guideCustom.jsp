@@ -17,7 +17,7 @@
 <body class="bg_white with_topbar">
 	
 		<div class="topbar bar_red navback">
-			<a href="guide.html"><i class="icon-arrow-left"></i>  返回个人中心 </a>
+			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心 </a>
 		</div>
 		<div class="listset" id="friendslist">
 			<c:forEach items="${guideCustom }" var="custom">
@@ -42,7 +42,12 @@
 					<div class="extendinfo">
 					<c:if test="${!empty custom.phone}">
 						<span class="phone">
-							<i class="icon-iphone"></i> <a href="tel:13574562568" >${empty custom.phone?"" }</a>
+							<c:choose>
+								<c:when test="${!empty custom.phone}">
+								<i class="icon-iphone"></i> <a href="tel:${custom.phone }" >${custom.phone }</a>
+								</c:when>
+							</c:choose>
+							
 						</span>
 					</c:if>
 						<c:if test="${custom.uncheckCount>0 }">

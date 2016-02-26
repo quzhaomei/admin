@@ -24,6 +24,16 @@ public class ThirdGuideDTO {
 	private Date createDate;//创建时间
 	
 	private Date updateDate;//更新时间
+	
+	private Integer uncheckCount;//未检查条目
+	
+	public Integer getUncheckCount() {
+		return uncheckCount;
+	}
+
+	public void setUncheckCount(Integer uncheckCount) {
+		this.uncheckCount = uncheckCount;
+	}
 
 	public Integer getGuideId() {
 		return guideId;

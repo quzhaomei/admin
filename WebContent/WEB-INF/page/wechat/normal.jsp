@@ -11,6 +11,7 @@
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">
      <link rel="stylesheet" href="css/main.css">
+     
 </head>
 <body>
 	<div class="bg_white">
@@ -47,10 +48,19 @@
 		<div class="listset">
 			
 			<div class="listitem arrowright">
-				<a href="order.html"><i class="icon-file-add"></i> 提交订单 </a>
+				<a href="toOrder.html"><i class="icon-file-add"></i> 提交订单 </a>
 			</div>
 			<div class="listitem arrowright">
-				<a href="my_rebates_c.html"><i class="icon-wallet"></i> 返利订单记录 <span class="label label_red">10</span></a>
+				<a href="myOrders.html"><i class="icon-wallet"></i> 返利订单记录 
+				<c:choose>
+					<c:when test="${orderCount==0 }">
+					<span class="label">${orderCount}</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${orderCount}</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
 		
 		</div>
@@ -65,16 +75,36 @@
 			
 			
 			<div class="listitem arrowright">
-				<a href="my_guiders.html"><i class="icon-users"></i> 我的导购 <span class="label label_red">3</span></a>
+				<a href="myGuide.html"><i class="icon-users"></i> 我的导购 
+				<c:choose>
+					<c:when test="${guides==0 }">
+					<span class="label">${guides}</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${guides}</span>
+					</c:otherwise>
+				</c:choose>
+				
+				</a>
 			</div>
 
 			<div class="listitem arrowright">
-				<a href="my_needs.html"><i class="icon-bubble2"></i> 需求及咨询 <span class="label label_gray">10</span></a>
+				<a href="myQuestion.html"><i class="icon-bubble2"></i> 
+				需求及咨询 
+				<c:choose>
+					<c:when test="${questionNum==0 }">
+					<span class="label">${talkNum}</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${questionNum}</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
-
+			<!--  
 			<div class="listitem arrowright">
 				<a href="my_fav.html"><i class="icon-heart4"></i> 我的收藏 </a>
-			</div>
+			</div>-->
 			
 
 		</div>
@@ -88,14 +118,23 @@
 		<div class="listset">
 			
 			<div class="listitem arrowright">
-				<a href="perinfo_customer.html"><i class="icon-v-card"></i> 个人资料</a>
+				<a href="myInfo.html"><i class="icon-v-card"></i> 个人资料</a>
 			</div>
 			<div class="listitem arrowright">
-				<a href="my_account.html"><i class="icon-credit-card"></i> 我的账号 <span class="label">2</span></a>
+				<a href="channelAccount.html"><i class="icon-credit-card"></i> 我的账号 
+				<c:choose>
+					<c:when test="${cards==0 }">
+					<span class="label">${cards}</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${cards}</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
-			<div class="listitem arrowright">
+		<!--  	<div class="listitem arrowright">
 				<a href=""><i class="icon-lock2"></i> 安全设置</a>
-			</div>
+			</div>-->
 
 	
 		</div>
@@ -104,11 +143,12 @@
 	</div>
 
 
-	<div class="navbttn">
+	<!--  <div class="navbttn">
 		<i class="icon-plus"></i>
-	</div>
+	</div>-->
 
 <script src="js/jquery.min.js"></script>
+
 <script src="js/main.js"></script>
 </body>
 </html>

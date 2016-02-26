@@ -27,6 +27,8 @@ public interface ThirdGuideService {
 	
 	int getTalkCountByGetMoreId( Integer getMoreId);
 	
+	int getQuestionCountByGetMoreId( Integer getMoreId);
+	
 	int check(Integer getMoreId,Integer guideId);
 	
 	int checkByBrandId(Integer getMoreId,String brandId);
@@ -34,4 +36,8 @@ public interface ThirdGuideService {
 	void userSetGuide(Integer getMoreId,Integer guideId);
 	
 	List<ThirdGuideHistoryDTO> getHistoryGuideId(Integer getMoreId);
+	
+	List<ThirdGuideDTO> getGuideByUserId(Integer getmoreId);
+	
+	List<ThirdGuideHistoryDTO> getHistoryGetMoreId( Integer getMoreId);
 }

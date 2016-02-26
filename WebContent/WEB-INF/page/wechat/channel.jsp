@@ -36,6 +36,9 @@
 						<c:when test="${channel.status==1 }">
 							<span class="verified">凯特猫渠道商</span>
 						</c:when>
+						<c:otherwise>
+							<span class="verifing">凯特猫渠道商 审核退回</span>
+						</c:otherwise>
 					</c:choose>
 					
 				</div>
@@ -60,13 +63,31 @@
 		<div class="listset">
 			
 			<div class="listitem">
-				<a href="channelBroad.html"><i class="icon-thumbs-o-up"></i> 推荐给好友 </a>
+				<a href="${channel.status==1?'channelBroad.html':'#' }"><i class="icon-thumbs-o-up"></i> 推荐给好友 </a>
 			</div>
 			<div class="listitem">
-				<a href="channelHistory.html"><i class="icon-wallet"></i> 佣金记录 <span class="label label_red">${total }</span></a>
+				<a href="${channel.status==1?'channelHistory.html':'#' }"><i class="icon-wallet"></i> 佣金记录 
+				<c:choose>
+					<c:when test="${total==0 }">
+						<span class="label label_gray">${total }</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${total }</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
 				<div class="listitem">
-				<a href="channelFriend.html"><i class="icon-users"></i> 我的推荐好友 <span class="label label_gray">${count }</span></a>
+				<a href="${channel.status==1?'channelFriend.html':'#' }"><i class="icon-users"></i> 我的推荐好友 
+				<c:choose>
+					<c:when test="${count==0 }">
+						<span class="label label_gray">${count }</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${count }</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
 
 		</div>
@@ -84,11 +105,20 @@
 			</div>
 			<div class="listitem">
 				<a href="channelAccount.html"><i class="icon-credit-card"></i> 
-				我的账号 <span class="label">${accounts }</span></a>
+				我的账号 
+				<c:choose>
+					<c:when test="${accounts==0 }">
+						<span class="label label_gray">${accounts }</span>
+					</c:when>
+					<c:otherwise>
+					<span class="label label_red">${accounts }</span>
+					</c:otherwise>
+				</c:choose>
+				</a>
 			</div>
-			<div class="listitem">
+			<!--  <div class="listitem">
 				<a href="#"><i class="icon-lock2"></i> 安全设置</a>
-			</div>
+			</div>-->
 			
 
 		</div>
