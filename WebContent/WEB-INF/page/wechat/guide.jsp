@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -103,11 +104,8 @@
 	</div>
 
 
-	<!--  <div class="navbttn">
-		<i class="icon-plus"></i>
-	</div>-->
-
 <script src="js/jquery.min.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

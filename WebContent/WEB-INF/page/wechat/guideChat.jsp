@@ -149,6 +149,8 @@
 			<i class="icon-reply"></i>
 			转单
 		</div>
+		
+		<div class="olay_dark overlay hide"></div>
 
 
 <script src="js/jquery.min.js"></script>

@@ -81,6 +81,7 @@
 			</div>
 		</div>
 		
+		<div class="olay_dark overlay hide"></div>
 
 <script src="js/jquery.min.js"></script>
 <script src="../js/socket/socket.io-1.3.4.js"></script>

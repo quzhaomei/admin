@@ -160,10 +160,6 @@
 		</div>
 
 
-		<div class="olay_dark overlay hide">
-			
-		</div>
-	
 
 
 	<!-- <div id="navicon">
@@ -178,6 +174,7 @@
 
 
 <script src="js/jquery.min.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script src="js/main.js"></script>
 <script>
 	$(document).ready(function() {

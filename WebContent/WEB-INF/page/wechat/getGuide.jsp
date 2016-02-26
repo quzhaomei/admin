@@ -102,12 +102,10 @@
 	</c:if>
 
 
-	<!--  <div class="navbttn">
-		<i class="icon-plus"></i>
-	</div>-->
 
 <script src="js/jquery.min.js"></script>
 <script src="js/main.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script type="text/javascript">
 $(function(){
 	$(".addguider").on("click",function(){

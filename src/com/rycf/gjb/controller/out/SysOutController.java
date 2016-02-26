@@ -13,9 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.rycf.gjb.controller.BaseController;
+import com.rycf.gjb.dto.GetMoreUserDTO;
 import com.rycf.gjb.dto.StoreDTO;
+import com.rycf.gjb.dto.ThirdChannelDTO;
 import com.rycf.gjb.dto.ThirdGuideDTO;
 import com.rycf.gjb.entity.ThirdGuide;
+import com.rycf.gjb.entity.ThirdNormal;
+import com.rycf.gjb.entity.WechatUser;
+import com.rycf.gjb.util.Constant;
 import com.rycf.gjb.util.JSONUtil;
 /**
  * 外部接口调用controller
@@ -112,6 +117,68 @@ public class SysOutController extends BaseController{
 		}
 		model.addAttribute("json", JSONUtil.object2json(data));
 		return "json";
+	}
+	
+	//获取快捷方式图标
+	@RequestMapping(value="/showMenuScript")
+	public String showMenuScript(HttpServletRequest request,
+			HttpServletResponse response, Model model){
+		GetMoreUserDTO hasUser = (GetMoreUserDTO) request.getSession().getAttribute(BaseController.LOGIN_USER);
+		Integer getId=null;
+		if(hasUser==null){
+		String openid=request.getParameter("openid");
+		String getMoreId=request.getParameter("getMoreId");
+		if(openid==null&&getMoreId==null){return null;}
+		if(getMoreId!=null&&!getMoreId.matches("\\d+")){return null;}
+		
+		if(openid!=null){
+			WechatUser loginUser=wechatUserService.getWechatUserByOpenId(openid);
+			if(loginUser!=null){
+				getId=loginUser.getGetMoreId();
+			}else{return null;}
+		}else{
+			getId=Integer.parseInt(getMoreId);
+		}
+		}else{
+			getId=hasUser.getGetMoreId();
+		}
+		
+		String role = null;
+		if(getId!=null){
+			ThirdNormal normal = normalService.getByGetMoreId(getId);
+
+			if (normal != null&&role==null) {
+				role= Constant.NORMAL;
+			}
+
+			// 导购
+			ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(getId);
+			if (guide != null&&role==null) {
+				role= Constant.GUIDE;
+			}
+
+			// 渠道商
+			ThirdChannelDTO channel = channelService.getByGetMoreId(getId);
+			if (channel != null&&role==null) {
+				role= Constant.CHANNEL;
+			}
+		}
+		String url = request.getRequestURL().toString();
+		if(url.lastIndexOf("/")>0){
+		url=url.substring(0, url.lastIndexOf("/"));
+		}
+		if(url.lastIndexOf("/")>0){
+		url=url.substring(0, url.lastIndexOf("/"));
+		}
+		model.addAttribute("url", url);
+		model.addAttribute("role", role);
+		return "showMenuScript";
+	}
+	public static void main(String[] args) {
+		String url="http://localhost:8080/admin/wechat/center.html";
+		url=url.substring(0, url.lastIndexOf("/"));
+		url=url.substring(0, url.lastIndexOf("/"));
+		System.out.println(url);
 	}
 	
 }

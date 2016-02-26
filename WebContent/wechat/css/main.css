@@ -1457,19 +1457,65 @@ label.namecard img {
     border-radius: 13px;
     border: 1px solid #f3555c; }
 
-.navbttn {
+#megamenu {
+  position: fixed;
+  border-radius: 5px;
+  background-color: white;
+  left: 15px;
+  right: 15px;
+  bottom: 128px;
+  min-height: 258px;
+  z-index: 1003;
+  -webkit-transform: scale(0, 0);
+  transform: scale(0, 0);
+  padding: 10px; }
+  #megamenu .col-4 {
+    background-repeat: repeat-y,repeat-x;
+    background-image: url("../images/dotline_gray_v.png"), url("../images/dotline_gray.png");
+    background-position: left, top; }
+    #megamenu .col-4:nth-child(3n+1) {
+      background-image: none, url("../images/dotline_gray.png");
+      background-repeat: no-repeat,repeat-x; }
+    #megamenu .col-4:nth-child(-n+3) {
+      background-image: url("../images/dotline_gray_v.png"), none;
+      background-repeat: repeat-y,no-repeat; }
+    #megamenu .col-4:nth-child(1) {
+      background: none; }
+  #megamenu a {
+    font-size: 12px;
+    text-align: center;
+    display: block;
+    padding: 25px 0px;
+    color: #a1b1bc; }
+    #megamenu a span {
+      display: block;
+      margin-top: 15px; }
+    #megamenu a i {
+      font-size: 35px;
+      text-align: center; }
+  #megamenu.shown {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1); }
+
+#navbttn {
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
   display: inline-block;
   width: 42px;
-  height: 40px;
+  height: 42px;
   text-align: center;
   position: fixed;
   right: 5%;
   bottom: 80px;
-  padding: 7px; }
-  .navbttn i {
-    font-size: 25px; }
+  padding: 8px;
+  overflow: hidden;
+  z-index: 1002; }
+  #navbttn i {
+    font-size: 26px;
+    display: inline-block; }
+  #navbttn.closemenu i {
+    -webkit-transform: rotate(135deg);
+    transform: rotate(135deg); }
 
 .bttn_c_guider {
   text-align: center;
@@ -1710,7 +1756,7 @@ label.namecard img {
         width: 100%;
         height: auto;
         display: block;
-        }
+        opacity: 0; }
       #chatui .chatarea .bubble.b_left {
         background-color: #28bfca; }
         #chatui .chatarea .bubble.b_left::before {

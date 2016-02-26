@@ -229,6 +229,7 @@ $$(document).on('pageBeforeInit', function (e) {
 						$("#imgReviw").get(0).src=localIds[0];
 						fileTempId=localIds[0];
 						checkOk();
+						
 				    }
 				});
 				

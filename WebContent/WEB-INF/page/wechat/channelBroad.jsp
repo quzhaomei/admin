@@ -58,8 +58,8 @@
 
 
 
-
 <script src="js/jquery.min.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

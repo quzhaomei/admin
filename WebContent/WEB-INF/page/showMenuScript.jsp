@@ -1,0 +1,90 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+var loginRole="${role }";
+var menuHtml=[
+		'<div class="olay_dark overlay hide"></div>',
+		'<div id="megamenu" class="anime">',
+			'<div class="row">',
+	<c:choose>
+		<c:when test="${role eq 'normal' }">
+			'<div class="col-4">',					
+						'<a href="${url }/wechat/toOrder.html">',
+						 '<i class="icon-cloud-upload"></i>',
+							'<span>订单上传</span>',
+						'</a>',
+					'</div>',
+					'<div class="col-4">',
+						'<a href="${url }/wechat/myOrders.html">',
+						'<i class="icon-paper"></i>',
+						'<span>返利记录</span>',
+						'</a>',
+					'</div>',
+					'<div class="col-4">',
+						'<a href="${url }/wechat/myQuestion.html">',
+						'<i class="icon-speech-bubble"></i>',
+						'<span>需求咨询</span>',
+						'</a>',
+					'</div>',
+		</c:when>
+		<c:when test="${role eq 'channel' }">
+			'<div class="col-4">',				
+					'<a href="${url }/wechat/channelBroad.html">',
+					 '<i class="icon-like"></i>',
+						'<span>我的推荐</span>',
+					'</a>',
+				'</div>',
+				'<div class="col-4">',					
+					'<a href="${url }/wechat/channelHistory.html">',
+					 '<i class="icon-wallet"></i>',
+						'<span>佣金记录</span>',
+					'</a>',
+				'</div>',
+				'<div class="col-4">',				
+					'<a href="${url }/wechat/channelFriend.html">',
+					' <i class="icon-head"></i>',
+						'<span>我的好友</span>',
+					'</a>',
+				'</div>',
+		</c:when>
+		<c:when test="${role eq 'guide' }">
+			'<div class="col-4">',				
+						'<a href="${url }/wechat/guideHistory.html">',
+						' <i class="icon-speech-bubble"></i>',
+							'<span>导购记录</span>',
+						'</a>',
+					'</div>',
+					'<div class="col-4">',			
+						'<a href="${url }/wechat/guideCustom.html">',
+						 '<i class="icon-head"></i>',
+							'<span>客户管理</span>',
+						'</a>',
+					'</div>',
+		</c:when>
+	</c:choose>		
+					'<div class="col-4">',
+						'<a href="http://guider.51getmore.cn/">',
+						'<i class="icon-image"></i>',
+						'<span>案例美图</span>',
+						'</a>',
+					'</div>',
+					'<div class="col-4">',
+						'<a href="http://guider.51getmore.cn/articles/">',
+						'<i class="icon-stack-2"></i>',
+						'<span>家装专栏</span>',
+						'</a>',
+					'</div>',
+					'<div class="col-4">',
+						'<a href="http://guide.51getmore.cn/brands/">',
+							'<i class="icon-star"></i>',
+						'<span>签约品牌</span>',
+						'</a>',
+					'</div>',
+			'</div>',
+		'</div>',
+		'<div id="navbttn">',
+			'<i class="icon-plus anime"></i>',
+		'</div>'
+		].join("");
+if(menuHtml&&loginRole){
+$("body").append(menuHtml);
+}

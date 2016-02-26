@@ -177,16 +177,13 @@
 		</div>
 		<!-- 更换默认银行卡结束 -->
 
-		<div class="olay_dark overlay hide">
-			
-		</div>
-
 
 
 
 
 
 <script src="js/jquery.min.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script src="js/main.js"></script>
 <script>
 	var cardid = '';

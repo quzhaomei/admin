@@ -34,7 +34,7 @@ chat.speakHtml=function(content,headimgurl,time,loadTag){
 	}else{
 		$("#talking-container").append($li);
 	}
-	chat.scollToButtom();
+//	chat.scollToButtom();
 };
 
 //接收信息
@@ -57,10 +57,10 @@ chat.setDialog=function(json){
 	$(json).each(function(){
 		if(this.fromUser.getMoreId==toId){
 			//初始化对方的
-			chat.getHtml(this.content,this.fromUser.headimgurl,new Date(parseInt(this.timeStamp)),1);
+			chat.getHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),1);
 		}else{
 			//初始化自己的
-			chat.speakHtml(this.content,this.fromUser.headimgurl,new Date(parseInt(this.timeStamp)),1);
+			chat.speakHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),1);
 		}
 	});
 	
@@ -92,11 +92,12 @@ chat.sendText=function(text,obj){
 		if(json.status=="1"){
 			//socket转发
 			if(user){
-				user.speak(json.data.toUser.getMoreId,text,json.data.timeStamp);
+				user.speak(json.data.toUser.getMoreId,text,json.data.timeStamp,json.data.historyId);
 			}
 			$("#talk-content").val("");
-			chat.speakHtml(text,json.data.fromUser.headimgurl,
+			chat.speakHtml(text,json.data.fromUser.photo,
 					new Date(parseInt(json.data.timeStamp)));
+			chat.scollToButtom();//到最下一页
 		}else{
 			alert(json.message);
 		}
@@ -114,12 +115,14 @@ chat.sendHtml=function(html,obj){
 		if(json.status=="1"){
 			//socket转发
 			if(user){
-				user.speak(json.data.toUser.getMoreId,html,json.data.timeStamp);
+				user.speak(json.data.toUser.getMoreId,html,json.data.timeStamp,json.data.historyId);
 			}
 			
 			$("#talk-content").val("");
-			chat.speakHtml(html,json.data.fromUser.headimgurl,
-					new Date(parseInt(json.data.timeStamp)))
+			chat.speakHtml(html,json.data.fromUser.photo,
+					new Date(parseInt(json.data.timeStamp)));
+			
+			chat.scollToButtom();//到最下一页
 		}else{
 			alert(json.message);
 		}
@@ -159,23 +162,60 @@ chat.showOther=function(imgPath,getMoreId,username){
 	}
 }
 
-//TODO 待编写
-function loadHis(toId,pageIndex,pageSize,status){
+//TODO 待编写加载已接受的
+function loadHistory(toId,pageIndex,pageSize,tempId){
+	
 	var param={};
 	param.toId=toId;
 	param.pageIndex=pageIndex;
 	param.pageSize=pageSize;
-	$.post("loadSay.html",param,function(json){
+	if(tempId){
+		param.tempId=tempId;
+	}
+	$.post("loadHistory.html",param,function(json){
 		if(json.status=="0"){
 			alert(json.message);
-		}else if(json.status=="1"){//加载历史数据
+		}else if(json.status=="1"&&parseInt(json.data.totalPage,"10")>0){//加载历史数据
+			if(!$(".li-tips")[0]){
+				var $li=$("<li>").addClass("li-tips");
+				$li.text(" - 以上为历史聊天记录 - ")
+				$("#talking-container").prepend($li);
+			}
 			//初始化
-			chat.setDialog(json.param);
+			chat.setDialog(json.data.param);
+			var tempId=json.message;
+			if(parseInt(json.data.totalPage,"10")>parseInt(json.data.pageIndex,"10")){//说明还有下一页
+				if($(".loadPage")[0]){
+					$(".loadPage").attr("pageIndex",parseInt( json.data.pageIndex,"10")+1);
+					$("#talking-container").prepend($(".loadPage"));
+				}else{
+					var $page=$("<li>").attr("pageSize",json.data.pageSize).attr("id","myload")
+					.attr("pageIndex",parseInt( json.data.pageIndex,"10")+1).attr("tempId",json.message).addClass("loadPage li-tips")
+					.attr("toId",toId);
+					$page.html("<a href='#myload'> -加载更多- </a> ");
+					$("#talking-container").prepend($page);
+				}
+				
+			}else{
+				if($(".loadPage")[0]){
+					$("#talking-container").prepend($(".loadPage"));
+					$(".loadPage").removeClass("loadPage")
+					.html("-没有更多消息了！-");
+				}
+			}
 		}
 	},"json");
 }
+$("#talking-container").on("click",".loadPage",function(){
+	var toId=$(this).attr("toId");
+	var pageIndex=$(this).attr("pageIndex");
+	var pageSize=$(this).attr("pageSize");
+	var tempId=$(this).attr("tempId");
+	loadHistory(toId,pageIndex,pageSize,tempId);
+});
+
 //加载未接受信息，以及历史信息数目
-function loadUnCheckHis(toId){
+function loadUnCheckHis(toId,callback){
 	$("#talking-container").html("");//清空
 	var param={};
 	param.toId=toId;
@@ -186,25 +226,79 @@ function loadUnCheckHis(toId){
 			//初始化
 			chat.setDialog(json.data);
 		}
+		
+		if(callback){
+			callback();
+		}
+		
 	},"json");
 }
 
 $(function(){
 	//加载未接受历史聊天信息
-	loadUnCheckHis($("#toId").val());
+	loadUnCheckHis($("#toId").val(),function(){
+		//加载历史
+		loadHistory($("#toId").val(),1,5);
+		});
+
+	
+	//发送图片
+	$(".add_img").on("click",function(){
+		
+		$(".add_img").attr("disabled","disabled");
+		
+			wx.chooseImage({
+			    count: 1, // 默认9
+			    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			    success: function (res) {
+			    	var tempId = res.localIds[0]; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+			        
+			    	//上传图片
+			        wx.uploadImage({
+			            localId: tempId, // 需要上传的图片的本地ID，由chooseImage接口获得
+			            isShowProgressTips: 1, // 默认为1，显示进度提示
+			            success: function (res) {
+			                var serverId = res.serverId; // 返回图片的服务器端ID
+			                
+			                $.post("getWechatImg.html",{"tempId":serverId},function(json){
+					        	$(".add_img").removeAttr("disabled");
+					        	if(json.status=="1"){
+					        		chat.sendHtml("<img src='"+json.data+"'/>",$(".add_img"));
+					        	}else{
+					        		alert("上传图片出错！");
+					        	}
+					        		
+					        },"json");
+			            }
+			        });
+			        
+			    }
+			});
+		
+	});
+	//客户发送导购图片
+	
+	if($("#imgUrl").val()){
+		chat.sendHtml("<img src='"+$("#imgUrl").val()+"'/>",$("#imgUrl"));
+	}
 	
 	//发送名片
 	$(".add_namecard").on("click",function(){
 		chat.sendHtml($("#guide-namecard").html(),this);
 	});
+	
 	//发送地点
 	$(".guide-location").on("click",function(){
 		chat.sendHtml($("#guide-location").html(),this);
 	});
+	
 	//发送话术
-	$("#preword").on("click",function(){
+	$("#preword").on("change",function(){
 		chat.sendHtml($(this).val(),this);
+		$("#preword option:eq(0)").attr("selected","selected");
 	});
+	
 	//发送聊天信息
 	$("#talkform").on("submit",function(){
 		var content=$("#talk-content").val();
@@ -223,6 +317,10 @@ $(function(){
 					chat.getHtml(data.message,data.fromUser.imgPath
 							,new Date(parseInt(data.datatime)));
 					chat.scollToButtom();
+					//该句更新为已读
+					$.post("hasRead.html",{"messageId":data.messageId},function(json){
+						
+					});
 				}else{
 					//置顶显示
 					chat.showOther(data.fromUser.imgPath,data.fromUser.getMoreId,
@@ -251,8 +349,12 @@ $(function(){
 		
 		var getMoreId=$(this).attr("getMoreId");
 		if(getMoreId){//进行切换
-			$("#toId").val(getMoreId)
-			loadUnCheckHis($("#toId").val());
+			$("#toId").val(getMoreId);
+			//加载未接受历史聊天信息
+			loadUnCheckHis($("#toId").val(),function(){
+				//加载历史
+				loadHistory($("#toId").val(),1,5);
+				});
 		}
 	});
 	

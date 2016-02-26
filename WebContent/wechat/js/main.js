@@ -9,13 +9,13 @@ function changeCard(){
 // 提交信息及返回处理结果后调用该方法，
 // status分别对应三种状态：submitting：提交中 ／ success: 操作成功 ／ error: 操作失败
 // msg为提示信息，置空则提示三个状态的默认信息）
-function showProgress(status,msg,fn) {
+function showProgress(status,msg) {
 	var progresslayer = $(".popup:not('.offstage') .progress");
 	var progresstext = '';
 
 	if(msg != '') {
 		progresstext = msg;
-	} else { 
+	} else {
 		switch(status)
 		{
 			case 'submitting':
@@ -38,7 +38,6 @@ function showProgress(status,msg,fn) {
 	if(status != 'submitting') {
 		setTimeout(function() {
 		  	 closePopup();
-		  	 if(fn){fn()};
 		}, 2200);
 	}	
 }
@@ -52,6 +51,38 @@ function closePopup() {
 		progresslayer.removeClass('shown').children('div').addClass('hide').attr('id','');
 		progresslayer.children('.progresstext').html('');
 		$('.overlay').addClass('hide');
+}
+
+
+
+function showAjaxWaiting() {
+	if(!$(".olay_trans")[0]){//初始化
+		$("body").append([
+				'<div class="popup waiting offstage">',
+				'<div class="hide" id="submitting">',
+					
+				'</div>',
+
+				'</div>',
+
+				'<div class="olay_trans overlay hide">',
+
+				'</div>'].join("")
+		);
+	}
+	var overlay = $(".olay_trans");
+	var icon = $(".popup.waiting");
+	icon.find('#submitting').removeClass('hide');
+	icon.removeClass('offstage');
+	overlay.removeClass('hide');
+}
+
+function closeAjaxWaiting() {
+	var overlay = $(".olay_trans");
+	var icon = $(".popup.waiting");
+	icon.find('#submitting').addClass('hide');
+	icon.addClass('offstage');
+	overlay.addClass('hide');
 }
 
 
@@ -76,5 +107,18 @@ $('.callpopup').on('click', '', function(event) {
 	overlay.removeClass('hide');
 });
 
+$('#navbttn').on('click', '', function(event) {
+	event.preventDefault();
+	$(this).toggleClass('closemenu');
+	$('#megamenu').toggleClass('shown');
+	$('.olay_dark').toggleClass('hide');
+});
+
+
+$(document).ajaxStart(function(){
+		showAjaxWaiting();
+	}).ajaxStop(function(){
+		closeAjaxWaiting();
+	});
 	
 });

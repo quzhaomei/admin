@@ -185,6 +185,7 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-ui.js"></script>
 <script src="js/main.js"></script>
+<script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script type="text/javascript">
 //根据品牌获取店铺
 $("#brands").on("change",function(){
