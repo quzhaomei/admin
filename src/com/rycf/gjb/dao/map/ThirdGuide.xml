@@ -49,6 +49,7 @@
 		<result property="guideId" column="guideId"/>
 		<result property="nickname" column="nickname"/>
 		<result property="headimgurl" column="headimgurl"/>
+		<result property="brandName" column="brandName"/>
 		<result property="uncheckCount" column="uncheckCount"/>
 		
 		<result property="isFriend" column="isFriend"/>
@@ -202,7 +203,7 @@
 	</select>
 	
 	<select id="getHistoryGetMoreId" resultMap="guideHistoryDTO">
-		select tgt.guideId getMoreId ,tgt.name nickname, gu.photo headimgurl,
+		select tgt.guideId getMoreId ,tgt.name nickname, gu.photo headimgurl,b.brandName,
 			(select count(*)
 			from guide_chat_history gch 
 			 where gch.fromId=gu.getMoreId and gch.toId=#{getMoreId}  and gch.status=0
@@ -214,8 +215,10 @@
 			from user_to_guide utg left join  third_guide tg on tg.guideId
 			=utg.guideId where utg.getMoreId=#{getMoreId} and tg.getMoreId=gu.getMoreId) isFriend
 			from 
-			getmore_user gu left join  third_guide tgt on tgt.getMoreId
-			=gu.getMoreId where gu.getMoreId in
+			getmore_user gu left join  third_guide tgt on tgt.getMoreId=gu.getMoreId
+			left join store s on s.storeId=tgt.storeId
+			left join brand b on b.brandId=s.brandId
+			where gu.getMoreId in
 			(select gch.toId 
 			from guide_chat_history gch 
 			where gch.fromId=#{getMoreId}
@@ -235,7 +238,9 @@
 			(select count(*)
 			from user_to_guide utg where utg.guideId=#{guideId} and utg.getMoreId=gu.getMoreId) isFriend
 			from 
-			getmore_user gu where gu.getMoreId in
+			getmore_user gu 
+			
+			where gu.getMoreId in
 			(select gch.fromId 
 			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
 			where tg.guideId=#{guideId}

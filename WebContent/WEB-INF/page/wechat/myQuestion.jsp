@@ -21,6 +21,14 @@
 
 		
 		<div class="listset" id="friendslist">
+		<c:if test="${empty guideHistory }">
+			<div class="nocontents">
+						<div class="icon">
+						<i class="icon-bubble2"></i>
+						</div>
+						<div class="info">暂无需求及咨询</div>
+			</div>
+		</c:if>
 			<c:forEach items="${guideHistory }" var="history">
 			<div class="listitem clearfix">
 				<div class="avatar left">
@@ -29,18 +37,19 @@
 				<div class="contents right">
 					<div class="basicinfo">
 						<span class="nickname">${history.nickname }</span>
+						<span class="ordernum"><i class="icon-star"></i> ${history.brandName }</span>
 						<c:if test="${history.isFriend>0 }">
 							<span class="customer"><i class="icon-heart4"></i></span>
 						</c:if>
 						
 						<c:if test="${history.uncheckCount>0 }">
 						<span class="chat">
-						<a href="customerChat.html?guideId=${history.getMoreId }">新回复: ${history.uncheckCount }</a>
+						<a href="customerChat.html?guideId=${history.getMoreId }">新: ${history.uncheckCount }</a>
 						</span>
 						</c:if>
 						<c:if test="${empty history.uncheckCount||history.uncheckCount==0 }">
 						<span class="chat nonew">
-						<a href="customerChat.html?guideId=${history.getMoreId }">历史消息</a>
+						<a href="customerChat.html?guideId=${history.getMoreId }">历史</a>
 						</span>
 						</c:if>
 					</div>

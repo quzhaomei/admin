@@ -389,7 +389,8 @@ a {
   background-color: rgba(156, 10, 38, 0.85); }
 
 .olay_trans {
-  background-color: rgba(255, 255, 255, 0); }
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 10000; }
 
 h2 {
   padding: 0px;
@@ -463,6 +464,39 @@ h2 {
   border-top: 3px solid #e9ecef; }
 .bg_white .title h2 {
   border-bottom: 3px solid #e9ecef; }
+
+.nocontents {
+  text-align: center; }
+  .nocontents .icon {
+    margin-top: 35%; }
+    .nocontents .icon i {
+      background-color: #cfd9e1;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: inline-block;
+      text-align: center;
+      font-size: 50px;
+      color: white;
+      padding-top: 23px; }
+  .nocontents .info {
+    color: #a1b1bc;
+    margin-top: 20px; }
+  .chatselect .nocontents .icon, .guiderlist .nocontents .icon {
+    margin-top: 5%; }
+    .chatselect .nocontents .icon i, .guiderlist .nocontents .icon i {
+      background-color: #f3555c;
+      width: 60px;
+      height: 60px;
+      color: #ce304e;
+      font-size: 30px;
+      padding-top: 15px; }
+  .chatselect .nocontents .info, .guiderlist .nocontents .info {
+    color: #f6858a;
+    margin-bottom: 5%;
+    margin-top: 10px; }
+  .guiderlist .nocontents .info {
+    margin-bottom: 0px; }
 
 input,
 select {
@@ -964,7 +998,8 @@ button {
     left: 50%;
     height: 80px;
     width: 80px;
-    background-color: #ce304e; }
+    background-color: #ce304e;
+    z-index: 10001; }
   .popup.pop_full {
     left: 0;
     right: 0;
@@ -1302,7 +1337,7 @@ label.namecard img {
   position: relative; }
   #orderlist .submit_again {
     width: 22%;
-    margin-right: 1%;
+    margin-right: 1.5%;
     position: relative;
     display: inline-block;
     vertical-align: middle; }
@@ -1315,19 +1350,20 @@ label.namecard img {
       font-size: 12px;
       padding: 3px; }
   #orderlist .avatar {
-    width: 19%;
+    width: 20%;
     margin-right: 1%;
     position: relative;
     display: inline-block;
-    background-color: #ce304e;
     border-radius: 50%;
-    vertical-align: middle; }
-    #orderlist .avatar.pending {
-      background-color: #a1b1bc; }
+    vertical-align: middle;
+    background-color: white;
+    padding: 5px;
+    border: 2px solid #dee6eb; }
     #orderlist .avatar img {
       width: 100%;
       height: auto;
-      display: block; }
+      display: block;
+      border-radius: 50%; }
     #orderlist .avatar i {
       display: inline-block;
       position: absolute;
@@ -1343,7 +1379,7 @@ label.namecard img {
       color: white;
       line-height: 30px; }
   #orderlist .contents {
-    width: 76.8%;
+    width: 75.8%;
     display: inline-block;
     vertical-align: middle; }
   #orderlist .tabs li {
@@ -1355,6 +1391,10 @@ label.namecard img {
     font-size: 0.8em;
     margin-bottom: 2px;
     font-weight: bold; }
+    #orderlist .datetime span {
+      font-weight: normal;
+      display: inline-block;
+      margin-left: 10px; }
   #orderlist .nickname, #orderlist .reason {
     color: #ce304e;
     font-weight: bold; }
@@ -1376,10 +1416,6 @@ label.namecard img {
       margin-right: 15px; }
     #orderlist .brief strong {
       color: #434d53; }
-  #orderlist #done .avatar {
-    background-color: #24ABB5; }
-    #orderlist #done .avatar.return {
-      background-color: #a1b1bc; }
   #orderlist #cancel .contents {
     width: 73.8%; }
   #orderlist #cancel .reason {
@@ -1461,8 +1497,8 @@ label.namecard img {
   position: fixed;
   border-radius: 5px;
   background-color: white;
-  left: 15px;
-  right: 15px;
+  left: 20px;
+  right: 20px;
   bottom: 128px;
   min-height: 258px;
   z-index: 1003;
@@ -1505,7 +1541,7 @@ label.namecard img {
   height: 42px;
   text-align: center;
   position: fixed;
-  right: 5%;
+  right: 20px;
   bottom: 80px;
   padding: 8px;
   overflow: hidden;
@@ -1519,6 +1555,7 @@ label.namecard img {
 
 .bttn_c_guider {
   text-align: center;
+  z-index: 1004;
   position: fixed;
   right: 5%;
   bottom: 85px;
@@ -1542,7 +1579,8 @@ label.namecard img {
   #friendslist .customer i {
     font-size: 1.2em;
     display: inline-block;
-    color: #ce304e; }
+    color: #ce304e;
+    vertical-align: bottom; }
 
 #accountsarea {
   padding: 4%; }
@@ -1745,7 +1783,7 @@ label.namecard img {
       color: white;
       font-size: 16px;
       line-height: 22px;
-      padding: 7px 10px;
+      padding: 10px;
       max-width: 75%;
       border-radius: 5px;
       position: relative;
@@ -1755,8 +1793,7 @@ label.namecard img {
       #chatui .chatarea .bubble img {
         width: 100%;
         height: auto;
-        display: block;
-        opacity: 0; }
+        display: block; }
       #chatui .chatarea .bubble.b_left {
         background-color: #28bfca; }
         #chatui .chatarea .bubble.b_left::before {
@@ -1951,6 +1988,8 @@ label.namecard img {
 
 .chooseguider {
   padding: 0px 20px;
+  border-radius: 5px !important;
+  z-index: 1003;
   position: fixed;
   left: 5%;
   right: 5%;
@@ -2015,3 +2054,44 @@ label.namecard img {
     .chooseguider .guiderlist img {
       border-radius: 50%;
       border: 2px solid #f3555c; }
+
+#errorpage {
+  text-align: center; }
+  #errorpage.noaccess {
+    background-color: #ce304e; }
+    #errorpage.noaccess strong {
+      color: #FFD263; }
+  #errorpage .icon {
+    background-color: #f3555c;
+    display: inline-block;
+    width: 130px;
+    height: 130px;
+    margin: auto;
+    display: inline-block;
+    border-radius: 50%;
+    margin-top: 30%;
+    text-align: center;
+    padding-top: 33px;
+    margin-bottom: 25px; }
+    #errorpage .icon img {
+      width: 80px !important;
+      display: inline-block; }
+  #errorpage .warning {
+    color: white; }
+  #errorpage .redirect {
+    display: inline-block;
+    background-color: #24ABB5;
+    font-size: 12px;
+    color: white;
+    padding: 2px 10px;
+    margin-top: 20px;
+    border-radius: 15px; }
+    #errorpage .redirect span {
+      color: #FFD263;
+      font-size: 13px;
+      display: inline-block;
+      margin-left: 5px; }
+
+#nocontent {
+  text-align: center;
+  background-color: #f5f7f9; }

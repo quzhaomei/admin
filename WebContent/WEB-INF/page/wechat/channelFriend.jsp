@@ -21,6 +21,14 @@
 			</a>
 		</div>
 		<div class="listset" id="friendslist">
+		<c:if test="${empty weList }">
+			<div class="nocontents">
+						<div class="icon">
+						<i class="icon-users"></i>
+						</div>
+						<div class="info">暂无推荐好友</div>
+					</div>
+		</c:if>
 			<c:forEach items="${weList }" var="temp">
 				<div class="listitem">
 					<span class="avatar">

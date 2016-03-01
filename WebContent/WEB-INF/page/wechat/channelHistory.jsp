@@ -30,6 +30,7 @@
 					
 					<c:forEach items="${pageResult.param}" var="temp">
 					<c:if test="${empty temp.tempId }">
+					<c:set var="inprogress" value="true"> </c:set>
 					<li>
 							<div class="avatar">
 								<img src="${temp.headimgurl }" alt="">
@@ -75,11 +76,20 @@
 					</li>
 						</c:if>
 						</c:forEach>
+						<c:if test="${empty inprogress }">
+						<div class="nocontents">
+						<div class="icon">
+						<i class="icon-repeat"></i>
+						</div>
+						<div class="info">暂无推荐客户有返利</div>
+					</div>
+						</c:if>
 				</ul>
 				
 				<ul class="anime" id="done">
 				<c:forEach items="${pageResult.param}" var="temp">
 					<c:if test="${! empty temp.tempId }">
+					<c:set var="done" value="true"></c:set>
 					<li>
 							<div class="avatar">
 								<img src="${temp.headimgurl }" alt="">
@@ -113,6 +123,14 @@
 					</li>
 						</c:if>
 						</c:forEach>
+						<c:if test="${empty done }">
+							<div class="nocontents">
+						<div class="icon">
+						<i class="icon-check2"></i>
+						</div>
+						<div class="info">暂无已返佣金记录</div>
+					</div>
+						</c:if>
 					</ul>
 			</div>
 		</div>

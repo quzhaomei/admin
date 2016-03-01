@@ -78,7 +78,7 @@
 		or
 		gch.toId=#{history.fromId} and gch.fromId=#{history.toId}
 		)
-		order by gch.createDate desc
+		order by gch.createDate asc
 	</select>
 	
 	<select id="loadCountByParam" resultType="int">

@@ -7,9 +7,12 @@ Date.prototype.toString=function(){
 	var day=this.getDate();
 	var hour=this.getHours();
 	var min=this.getMinutes();
+	if(min<10){
+		min="0"+min;
+	}
 	var sec=this.getSeconds();
 	if(this>date){
-		return "今天 "+hour+":"+min;
+		return "今天 "+hour+":"+min+":"+sec;
 	}else{
 		return year+"-"+mon+"-"+day+" "+hour+":"+min;
 	}
@@ -52,15 +55,21 @@ chat.getHtml=function(content,headimgurl,time,loadTag){
 	}
 };
 //设置对话
-chat.setDialog=function(json){
+chat.setDialog=function(json,loadTag){
+	if(loadTag){
+		loadTag=false;
+	}else{
+		loadTag=true; 
+	}
+		
 	var toId=$("#toId").val();
 	$(json).each(function(){
 		if(this.fromUser.getMoreId==toId){
 			//初始化对方的
-			chat.getHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),1);
+			chat.getHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),loadTag);
 		}else{
 			//初始化自己的
-			chat.speakHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),1);
+			chat.speakHtml(this.content,this.fromUser.photo,new Date(parseInt(this.timeStamp)),loadTag);
 		}
 	});
 	
@@ -163,7 +172,7 @@ chat.showOther=function(imgPath,getMoreId,username){
 }
 
 //TODO 待编写加载已接受的
-function loadHistory(toId,pageIndex,pageSize,tempId){
+function loadHistory(toId,pageIndex,pageSize,tempId,callback){
 	
 	var param={};
 	param.toId=toId;
@@ -203,6 +212,11 @@ function loadHistory(toId,pageIndex,pageSize,tempId){
 					.html("-没有更多消息了！-");
 				}
 			}
+			
+			if(callback){//加载回调函数
+				callback();
+			}
+			
 		}
 	},"json");
 }
@@ -215,8 +229,8 @@ $("#talking-container").on("click",".loadPage",function(){
 });
 
 //加载未接受信息，以及历史信息数目
-function loadUnCheckHis(toId,callback){
-	$("#talking-container").html("");//清空
+function loadUnCheckHis(toId){
+	
 	var param={};
 	param.toId=toId;
 	$.post("loadUncheck.html",param,function(json){
@@ -224,22 +238,19 @@ function loadUnCheckHis(toId,callback){
 			alert(json.message);
 		}else if(json.status=="1"){//加载历史数据
 			//初始化
-			chat.setDialog(json.data);
-		}
-		
-		if(callback){
-			callback();
+			chat.setDialog(json.data,true);
 		}
 		
 	},"json");
 }
 
 $(function(){
-	//加载未接受历史聊天信息
-	loadUnCheckHis($("#toId").val(),function(){
-		//加载历史
-		loadHistory($("#toId").val(),1,5);
-		});
+	//加载历史
+	$("#talking-container").html("");//清空
+	loadHistory($("#toId").val(),1,5,null,function(){
+		//加载未接受历史聊天信息
+		loadUnCheckHis($("#toId").val());
+	});
 
 	
 	//发送图片
@@ -322,6 +333,7 @@ $(function(){
 						
 					});
 				}else{
+					$(".chatselect .nocontents").remove();
 					//置顶显示
 					chat.showOther(data.fromUser.imgPath,data.fromUser.getMoreId,
 							data.fromUser.username);
@@ -351,10 +363,11 @@ $(function(){
 		if(getMoreId){//进行切换
 			$("#toId").val(getMoreId);
 			//加载未接受历史聊天信息
-			loadUnCheckHis($("#toId").val(),function(){
-				//加载历史
-				loadHistory($("#toId").val(),1,5);
-				});
+			$("#talking-container").html("");//清空
+			loadHistory($("#toId").val(),1,5,null,function(){
+				//加载未接受历史聊天信息
+				loadUnCheckHis($("#toId").val());
+			});
 		}
 	});
 	

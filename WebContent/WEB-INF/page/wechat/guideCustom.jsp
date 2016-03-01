@@ -20,6 +20,14 @@
 			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心 </a>
 		</div>
 		<div class="listset" id="friendslist">
+		<c:if test="${empty guideCustom }">
+		<div class="nocontents">
+						<div class="icon">
+						<i class="icon-users"></i>
+						</div>
+						<div class="info">暂无我的客户</div>
+			</div>
+			</c:if>
 			<c:forEach items="${guideCustom }" var="custom">
 				<div class="listitem clearfix">
 				<div class="avatar left">
@@ -52,7 +60,7 @@
 					</c:if>
 						<c:if test="${custom.uncheckCount>0 }">
 							<span class="chat"><a href="guideChat.html?toId=${custom.getMoreId}">
-							新问询: ${custom.uncheckCount }
+							新: ${custom.uncheckCount }
 							</a></span>
 						</c:if>
 						<c:if test="${empty custom.uncheckCount||custom.uncheckCount==0 }">

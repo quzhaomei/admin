@@ -124,7 +124,7 @@ public class WechatController extends BaseController {
 				e1.printStackTrace();
 			}
 			try {
-				response.sendRedirect(url + "?openId=" + weUser.getOpenid());
+				response.sendRedirect(url + "?openId=" + weUser.getOpenid()+"&nickname="+weUser.getNickname());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -496,7 +496,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -845,7 +846,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role != null && !role.equals(Constant.NORMAL)) {// 如果不是普通用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -864,7 +866,16 @@ public class WechatController extends BaseController {
 		// 订单总数
 		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
 		model.addAttribute("orderCount", allOrders == null ? 0 : allOrders.size());
-		model.addAttribute("totalPay", orderService.getUserTotalPay(loginUser.getGetMoreId()));
+		List<OrderDTO> myOrders=orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
+		float totalPay=0f;
+		for(OrderDTO order:myOrders){
+			if("3".equals(order.getStatus())){
+				float rate=order.getBrand().getRate();
+				float hasPay=order.getHasPay();
+				totalPay+=rate*hasPay;
+			}
+		}
+		model.addAttribute("totalPay", totalPay);
 		
 		// 咨询数目
 		model.addAttribute("questionNum", thirdGuideService.getQuestionCountByGetMoreId(loginUser.getGetMoreId()));
@@ -893,7 +904,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -911,7 +923,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -939,7 +952,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1022,7 +1036,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1044,7 +1059,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1113,7 +1129,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || (!role.equals(Constant.NORMAL) && !role.equals(Constant.CHANNEL))) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1186,7 +1203,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1209,7 +1227,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1229,7 +1248,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1273,7 +1293,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1298,7 +1319,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1384,7 +1406,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 不是普通用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1403,7 +1426,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1423,7 +1447,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1458,7 +1483,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1519,7 +1545,8 @@ public class WechatController extends BaseController {
 
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1550,7 +1577,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1599,7 +1627,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.NORMAL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1669,7 +1698,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1853,7 +1883,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role != null && !role.equals(Constant.GUIDE)) {// 如果不是导购用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.GUIDE);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -1912,6 +1943,7 @@ public class WechatController extends BaseController {
 
 			try {
 				thirdGuideService.save(guide);
+				request.getSession().setAttribute(Constant.ROLE, Constant.GUIDE);
 				json.setStatus("1").setMessage("导购员申请成功！");
 			} catch (Exception e) {
 				json.setStatus("0").setMessage("申请失败，请稍后再试！");
@@ -1931,7 +1963,8 @@ public class WechatController extends BaseController {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role != null && !role.equals(Constant.CHANNEL)) {// 如果不是导购用户
 			try {
-				request.getRequestDispatcher("center.html").forward(request, response);
+				request.setAttribute("role", Constant.CHANNEL);
+				request.getRequestDispatcher("noaccess.html").forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -2073,5 +2106,12 @@ public class WechatController extends BaseController {
 
 	private static String create_timestamp() {
 		return Long.toString(System.currentTimeMillis() / 1000);
+	}
+	
+	//无权限界面
+	@RequestMapping(value = "/noaccess")
+	public String noaccess(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return	"wechat/noaccess/error";
+		
 	}
 }

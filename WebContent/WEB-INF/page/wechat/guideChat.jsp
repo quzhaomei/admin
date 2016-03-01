@@ -102,6 +102,12 @@
 
 
 		<div class="chatselect anime">
+		<div class="nocontents" style="display:none;">
+				<div class="icon">
+					<i class="icon-bubble2"></i>
+				</div>
+				<div class="info">暂无新消息</div>
+			</div>
 			<div class="row">
 			</div>
 
@@ -119,11 +125,19 @@
 			</div>
 			<div class="shopchoose">
 				<select name="shopchoose" id="shopchoose">
-					<option value="0">当前导购所属店铺名</option>
+					<option value="0">选择导购所属店铺名</option>
 				</select>
 			</div>
 
 			<div class="guiderlist">
+			
+			<div class="nocontents" style="display:none;">
+					<div class="icon">
+						<i class="icon-users"></i>
+					</div>
+					<div class="info">该店铺下暂无导购</div>
+				</div>
+			
 				<div class="row">
 				<!--  <div class="col-3">
 					<a href="#" id="uid_18763">
@@ -197,14 +211,14 @@
 		});
 		
 		$('.morechat').on('click', '', function(event) {
-			var number=$(this).find("span.number_chat").text();
-			if(number&&number.match(/^\d+$/)){
-				number=parseInt(number, "10");
-				if(number>0){//如果有，则显示
-				event.preventDefault();
-				$('.chatselect').toggleClass('shown');
+			var number=$(this).find("span.number_chat")[0];
+				if(!number){//如果有，则显示
+					$(".chatselect .nocontents").show();
+				}else{
+					$(".chatselect .nocontents").remove();
 				}
-			}
+				$('.chatselect').toggleClass('shown');
+				event.preventDefault();
 		});
 
 		$('.chatselect').on('click', '.close', function(event) {
@@ -226,6 +240,7 @@
 		var storeName;
 		
 		bttnGuider.on('click', '', function(event) {
+			$('.overlay').removeClass('hide');
 			event.preventDefault();
 			//后台调取所有该品牌下的所有店铺
 			$.post("guideShop.html",function(json){
@@ -266,7 +281,9 @@
 							}
 						});
 						if(!has){
-							$(".guiderlist .row").append("该品牌无其他导购");
+							$(".guiderlist .nocontents").show();
+						}else{
+							$(".guiderlist .nocontents").hide();
 						}
 					}
 				},"json");
@@ -277,6 +294,7 @@
 		guiderChoose.on('click', '.close', function(event) {
 			event.preventDefault();
 			guiderChoose.removeClass('shown');
+			$('.overlay').addClass('hide');
 		});
 			
 		guiderList.on('click', 'a', function(event) {

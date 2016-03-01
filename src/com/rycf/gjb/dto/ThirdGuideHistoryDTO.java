@@ -12,11 +12,18 @@ public class ThirdGuideHistoryDTO {
 	private String headimgurl;
 	
 	private Date lastTime;
-	
+	private String brandName;
 	private int isFriend;
 	
 	private Integer uncheckCount;
 	
+	
+	public String getBrandName() {
+		return brandName;
+	}
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
 	public Date getLastTime() {
 		return lastTime;
 	}

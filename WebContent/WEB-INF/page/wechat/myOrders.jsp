@@ -28,6 +28,7 @@
 				<ul class="anime active" id="inprogress">
 				 <c:forEach items="${orders }" var="order" varStatus="status">
 				 <c:if test="${order.status=='0'||order.status=='1'||order.status=='2'||order.status=='2.5' }">
+					 <c:set var="active" value="true"></c:set>
 					<li>
 							<div class="avatar">
 								<img src="${order.brand.imgPath }">
@@ -55,6 +56,14 @@
 					</li>
 					</c:if>
 				 </c:forEach>
+				 <c:if test="${empty active }">
+				 	<div class="nocontents">
+							<div class="icon">
+							<i class="icon-repeat"></i>
+							</div>
+							<div class="info">暂无返利中的订单</div>
+						</div>
+				 </c:if>
 					<!--  li>
 							<div class="avatar">
 								<img src="images/placeholder.png">
@@ -140,9 +149,10 @@
 				<ul class="anime" id="done">
 				 <c:forEach items="${orders }" var="order" varStatus="status">
 				 <c:if test="${order.status=='3'||order.status=='6' }">
+				 <c:set var="done" value="true"></c:set>
 				 	<li>
 							<div class="avatar">
-								<img src="images/avatar2.jpg" alt="">
+								<img src="${order.brand.imgPath }">
 							</div>
 							<div class="contents">
 								<div class="datetime">
@@ -169,6 +179,14 @@
 					</li>
 				 </c:if>
 				 </c:forEach>
+				  <c:if test="${empty done }">
+				 	<div class="nocontents">
+							<div class="icon">
+							<i class="icon-check2"></i>
+							</div>
+							<div class="info">暂无已完成的订单</div>
+						</div>
+				 </c:if>
 					<!--  li>
 						
 							<div class="avatar">
@@ -210,6 +228,7 @@
 					<ul class="anime" id="cancel">
 					 <c:forEach items="${orders }" var="order" varStatus="status">
 				 <c:if test="${order.status=='4'}">
+				 <c:set var="cancel" value="true"></c:set>
 				 	<li>
 							<div class="submit_again">
 								<a href="order_submit.html">重新提交</a>
@@ -217,6 +236,7 @@
 							<div class="contents">
 								<div class="datetime">
 									<fmt:formatDate value="${order.createDate }" pattern="yyyy年	MM月dd日"/>
+									<span class="brand"><i class="icon-star"></i> ${order.brand.brandName }</span>
 								</div>
 								
 								<div class="reason">
@@ -233,6 +253,14 @@
 					</li>
 				 </c:if>
 				 </c:forEach>
+				  <c:if test="${empty cancel }">
+				 	<div class="nocontents">
+							<div class="icon">
+							<i class="icon-file-add"></i>
+							</div>
+							<div class="info">暂无无效的订单</div>
+						</div>
+				 </c:if>
 				 
 					
 					<!-- li>

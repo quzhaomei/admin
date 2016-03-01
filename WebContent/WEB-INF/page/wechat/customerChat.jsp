@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
@@ -73,6 +74,13 @@
 
 
 		<div class="chatselect anime">
+		<div class="nocontents" style="display:none;">
+				<div class="icon">
+					<i class="icon-bubble2"></i>
+				</div>
+				<div class="info">暂无新消息</div>
+			</div>
+			
 			<div class="row">
 			</div>
 
@@ -115,14 +123,14 @@
 		});
 		
 		$('.morechat').on('click', '', function(event) {
-			var number=$(this).find("span.number_chat").text();
-			if(number&&number.match(/^\d+$/)){
-				number=parseInt(number, "10");
-				if(number>0){//如果有，则显示
-				event.preventDefault();
-				$('.chatselect').toggleClass('shown');
-				}
+			var number=$(this).find("span.number_chat")[0];
+			if(!number){//如果有，则显示
+				$(".nocontents").show();
+			}else{
+				$(".nocontents").remove();
 			}
+			$('.chatselect').toggleClass('shown');
+			event.preventDefault();
 		});
 
 		$('.chatselect').on('click', '.close', function(event) {

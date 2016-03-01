@@ -92,8 +92,8 @@
 				<a href="myQuestion.html"><i class="icon-bubble2"></i> 
 				需求及咨询 
 				<c:choose>
-					<c:when test="${questionNum==0 }">
-					<span class="label">${talkNum}</span>
+					<c:when test="${questionNum==0 || empty questionNum}">
+					<span class="label">${questionNum}</span>
 					</c:when>
 					<c:otherwise>
 					<span class="label label_red">${questionNum}</span>
