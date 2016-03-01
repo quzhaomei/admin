@@ -335,10 +335,22 @@ a {
   .topbar.navback a {
     font-size: 0.9em;
     display: inline-block;
+    width: 84%;
     vertical-align: middle;
     height: 26px;
     line-height: 26px;
     box-sizing: border-box; }
+  .topbar.navback .getlogo {
+    display: inline-block;
+    width: 15%;
+    float: right; }
+    .topbar.navback .getlogo a {
+      display: block;
+      width: 100%;
+      text-align: right; }
+      .topbar.navback .getlogo a img {
+        height: 26px;
+        width: auto; }
   .topbar .centertitle {
     display: block;
     position: absolute;
@@ -2095,3 +2107,55 @@ label.namecard img {
 #nocontent {
   text-align: center;
   background-color: #f5f7f9; }
+
+#welcome {
+  background-color: #24ABB5;
+  background-image: url("../images/welcomebg.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto; }
+  #welcome .main {
+    position: absolute;
+    top: 25%;
+    left: 0%;
+    right: 0px;
+    text-align: center; }
+  #welcome .icons {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: auto; }
+  #welcome .sec {
+    position: absolute;
+    transform: scale(0.6);
+    top: 55%;
+    left: 0%;
+    right: 45%;
+    text-align: center; }
+  #welcome .thi {
+    position: absolute;
+    transform: scale(0.6);
+    top: 55%;
+    right: 0%;
+    left: 45%;
+    text-align: center; }
+  #welcome .iconcustomer {
+    background-color: #FFD263;
+    padding: 20px;
+    padding-top: 30px; }
+  #welcome .iconguide {
+    background-color: #9F6DBF; }
+    #welcome .iconguide img {
+      border-radius: 50%; }
+  #welcome .icondistributor {
+    background-color: transparent; }
+    #welcome .icondistributor img {
+      border-radius: 50%; }
+  #welcome .apply {
+    display: block;
+    text-align: center;
+    text-align: center;
+    margin-top: 15px; }
+    #welcome .apply a {
+      color: white;
+      font-size: 20px; }

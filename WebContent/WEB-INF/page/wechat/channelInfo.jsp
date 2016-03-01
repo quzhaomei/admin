@@ -18,6 +18,7 @@
 	
 		<div class="topbar bar_red navback">
 			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  </a>
+			<div class="getlogo"><a href="http://guide.51getmore.cn"><img src="images/cathead.svg"></a></div>
 		</div>
 
 		<div class="title tcenter"><h2>基本信息</h2></div>

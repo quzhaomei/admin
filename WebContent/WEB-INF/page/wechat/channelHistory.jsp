@@ -16,7 +16,7 @@
 <body class="bg_white with_topbar">
 		<div class="topbar bar_red navback">
 			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心
-			 <div class="avatar sm"><img src="${user.photo } " alt=""></div></a>
+			<div class="getlogo"><a href="http://guide.51getmore.cn"><img src="images/cathead.svg"></a></div>
 		</div>
 		<div id="rebateslist" class="wrap">
 			<div class="tabs">

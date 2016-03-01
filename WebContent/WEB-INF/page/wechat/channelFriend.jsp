@@ -17,7 +17,7 @@
 	
 		<div class="topbar bar_red navback">
 			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  
-			<div class="avatar sm"><img src="${wechat.headimgurl } " alt=""></div>
+			<div class="getlogo"><a href="http://guide.51getmore.cn"><img src="images/cathead.svg"></a></div>
 			</a>
 		</div>
 		<div class="listset" id="friendslist">
