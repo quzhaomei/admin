@@ -213,10 +213,9 @@ function loadHistory(toId,pageIndex,pageSize,tempId,callback){
 				}
 			}
 			
-			if(callback){//加载回调函数
-				callback();
-			}
-			
+		}
+		if(callback){//加载回调函数
+			callback();
 		}
 	},"json");
 }

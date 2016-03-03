@@ -171,7 +171,7 @@
 <script src="../js/socket/socket.io-1.3.4.js"></script>
 <script src="../js/socket/p-talk.js"></script>
 <script src="js/main.js"></script>
-<script src="js/we_chat.js"></script>
+<script src="js/we_chat.js?v=1"></script>
  <!-- 微信sdk -->
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" charset="utf-8"></script>
 <script>

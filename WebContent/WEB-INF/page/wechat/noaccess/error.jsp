@@ -22,10 +22,10 @@
 			您不是<strong>
 			<c:choose>
 				<c:when test="${role=='normal' }">
-					导购员
+					普通用户
 				</c:when>
 				<c:when test="${role=='guide' }">
-					导购
+					导购员
 				</c:when>
 				<c:when test="${role=='channel' }">
 					渠道商

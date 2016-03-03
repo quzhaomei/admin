@@ -95,7 +95,7 @@
 <script src="../js/socket/socket.io-1.3.4.js"></script>
 <script src="../js/socket/p-talk.js"></script>
 <script src="js/main.js"></script>
-<script src="js/we_chat.js"></script>
+<script src="js/we_chat.js?v=1"></script>
 <script>
 	$(document).ready(function() {
 		

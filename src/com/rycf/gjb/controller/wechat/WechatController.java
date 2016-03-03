@@ -1595,7 +1595,8 @@ public class WechatController extends BaseController {
 		}
 		return "json";
 	}
-	//
+	//凯特猫导购
+	private String getMoreGuideId="2";
 	private String chosenGuide(String brandName){
 		ThirdGuide guide=new ThirdGuide();
 		guide.setBrandName(brandName);
@@ -1617,8 +1618,9 @@ public class WechatController extends BaseController {
 			}else{
 				return guides.get(new Random().nextInt(guides.size())).getGuideId()+"";
 			}
+		}else{
+			return getMoreGuideId;
 		}
-		return null;
 	}
 	// 客户对话页面
 	@RequestMapping(value = "/customerChat")

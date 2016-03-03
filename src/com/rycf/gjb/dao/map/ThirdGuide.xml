@@ -229,8 +229,9 @@
 		select gu.getMoreId ,gu.userName nickname,gu.photo headimgurl,
 			(select count(*)
 			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
-			and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId and gch.status=0
-			group by gch.fromId) uncheckCount,
+			 where gch.fromId=gu.getMoreId and gch.status=0
+			and tg.guideId=#{guideId}
+			) uncheckCount,
 			(select  max(gch.createDate)
 			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
 			and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId 
@@ -253,7 +254,7 @@
 		(select count(*) from fur_order fo where fo.getMoreId=wu.getMoreId) orderCount,
 		(select sum(fo.hasPay) from fur_order fo where fo.getMoreId=wu.getMoreId) totalPay,
 		(SELECT count(*) FROM guide_chat_history gch WHERE gch.fromId=wu.getMoreId 
-		and gch.toId=tg.getMoreId and gch.status=0 group by fromId) uncheckCount,
+		and gch.toId=tg.getMoreId and gch.status=0 ) uncheckCount,
 		(SELECT max(gc.createDate) from guide_chat_history gc WHERE gc.toId=wu.getMoreId) newDate
 		from wechat_user wu 
 		left join getmore_user gu on gu.getMoreId=wu.getMoreId
