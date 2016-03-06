@@ -234,8 +234,10 @@
 			) uncheckCount,
 			(select  max(gch.createDate)
 			from guide_chat_history gch left join third_guide tg on gch.toId=tg.getMoreId
-			and tg.guideId=#{guideId} where gch.fromId=gu.getMoreId 
-			group by gch.fromId) lastTime,
+			left join third_guide tgc on tgc.getMoreId=gch.fromId
+			where (tg.guideId=#{guideId} and gch.fromId=gu.getMoreId )
+			or (gch.toId=gu.getMoreId and tgc.guideId=#{guideId})
+			) lastTime,
 			(select count(*)
 			from user_to_guide utg where utg.guideId=#{guideId} and utg.getMoreId=gu.getMoreId) isFriend
 			from 

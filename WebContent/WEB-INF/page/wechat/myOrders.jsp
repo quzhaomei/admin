@@ -232,7 +232,7 @@
 				 <c:set var="cancel" value="true"></c:set>
 				 	<li>
 							<div class="submit_again">
-								<a href="order_submit.html">重新提交</a>
+								<a href="toOrder.html">重新提交</a>
 							</div>
 							<div class="contents">
 								<div class="datetime">

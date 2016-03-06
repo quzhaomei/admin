@@ -90,12 +90,12 @@
 		
 		
 	</div>
-	<c:if test="${count==0 }">
+	<c:if test="${count_==0 }">
 		<div class="bottombar bg_grayl">
 			<button type="button" guideId="${guide.guideId }" class="addguider bttn_full">确认添加TA为我的导购</button>
 		</div>
 	</c:if>
-	<c:if test="${count>0 ">
+	<c:if test="${count_>0}" >
 		<div class="bottombar bg_grayl">
 			<button type="button" guideId="${guide.guideId }" class="toguider bttn_full">联系该导购</button>
 		</div>
@@ -124,7 +124,7 @@ $(function(){
 		},"json");
 	});
 	
-	$(".toguider").on(function(){
+	$(".toguider").on("click",function(){
 		var guideId=$(this).attr("guideId");
 		window.location.href="customerChat.html?guideId="+guideId;
 	});

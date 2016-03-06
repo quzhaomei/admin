@@ -57,7 +57,7 @@
 						<span class="lasttime">
 							<c:if test="${not empty history.lastTime}">
 							<i class="icon-clock4"></i> 最近更新:
-							<fmt:formatDate value="${history.lastTime }" pattern="YYYY-MM-dd hh:mm"/>
+							<fmt:formatDate value="${history.lastTime }" pattern="YYYY-MM-dd HH:mm"/>
 							</c:if>
 						</span>
 					</div>

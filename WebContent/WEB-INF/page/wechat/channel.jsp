@@ -67,26 +67,12 @@
 			</div>
 			<div class="listitem">
 				<a href="${channel.status==1?'channelHistory.html':'#' }"><i class="icon-wallet"></i> 佣金记录 
-				<c:choose>
-					<c:when test="${total==0 }">
 						<span class="label label_gray">${total }</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${total }</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 				<div class="listitem">
 				<a href="${channel.status==1?'channelFriend.html':'#' }"><i class="icon-users"></i> 我的推荐好友 
-				<c:choose>
-					<c:when test="${count==0 }">
 						<span class="label label_gray">${count }</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${count }</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 
@@ -106,14 +92,7 @@
 			<div class="listitem">
 				<a href="channelAccount.html"><i class="icon-credit-card"></i> 
 				我的账号 
-				<c:choose>
-					<c:when test="${accounts==0 }">
 						<span class="label label_gray">${accounts }</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${accounts }</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 			<!--  <div class="listitem">

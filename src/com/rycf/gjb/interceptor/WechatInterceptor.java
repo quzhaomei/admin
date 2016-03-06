@@ -61,12 +61,14 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
 		if (guide != null) {
 			request.getSession().setAttribute(Constant.ROLE, Constant.GUIDE);
+			request.getSession().setAttribute(Constant.STATUS, guide.getStatus());
 			return;
 		}
 
 		// 渠道商
 		ThirdChannelDTO channel = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		if (channel != null) {
+			request.getSession().setAttribute(Constant.STATUS,  channel.getStatus());
 			request.getSession().setAttribute(Constant.ROLE, Constant.CHANNEL);
 		}
 	}
@@ -83,7 +85,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 			String code = request.getParameter("code");
 
 			// 测试
-			boolean test = false;
+			boolean test = true;
 			String getmoreId = request.getParameter("getId");
 			if (loginUser == null && test && getmoreId != null && getmoreId.matches("\\d+")) {
 				loginUser = getMoreUserService.getUserById(Integer.parseInt(getmoreId));

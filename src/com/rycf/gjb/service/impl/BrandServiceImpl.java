@@ -92,5 +92,9 @@ public class BrandServiceImpl implements BrandService {
 	public List<BrandDTO> getBrandByUserId(String userId) {
 		return brandDao.getBrandByUserId(userId);
 	}
+	@Override
+	public List<BrandDTO> getBrandList(Brand brand) {
+		return brandDao.getBrandList(brand);
+	}
 
 }

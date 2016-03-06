@@ -27,7 +27,7 @@
 </head>
 <body class="bg_white with_topbar">
 	<input type="hidden" id="imgUrl" value="${imgUrl }"/>
-
+	
 	<input type="hidden" id="toId" value="${toUser.getMoreId }"/>
 	<input type="hidden" id="pageSize" value="${pageSize }"/>
 	<input type="hidden" id="pageIndex" value="${pageIndex }"/>
@@ -41,7 +41,11 @@
 					<a href="http://${backUrl }"><i class="icon-cross"></i></a>
 				</c:otherwise>
 			</c:choose>
-			<div class="centertitle">导购 :: ${toguide.name}</div>
+			<div class="centertitle">
+			<c:if test="${check==0 }">
+			 <button class="addGuideBtn" href="getGuide.html?guideId=${toguide.guideId }"><i class="icon-plus"></i>添加为我的导购</button>
+			</c:if>
+			 </div>
 			<div class="rightele">
 				<i class="icon-users withlabel morechat">
 					<!-- <span class="number_chat"></span> -->
@@ -61,7 +65,10 @@
 		<div class="tools">
 			<div class="input">
 				<form action="#" id="talkform">
-					<input type="text" style="width:100%;" id="talk-content" maxlength="200" name="words"> 
+					<input type="text" id="talk-content" maxlength="200" name="words"> 
+					<button type="submit">
+						发送
+					</button>
 				</form>
 				
 
@@ -95,7 +102,7 @@
 <script src="../js/socket/socket.io-1.3.4.js"></script>
 <script src="../js/socket/p-talk.js"></script>
 <script src="js/main.js"></script>
-<script src="js/we_chat.js?v=1"></script>
+<script src="js/we_chat.js?v=2"></script>
 <script>
 	$(document).ready(function() {
 		
@@ -143,6 +150,24 @@
 
 			setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
 		}
+		
+		//导购头像跳转
+		$("#talking-container").on("click",".speakPhoto",function(){
+			var toId=$("#toId").val();
+			var param={};
+			param.userId=toId;
+			$.post("getGuideByUserId.html",param,function(json){
+				if(json.status==1){
+					window.location.href="getGuide.html?guideId="+json.data;
+				}
+			},"json")
+		});
+		$(".addGuideBtn").on("click",function(){
+			var href=$(this).attr("href");
+			if(href){
+				window.location.href=href;
+			}
+		});
 		
 	});	
 </script>

@@ -12,4 +12,5 @@ public interface BrandService {
 	void saveBrand(Brand brand);
 	void updateBrand(Brand brand);
 	List<BrandDTO> getBrandByUserId(String userId);
+	List<BrandDTO> getBrandList(Brand brand);
 }

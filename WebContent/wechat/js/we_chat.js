@@ -45,7 +45,7 @@ chat.getHtml=function(content,headimgurl,time,loadTag){
 	var $html=$("<span>").addClass("bubble b_left").html(content);
 	
 	var $li=$("<li>");
-	$li.append($("<span>").addClass("avatar").append($("<img>").attr("src",headimgurl)));
+	$li.append($("<span>").addClass("avatar speakPhoto").append($("<img>").attr("src",headimgurl)));
 	$li.append($html);
 	$li.append($("<div>").addClass("datetime").text(time));
 	if(loadTag){
@@ -228,7 +228,7 @@ $("#talking-container").on("click",".loadPage",function(){
 });
 
 //加载未接受信息，以及历史信息数目
-function loadUnCheckHis(toId){
+function loadUnCheckHis(toId,fn){
 	
 	var param={};
 	param.toId=toId;
@@ -239,6 +239,10 @@ function loadUnCheckHis(toId){
 			//初始化
 			chat.setDialog(json.data,true);
 		}
+		//执行回调函数
+		if(fn){
+			fn();
+		}
 		
 	},"json");
 }
@@ -248,7 +252,15 @@ $(function(){
 	$("#talking-container").html("");//清空
 	loadHistory($("#toId").val(),1,5,null,function(){
 		//加载未接受历史聊天信息
-		loadUnCheckHis($("#toId").val());
+		loadUnCheckHis($("#toId").val(),function(){
+			//客户发送导购图片
+			if($("#imgUrl").val()){
+				chat.sendHtml("<img src='"+$("#imgUrl").val()+"'/>",$("#imgUrl"));
+			}
+		});
+		
+		
+		
 	});
 
 	
@@ -287,11 +299,7 @@ $(function(){
 			});
 		
 	});
-	//客户发送导购图片
 	
-	if($("#imgUrl").val()){
-		chat.sendHtml("<img src='"+$("#imgUrl").val()+"'/>",$("#imgUrl"));
-	}
 	
 	//发送名片
 	$(".add_namecard").on("click",function(){

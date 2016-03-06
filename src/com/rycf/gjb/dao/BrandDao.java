@@ -14,4 +14,6 @@ public interface BrandDao {
 	List<BrandDTO> getBrandByUserId(@Param(value="userId")String userId);
 	void saveBrand(@Param(value="brand")Brand brand);
 	void updateBrand(@Param(value="brand")Brand brand);
+	
+	List<BrandDTO> getBrandList(@Param(value="brand")Brand brand);
 }

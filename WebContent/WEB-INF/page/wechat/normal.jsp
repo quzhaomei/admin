@@ -52,14 +52,7 @@
 			</div>
 			<div class="listitem arrowright">
 				<a href="myOrders.html"><i class="icon-wallet"></i> 返利订单记录 
-				<c:choose>
-					<c:when test="${orderCount==0 }">
 					<span class="label">${orderCount}</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${orderCount}</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 		
@@ -76,29 +69,14 @@
 			
 			<div class="listitem arrowright">
 				<a href="myGuide.html"><i class="icon-users"></i> 我的导购 
-				<c:choose>
-					<c:when test="${guides==0 }">
 					<span class="label">${guides}</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${guides}</span>
-					</c:otherwise>
-				</c:choose>
-				
 				</a>
 			</div>
 
 			<div class="listitem arrowright">
 				<a href="myQuestion.html"><i class="icon-bubble2"></i> 
 				需求及咨询 
-				<c:choose>
-					<c:when test="${questionNum==0 || empty questionNum}">
 					<span class="label">${questionNum}</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${questionNum}</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 			<!--  
@@ -122,14 +100,7 @@
 			</div>
 			<div class="listitem arrowright">
 				<a href="channelAccount.html"><i class="icon-credit-card"></i> 我的账号 
-				<c:choose>
-					<c:when test="${cards==0 }">
 					<span class="label">${cards}</span>
-					</c:when>
-					<c:otherwise>
-					<span class="label label_red">${cards}</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 		<!--  	<div class="listitem arrowright">

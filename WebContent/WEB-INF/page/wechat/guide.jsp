@@ -56,18 +56,22 @@
 				门店 <span>${guide.store.storeName }</span>
 			</div>
 		</div>
-		
+		<c:if test="${guide.status==0 }">
+			<div class="verifying">
+			<div class="icon">
+				<img src="images/cathead_gray.svg" alt="">
+			</div>
+			
+			<div class="info">
+				身份审核中 请稍后再试
+			</div>
+		</div>
+		</c:if>
+		<c:if test="${guide.status==1 }">
 		<div class="listset">
 			<div class="listitem arrowright">
 				<a href="${guide.status==1?'guideHistory.html':'#' }"><i class="icon-wallet"></i> 导购记录 
-				<c:choose>
-					<c:when test="${talkNum==0 }">
 						<span class="label">${talkNum }</span>
-					</c:when>
-					<c:otherwise>
-						<span class="label label_red">${talkNum }</span>
-					</c:otherwise>
-				</c:choose>
 				</a>
 			</div>
 			<div class="listitem arrowright">
@@ -99,6 +103,7 @@
 				<a href="guideInfo.html"><i class="icon-v-card"></i> 个人资料  <span class="info">信息更改后将重新审核</span></a>
 			</div>
 		</div>
+		</c:if>
 
 
 	</div>

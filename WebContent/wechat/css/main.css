@@ -359,7 +359,27 @@ a {
     text-align: center;
     right: 40px;
     bottom: 0px;
-    padding: 10px; }
+    padding: 10px;
+    font-size: 13px;
+    line-height: 16px; }
+    .topbar .centertitle button {
+      border: 0px;
+      padding: 4px 5px;
+      padding-right: 7px;
+      height: 24px;
+      border-radius: 30px;
+      margin-top: 1px; }
+      .topbar .centertitle button i {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 5px;
+        height: 16px;
+        width: 16px;
+        line-height: 16px;
+        text-align: center;
+        background-color: #ce304e;
+        border-radius: 50%;
+        font-size: 12px; }
   .topbar .rightele {
     display: inline-block;
     position: absolute;
@@ -1733,12 +1753,12 @@ label.namecard img {
   border: 5px solid #bfcdd7; }
 
 .guider .mis_info .brand {
-  width: 30%;
+  width: 36%;
   background-image: url(../images/dotline_gray_v.png);
   background-position: right;
   background-repeat: repeat-y; }
 .guider .mis_info .shop {
-  width: 68%; }
+  width: 62%; }
 .guider .mis_info span {
   font-size: 1.1em; }
 
@@ -1844,7 +1864,7 @@ label.namecard img {
       padding: 15px; }
     #chatui .tools input {
       display: inline-block !important;
-      width: 86%;
+      width: 68%;
       border: 1px solid #EEEBEC;
       font-size: 16px;
       line-height: 16px;
@@ -1856,6 +1876,15 @@ label.namecard img {
       -webkit-box-shadow: inset 0px 1px 1px 0px rgba(51, 49, 47, 0.1);
       -moz-box-shadow: inset 0px 1px 1px 0px rgba(51, 49, 47, 0.1);
       box-shadow: inset 0px 1px 1px 0px rgba(51, 49, 47, 0.1); }
+    #chatui .tools button {
+      width: 14%;
+      font-size: 12px;
+      font-weight: normal;
+      padding: 2px;
+      height: 32px;
+      margin-top: 5px;
+      margin-left: 5px;
+      float: right; }
     #chatui .tools i {
       color: #cfd9e1;
       display: inline-block;
@@ -2103,6 +2132,14 @@ label.namecard img {
       font-size: 13px;
       display: inline-block;
       margin-left: 5px; }
+  #errorpage.gray {
+    background-color: #bfcdd7; }
+    #errorpage.gray .icon {
+      background-color: #dee6eb; }
+    #errorpage.gray .redirect {
+      background-color: #5b7585; }
+    #errorpage.gray .warning {
+      color: #475a66; }
 
 #nocontent {
   text-align: center;
@@ -2159,3 +2196,22 @@ label.namecard img {
     #welcome .apply a {
       color: white;
       font-size: 20px; }
+
+.verifying {
+  text-align: center;
+  margin-top: 15%; }
+  .verifying .icon {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    padding-top: 25px;
+    background-color: #eef2f4;
+    border-radius: 50%; }
+  .verifying img {
+    width: 100%;
+    opacity: 0.6; }
+  .verifying .info {
+    color: #a1b1bc;
+    font-size: 14px;
+    margin-top: 16px; }

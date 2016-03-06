@@ -14,7 +14,7 @@ public class Constant {
 	public static final String NORMAL="normal";//普通用户
 	public static final String GUIDE="guide";//导购
 	public static final String CHANNEL="channel";//渠道商
-	
+	public static final String STATUS="roleStatus";
 	/**
 	 * 用户登录产生session,保存session名称
 	 */

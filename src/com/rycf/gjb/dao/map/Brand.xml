@@ -72,6 +72,17 @@
 		select brandId,brandName,proImgs,introduce,imgPath,scanNum,status,indexWord,rate,brandRate,pinying,brandTypeIds from brand 
 		order by pinying asc; 
 	</select>
+	<select id="getBrandList" resultMap="brandDTO" useCache="true">
+		select brandId,brandName,proImgs,introduce,imgPath,scanNum,status,indexWord,rate,brandRate,
+		pinying,brandTypeIds 
+		
+		from brand 
+		where 1=1
+		<if test="brand.status!=null">
+		and status=#{brand.status} 
+		</if>
+		order by pinying asc; 
+	</select>
 	<select id="getBrandByUserId" resultMap="brandDTO" useCache="false">
 		select b.brandId,b.brandName,b.proImgs,b.introduce,b.imgPath,b.status,b.indexWord,scanNum,
 		b.rate,b.brandRate,b.pinying,b.brandTypeIds

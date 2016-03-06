@@ -68,7 +68,7 @@ var menuHtml=[
 						'</a>',
 					'</div>',
 					'<div class="col-4">',
-						'<a href="http://guide.51getmore.cn/articles/">',
+						'<a href="http://guide.51getmore.cn/columns/">',
 						'<i class="icon-stack-2"></i>',
 						'<span>家装专栏</span>',
 						'</a>',

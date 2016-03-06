@@ -33,7 +33,7 @@
 			<c:forEach items="${guideHistory }" var="history">
 			<div class="listitem clearfix">
 				<div class="avatar left">
-					<a href="guideChat.html?toId=${history.getMoreId }"><img src="${history.headimgurl }"></a>
+					<a href="customerChat.html?guideId=${history.getMoreId }"><img src="${history.headimgurl }"></a>
 				</div>
 				<div class="contents right">
 					<div class="basicinfo">

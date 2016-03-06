@@ -28,7 +28,7 @@
 	<input type="hidden" id="totalPage" value="${totalPage }"/>
 		<div class="topbar bar_red navback">
 			<a href="center.html"><i class="icon-cross"></i></a>
-			<div class="centertitle">导购 :: ${toUser.userName }</div>
+			<div class="centertitle"><!-- 导购 :: ${toUser.userName } --></div>
 			<div class="rightele">
 				<i class="icon-users withlabel morechat">
 					<!-- <span class="number_chat"></span> -->
@@ -44,6 +44,9 @@
 				<form action="#" id="talkform">
 					<input type="text" id="talk-content" maxlength="200" name="words"> 
 					<i class="icon-circle-plus"></i>
+					<button type="submit">
+						发送
+					</button>
 				</form>
 			</div>
 			<div class="toolbox grid-container hide">
@@ -123,9 +126,9 @@
 			<div class="title">
 				选择其他导购
 			</div>
-			<div class="shopchoose">
+			<div class="shopchoose" id="shopContainer">
 				<select name="shopchoose" id="shopchoose">
-					<option value="0">选择导购所属店铺名</option>
+					<option value="0">请输入导购所属店铺名</option>
 				</select>
 			</div>
 
@@ -245,16 +248,46 @@
 			//后台调取所有该品牌下的所有店铺
 			$.post("guideShop.html",function(json){
 				if(json.status=="1"){
-				$("#shopchoose")[0].options.length=1;
-				$(json.data).each(function(){
-					$("#shopchoose")[0].options.add(new Option(this.storeName,this.storeId));
-				});
+					$("#shopchoose")[0].options.length=0;
+					$("#shopchoose")[0].options.add(new Option("选择导购所属店铺名",0));
+					$(json.data).each(function(){
+						$("#shopchoose")[0].options.add(new Option(this.storeName,this.storeId));
+					});
+				}else if(json.status=="2"){//初始化品牌
+					if(!$("#brandchoose")[0]){
+						$("div #shopchoose").before('<select name="brandchoose" id="brandchoose"></select>');
+					}
+					$("#shopchoose")[0].options.length=1;
+					$("#brandchoose")[0].options.length=0;
+					$("#brandchoose")[0].options.add(new Option("选择导购所属品牌",0));
+					$(json.data).each(function(){
+						$("#brandchoose")[0].options.add(new Option(this.brandName,this.brandId));
+					});
+				}
 					guiderChoose.addClass('shown');
 					chatselect.removeClass('shown');
-				}
 			},"json");
 		});
-
+		//选择品牌
+		$(".chooseguider").on("change","#brandchoose",function(){
+			$("#shopchoose")[0].options.length=1;
+			var value=this.value;
+			if(value!=0){
+				$.post("guideShop.html",{"brandId":value},function(json){
+					if(json.status=="1"){
+						$("#shopchoose")[0].options.length=0;
+						$("#shopchoose")[0].options.add(new Option("选择导购所属店铺名",0));
+						$(json.data).each(function(){
+							$("#shopchoose")[0].options.add(new Option(this.storeName,this.storeId));
+						});
+					}
+						guiderChoose.addClass('shown');
+						chatselect.removeClass('shown');
+				},"json");
+			}
+			
+		});
+		
 		//选择店铺
 		$("#shopchoose").on("change",function(){
 			var storeId=this.value;
