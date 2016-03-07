@@ -27,7 +27,10 @@ public interface ThirdGuideService {
 	
 	int getTalkCountByGetMoreId( Integer getMoreId);
 	
+	int getUncheckTalkCountByGetMoreId( Integer getMoreId);
+	
 	int getQuestionCountByGetMoreId( Integer getMoreId);
+	int getUncheckQuestionCountByGetMoreId( Integer getMoreId);
 	
 	int check(Integer getMoreId,Integer guideId);
 	

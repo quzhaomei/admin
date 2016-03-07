@@ -118,4 +118,14 @@ public class ThirdGuideServiceImpl implements ThirdGuideService {
 		return guideDao.getHistoryGetMoreId(getMoreId);
 	}
 
+	@Override
+	public int getUncheckTalkCountByGetMoreId(Integer getMoreId) {
+		return guideDao.getUncheckTalkCountByGetMoreId(getMoreId);
+	}
+
+	@Override
+	public int getUncheckQuestionCountByGetMoreId(Integer getMoreId) {
+		return guideDao.getUncheckQuestionCountByGetMoreId(getMoreId);
+	}
+
 }

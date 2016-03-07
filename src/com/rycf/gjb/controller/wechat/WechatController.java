@@ -878,6 +878,7 @@ public class WechatController extends BaseController {
 		
 		// 咨询数目
 		model.addAttribute("questionNum", thirdGuideService.getQuestionCountByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("uncheckQuestionNum", thirdGuideService.getUncheckQuestionCountByGetMoreId(loginUser.getGetMoreId()));
 				
 		// 我的导购
 		List<ThirdGuideDTO> guides = thirdGuideService.getGuideByUserId(loginUser.getGetMoreId());
@@ -958,7 +959,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {
@@ -1217,7 +1218,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {
@@ -1249,7 +1250,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {
@@ -1269,7 +1270,6 @@ public class WechatController extends BaseController {
 	@RequestMapping(value = "/getCode")
 	public void getCode(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
-		Integer status = (Integer) request.getSession().getAttribute(Constant.STATUS);
 		if (role == null || !role.equals(Constant.CHANNEL)) {// 如果不是渠道用户
 			try {
 				request.setAttribute("role", Constant.CHANNEL);
@@ -1330,6 +1330,7 @@ public class WechatController extends BaseController {
 		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
 		// 导购数目
 		model.addAttribute("talkNum", thirdGuideService.getTalkCountByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("unChecktalkNum", thirdGuideService.getUncheckTalkCountByGetMoreId(loginUser.getGetMoreId()));
 
 		// 客户数目
 		model.addAttribute("customNum", thirdGuideService.getCustomCountByGuideId(guide.getGuideId()));
@@ -1458,7 +1459,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {
@@ -1487,7 +1488,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {
@@ -1780,7 +1781,7 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status==0){
+		}else if(status!=1){
 			try{
 			request.getRequestDispatcher("verifying.html").forward(request, response);
 		} catch (ServletException | IOException e) {

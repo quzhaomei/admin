@@ -275,11 +275,22 @@
 	select count(*) from guide_chat_history where toId=#{getMoreId}
 	group by fromId) a
 	</select>
+	<select id="getUncheckTalkCountByGetMoreId" resultType="int">
+	select count(*) from(
+	select count(*) from guide_chat_history where toId=#{getMoreId}
+	and status=0
+	group by fromId) a
+	</select>
 	
 	<select id="getQuestionCountByGetMoreId" resultType="int">
 	select count(*) from(
 	select count(*) from guide_chat_history where fromId=#{getMoreId}
 	group by toId) a
+	</select>
+	<select id="getUncheckQuestionCountByGetMoreId" resultType="int">
+	select count(*) from(
+	select count(*) from guide_chat_history where toId=#{getMoreId} and status=0
+	group by fromId) a
 	</select>
 	
 	

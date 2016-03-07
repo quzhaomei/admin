@@ -75,8 +75,15 @@
 
 			<div class="listitem arrowright">
 				<a href="myQuestion.html"><i class="icon-bubble2"></i> 
-				需求及咨询 
-					<span class="label">${questionNum}</span>
+				需求及咨询  
+					<c:choose>
+					<c:when test="${uncheckQuestionNum==0 }">
+						<span class="label">${questionNum }</span>
+					</c:when>
+					<c:otherwise>
+						<span class="label label_red">${uncheckQuestionNum }</span>
+					</c:otherwise>
+				</c:choose>
 				</a>
 			</div>
 			<!--  

@@ -26,8 +26,11 @@ public interface ThirdGuideDao {
 	int getCustomCountByGuideId(@Param(value = "guideId") Integer guideId);
 	
 	int getTalkCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	int getUncheckTalkCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
 	
 	int getQuestionCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	int getUncheckQuestionCountByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	
 	
 	int check(@Param(value = "getMoreId") Integer getMoreId,@Param(value = "guideId") Integer guideId);
 	

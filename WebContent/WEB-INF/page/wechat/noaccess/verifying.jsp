@@ -18,7 +18,17 @@
 			<img src="images/cathead_gray.svg">
 		</div>
 		<div class="warning">
-			您的身份还在审核中<br>暂无权限查看该页面
+			您的身份
+			<c:choose>
+				<c:when test="${sessionScope['roleStatus']==0 }">
+					还在审核中
+				</c:when>
+				<c:when test="${sessionScope['roleStatus']==2 }">
+					审核未通过
+				</c:when>
+			</c:choose>
+			<br>
+			暂无权限查看该页面
 		</div>
 
 		<a href="center.html" class="redirect">返回个人中心<span class="time">5</span></a>
