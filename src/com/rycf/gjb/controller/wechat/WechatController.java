@@ -70,6 +70,7 @@ import com.rycf.gjb.entity.ThirdNormal;
 import com.rycf.gjb.entity.UserCard;
 import com.rycf.gjb.entity.WechatUser;
 import com.rycf.gjb.interceptor.WechatTag;
+import com.rycf.gjb.pay.MD5Util;
 import com.rycf.gjb.socket.ServerSocket;
 import com.rycf.gjb.util.Constant;
 import com.rycf.gjb.util.ImgUtil;
@@ -110,12 +111,14 @@ public class WechatController extends BaseController {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@RequestMapping(value = "/login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		WechatUser weUser=wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId());
 		String url = request.getParameter("url");
+		String key="xiaoqushitiancai";
+		String sign=MD5Util.GetMD5Code( weUser.getOpenid()+key);
 		if (request.getParameter("url") != null) {// 如果是从外部请求
 			try {
 				url = URLDecoder.decode(url, "utf-8");
@@ -123,7 +126,8 @@ public class WechatController extends BaseController {
 				e1.printStackTrace();
 			}
 			try {
-				response.sendRedirect(url + "?openId=" + weUser.getOpenid()+"&nickname="+weUser.getNickname());
+				response.sendRedirect(url + "?openId=" + weUser.getOpenid()+"&nickname="+weUser.getNickname()+"&sign="+sign
+			);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
