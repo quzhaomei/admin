@@ -344,6 +344,7 @@ $(function(){
 					//置顶显示
 					chat.showOther(data.fromUser.imgPath,data.fromUser.getMoreId,
 							data.fromUser.username);
+					
 				}
 			}
 		}

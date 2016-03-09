@@ -118,6 +118,7 @@ public class WechatController extends BaseController {
 		WechatUser weUser=wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId());
 		String url = request.getParameter("url");
 		String key="xiaoqushitiancai";
+		String role=(String) request.getSession().getAttribute(Constant.ROLE);
 		String sign=MD5Util.GetMD5Code( weUser.getOpenid()+key);
 		if (request.getParameter("url") != null) {// 如果是从外部请求
 			try {
@@ -127,7 +128,8 @@ public class WechatController extends BaseController {
 			}
 			try {
 				response.sendRedirect(url + "?openId=" + weUser.getOpenid()+"&nickname="+weUser.getNickname()+"&sign="+sign
-			);
+						+"&role="+role
+						);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1514,12 +1516,19 @@ public class WechatController extends BaseController {
 	@RequestMapping(value = "/socketLogin")
 	public String userinfo(HttpServletRequest request, HttpServletResponse response, Model model) {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user", loginUser);
+		map.put("role", role);
 		String url = "http://" + request.getServerName();
 		map.put("url", url + ":14080");
-		model.addAttribute("json", JSONUtil.object2json(map));
+		String callback=request.getParameter("jsoncallback");
+		if(callback!=null){
+		model.addAttribute("json", callback+"("+JSONUtil.object2json(map)+")");
+		}else{
+			model.addAttribute("json", JSONUtil.object2json(map));
+		}
 		return "json";
 	}
 
@@ -1767,9 +1776,27 @@ public class WechatController extends BaseController {
 			model.addAttribute("pageSize", 5);
 			model.addAttribute("totalPage", chatService.loadCountByParam(page));
 		}
+		
+		// 生成微信凭证
+			Date putDate = time.get("ticket_time");
+			Long dual = new Date().getTime() - putDate.getTime();
+			if (dual > 7200 * 900) {// 重置ticket
+				initJsapiSign();
+			}
+			String queryString = request.getQueryString();
 
+			String url = request.getRequestURL().toString();
+			if (queryString != null) {
+				url = url + "?" + queryString;
+			}
+			String sign = openIdUtil.getJsSign(nonceStr, timestamp, ticket, url);
+
+			model.addAttribute("appId", appId);
+			model.addAttribute("timestamp", timestamp);
+			model.addAttribute("signature", sign);
+			model.addAttribute("nonceStr", nonceStr);
+				
 		return "wechat/customerChat";
-
 	}
 
 	// 导购员对话页面

@@ -8,7 +8,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>导购 :: ${toguide.name}</title>
+	<title>导购 | ${toguide.name}</title>
      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
       <meta name="format-detection" content="telephone=no">
      <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
@@ -66,13 +66,24 @@
 			<div class="input">
 				<form action="#" id="talkform">
 					<input type="text" id="talk-content" maxlength="200" name="words"> 
+					<i class="icon-circle-plus"></i>
 					<button type="submit">
 						发送
 					</button>
 				</form>
-				
-
 			</div>
+			<div class="toolbox grid-container hide">
+				<div class="row">
+					<div class="col-3">
+						<div class="add_img item">
+							<i class="icon-image"></i>
+							<strong>图片</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
 		</div>
 		
 		</div>
@@ -103,8 +114,21 @@
 <script src="../js/socket/p-talk.js"></script>
 <script src="js/main.js"></script>
 <script src="js/we_chat.js?v=2"></script>
+ <!-- 微信sdk -->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" charset="utf-8"></script>
 <script>
 	$(document).ready(function() {
+		
+		$(function(){
+		     wx.config({
+		    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		    appId: '${appId}', // 必填，公众号的唯一标识
+		    timestamp:${timestamp}, // 必填，生成签名的时间戳
+		    nonceStr: '${nonceStr}', // 必填，生成签名的随机串
+		    signature: '${signature}',// 必填，签名，见附录1
+		    jsApiList: ['chooseImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			}); 
+	    });
 		
 		var toolbox = $('.toolbox');
 		$('.input').on('focus', 'input', function(event) {
@@ -147,7 +171,6 @@
 
 		if($('.chatnotice')[0]){
 			$('.chatnotice').addClass('shown');
-
 			setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
 		}
 		
@@ -162,6 +185,7 @@
 				}
 			},"json")
 		});
+		
 		$(".addGuideBtn").on("click",function(){
 			var href=$(this).attr("href");
 			if(href){
