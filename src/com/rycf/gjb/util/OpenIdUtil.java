@@ -85,6 +85,19 @@ public class OpenIdUtil {
 				"&url="+url;
 		return  SHA1.SHA1Digest(param);
 	}
+	//只获取openid
+	public String getBaseCodeUrl(String uri) {
+		try {
+			uri=URLEncoder.encode(uri,"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String rediUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
+				+ "?appid="+appId+"&redirect_uri="+uri+"&response_type=code"
+				+ "&scope=snsapi_base&state=base#wechat_redirect";
+		return rediUrl;
+	}
+	
 	public String getCodeUrl(String uri) {
 		try {
 			uri=URLEncoder.encode(uri,"utf-8");
@@ -93,7 +106,7 @@ public class OpenIdUtil {
 		}
 		String rediUrl = "https://open.weixin.qq.com/connect/oauth2/authorize"
 				+ "?appid="+appId+"&redirect_uri="+uri+"&response_type=code"
-				+ "&scope=snsapi_userinfo&state=success#wechat_redirect";
+				+ "&scope=snsapi_userinfo&state=info#wechat_redirect";
 		return rediUrl;
 	}
 	

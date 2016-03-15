@@ -962,8 +962,8 @@ button {
     list-style-position: outside;
     list-style-type: none;
     position: absolute;
-    -webkit-transform: translate(-100%, 0);
-    transform: translate(-100%, 0);
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
     top: 0;
     bottom: 0px;
     left: 0px;
@@ -971,8 +971,8 @@ button {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; }
     .tabcontents ul.active {
-      -webkit-transform: translate(0, 0);
-      transform: translate(0, 0); }
+      -webkit-transform: translateX(0);
+      transform: translateX(0); }
     .tabcontents ul li {
       padding: 20px;
       background-repeat: repeat-x;
@@ -1108,10 +1108,12 @@ button {
   color: #fab4b7; }
 
 .anime {
+  -webkit-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
   -webkit-transform: translateZ(0); }
 
 .anime_l {
+  -webkit-transition: all 0.8s ease-out;
   transition: all 0.8s ease-out;
   -webkit-transform: translateZ(0); }
 

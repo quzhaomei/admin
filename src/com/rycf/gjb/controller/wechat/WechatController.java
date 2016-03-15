@@ -1683,7 +1683,7 @@ public class WechatController extends BaseController {
 		return "json";
 	}
 	//凯特猫导购
-	private String getMoreGuideId="2";
+	private String getMoreGuideId="1";
 	private String chosenGuide(String brandName){
 		ThirdGuide guide=new ThirdGuide();
 		guide.setBrandName(brandName);
