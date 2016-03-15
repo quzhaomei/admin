@@ -66,7 +66,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 		// 渠道商
 		ThirdChannelDTO channel = channelService.getByGetMoreId(loginUser.getGetMoreId());
 		if (channel != null) {
-			request.getSession().setAttribute(Constant.STATUS,  channel.getStatus());
+			request.getSession().setAttribute(Constant.STATUS, channel.getStatus());
 			request.getSession().setAttribute(Constant.ROLE, Constant.CHANNEL);
 		}
 	}
@@ -92,7 +92,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 				setRole(request, loginUser);
 				return true;
 			}
-			//先获取openid
+			// 先获取openid
 			if (loginUser == null && code == null) {
 				if (queryString != null) {
 					url = url + "?" + queryString + "&" + new Date().getTime();
@@ -102,140 +102,131 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 				String rediUrl = openIdUtil.getBaseCodeUrl(url);
 				response.sendRedirect(rediUrl);
 				return false;
-			}else if (loginUser == null && code != null&&"base".equals(state)) { // 开始调取数据
+			} else if (loginUser == null && code != null && "base".equals(state)) { // 开始调取数据
 				if (code != null) {
 					Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
 					String openId_temp = (String) jsonMap.get("openid");
 					// 先查看用户注册没有。
 					WechatUser wechatUser = wechatUserService.getWechatUserByOpenId(openId_temp);
-					if (wechatUser == null||
-							(wechatUser.getHeadimgurl() == null || "".equals(wechatUser.getHeadimgurl()))
-							) {
+					if (wechatUser == null
+							|| (wechatUser.getHeadimgurl() == null || "".equals(wechatUser.getHeadimgurl()))) {
 						if (queryString != null) {
 							url = url + "?" + queryString + "&" + new Date().getTime();
 						} else {
 							url = url + "?" + new Date().getTime();
 						}
-						String rediUrl = openIdUtil.getCodeUrl(url);//拉取用户信息
+						String rediUrl = openIdUtil.getCodeUrl(url);// 拉取用户信息
 						response.sendRedirect(rediUrl);
 						return false;
-					} 
-				}
-			}else if(loginUser == null && code != null&&"info".equals(state)) { // 开始调取数据
-				String channelCode = request.getParameter("channelCode");// 渠道编码
-				if (code != null) {
-					Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
-					String openId_temp = (String) jsonMap.get("openid");
-					String access_token = (String) jsonMap.get("access_token");
-					// 先查看用户注册没有。
-					WechatUser wechatUser = wechatUserService.getWechatUserByOpenId(openId_temp);
-					if (wechatUser == null) {
-						wechatUser = openIdUtil.getUserByTokenAndUser(access_token, openId_temp);
-						// 生成凯特猫用户
-						GetMoreUser user = new GetMoreUser();
-						user.setCreateDate(new Date());
-						user.setPhoto(wechatUser.getHeadimgurl());
-						user.setCode(channelCode);// 第一次进入初始化渠道编码
-						user.setStatus(1);// 正常
-						user.setType(1);// 微信用户
-						user.setUserName(wechatUser.getNickname());
-						user.setLoginName(UuidUtils.getObjectUUID("wechat"));
-						user.setPassword(UuidUtils.getObjectUUID("wechat"));
-						getMoreUserService.saveGetMoreUser(user);// 保存用户
-
-						wechatUser.setGetMoreId(user.getGetMoreId());// 关联ID
-						wechatUser.setOpenid(openId_temp);// 初始化openId 为了防止没有授权
-						wechatUserService.saveWechatUser(wechatUser);
-						// 保存session
-						loginUser = getMoreUserService.getUserById(user.getGetMoreId());
-						request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);
 					} else {
 						loginUser = getMoreUserService.getUserById(wechatUser.getGetMoreId());
 						setRole(request, loginUser);
 						request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);// 保存session
-						if (wechatUser.getHeadimgurl() == null || "".equals(wechatUser.getHeadimgurl())) {
-							Integer getMoreId = wechatUser.getGetMoreId();// 凯特号
-							// 查看有头像信息不，没有再请求一次
-							wechatUser = openIdUtil.getUserByTokenAndUser(access_token, openId_temp);
-							if (wechatUser.getHeadimgurl() != null && wechatUser.getOpenid() != null) {// 正确返回
-
-								wechatUserService.update(wechatUser);// 更新数据
-								// 更新头像昵称
-								GetMoreUser updateParam = new GetMoreUser();
-								updateParam.setGetMoreId(getMoreId);
-								updateParam.setUserName(wechatUser.getNickname());
-								updateParam.setPhoto(wechatUser.getHeadimgurl());
-								getMoreUserService.updateGetMoreUser(updateParam);// 更新
-							}
-
-						}
+						return true;
 					}
 				}
-			}
-/*			
-			
-			if (loginUser == null && code == null) {
-				if (queryString != null) {
-					url = url + "?" + queryString + "&" + new Date().getTime();
+			} else if (loginUser == null && code != null && "info".equals(state)) { // 开始调取数据
+				String channelCode = request.getParameter("channelCode");// 渠道编码
+				Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
+				String openId_temp = (String) jsonMap.get("openid");
+				String access_token = (String) jsonMap.get("access_token");
+				// 先查看用户注册没有。
+				WechatUser wechatUser = wechatUserService.getWechatUserByOpenId(openId_temp);
+				if (wechatUser == null) {
+					wechatUser = openIdUtil.getUserByTokenAndUser(access_token, openId_temp);
+					// 生成凯特猫用户
+					GetMoreUser user = new GetMoreUser();
+					user.setCreateDate(new Date());
+					user.setPhoto(wechatUser.getHeadimgurl());
+					user.setCode(channelCode);// 第一次进入初始化渠道编码
+					user.setStatus(1);// 正常
+					user.setType(1);// 微信用户
+					user.setUserName(wechatUser.getNickname());
+					user.setLoginName(UuidUtils.getObjectUUID("wechat"));
+					user.setPassword(UuidUtils.getObjectUUID("wechat"));
+					getMoreUserService.saveGetMoreUser(user);// 保存用户
+
+					wechatUser.setGetMoreId(user.getGetMoreId());// 关联ID
+					wechatUser.setOpenid(openId_temp);// 初始化openId 为了防止没有授权
+					wechatUserService.saveWechatUser(wechatUser);
+					// 保存session
+					loginUser = getMoreUserService.getUserById(user.getGetMoreId());
+					request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);
+					return true;
 				} else {
-					url = url + "?" + new Date().getTime();
-				}
-				String rediUrl = openIdUtil.getCodeUrl(url);
-				response.sendRedirect(rediUrl);
-				return false;
-			} else if (loginUser == null && code != null) { // 开始调取数据
-				String channelCode = request.getParameter("channelCode");// 渠道编码
-				if (code != null) {
-					Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
-					String openId_temp = (String) jsonMap.get("openid");
-					String access_token = (String) jsonMap.get("access_token");
-					// 先查看用户注册没有。
-					WechatUser wechatUser = wechatUserService.getWechatUserByOpenId(openId_temp);
-					if (wechatUser == null) {
+					loginUser = getMoreUserService.getUserById(wechatUser.getGetMoreId());
+					setRole(request, loginUser);
+					request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);// 保存session
+					if (wechatUser.getHeadimgurl() == null || "".equals(wechatUser.getHeadimgurl())) {
+						Integer getMoreId = wechatUser.getGetMoreId();// 凯特号
+						// 查看有头像信息不，没有再请求一次
 						wechatUser = openIdUtil.getUserByTokenAndUser(access_token, openId_temp);
-						// 生成凯特猫用户
-						GetMoreUser user = new GetMoreUser();
-						user.setCreateDate(new Date());
-						user.setPhoto(wechatUser.getHeadimgurl());
-						user.setCode(channelCode);// 第一次进入初始化渠道编码
-						user.setStatus(1);// 正常
-						user.setType(1);// 微信用户
-						user.setUserName(wechatUser.getNickname());
-						user.setLoginName(UuidUtils.getObjectUUID("wechat"));
-						user.setPassword(UuidUtils.getObjectUUID("wechat"));
-						getMoreUserService.saveGetMoreUser(user);// 保存用户
+						if (wechatUser.getHeadimgurl() != null && wechatUser.getOpenid() != null) {// 正确返回
 
-						wechatUser.setGetMoreId(user.getGetMoreId());// 关联ID
-						wechatUser.setOpenid(openId_temp);// 初始化openId 为了防止没有授权
-						wechatUserService.saveWechatUser(wechatUser);
-						// 保存session
-						loginUser = getMoreUserService.getUserById(user.getGetMoreId());
-						request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);
-					} else {
-						loginUser = getMoreUserService.getUserById(wechatUser.getGetMoreId());
-						setRole(request, loginUser);
-						request.getSession().setAttribute(BaseController.LOGIN_USER, loginUser);// 保存session
-						if (wechatUser.getHeadimgurl() == null || "".equals(wechatUser.getHeadimgurl())) {
-							Integer getMoreId = wechatUser.getGetMoreId();// 凯特号
-							// 查看有头像信息不，没有再请求一次
-							wechatUser = openIdUtil.getUserByTokenAndUser(access_token, openId_temp);
-							if (wechatUser.getHeadimgurl() != null && wechatUser.getOpenid() != null) {// 正确返回
-
-								wechatUserService.update(wechatUser);// 更新数据
-								// 更新头像昵称
-								GetMoreUser updateParam = new GetMoreUser();
-								updateParam.setGetMoreId(getMoreId);
-								updateParam.setUserName(wechatUser.getNickname());
-								updateParam.setPhoto(wechatUser.getHeadimgurl());
-								getMoreUserService.updateGetMoreUser(updateParam);// 更新
-							}
-
+							wechatUserService.update(wechatUser);// 更新数据
+							// 更新头像昵称
+							GetMoreUser updateParam = new GetMoreUser();
+							updateParam.setGetMoreId(getMoreId);
+							updateParam.setUserName(wechatUser.getNickname());
+							updateParam.setPhoto(wechatUser.getHeadimgurl());
+							getMoreUserService.updateGetMoreUser(updateParam);// 更新
 						}
+
 					}
 				}
 			}
-			
-			*/
+			/*
+			 * 
+			 * if (loginUser == null && code == null) { if (queryString != null)
+			 * { url = url + "?" + queryString + "&" + new Date().getTime(); }
+			 * else { url = url + "?" + new Date().getTime(); } String rediUrl =
+			 * openIdUtil.getCodeUrl(url); response.sendRedirect(rediUrl);
+			 * return false; } else if (loginUser == null && code != null) { //
+			 * 开始调取数据 String channelCode =
+			 * request.getParameter("channelCode");// 渠道编码 if (code != null) {
+			 * Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
+			 * String openId_temp = (String) jsonMap.get("openid"); String
+			 * access_token = (String) jsonMap.get("access_token"); //
+			 * 先查看用户注册没有。 WechatUser wechatUser =
+			 * wechatUserService.getWechatUserByOpenId(openId_temp); if
+			 * (wechatUser == null) { wechatUser =
+			 * openIdUtil.getUserByTokenAndUser(access_token, openId_temp); //
+			 * 生成凯特猫用户 GetMoreUser user = new GetMoreUser();
+			 * user.setCreateDate(new Date());
+			 * user.setPhoto(wechatUser.getHeadimgurl());
+			 * user.setCode(channelCode);// 第一次进入初始化渠道编码 user.setStatus(1);// 正常
+			 * user.setType(1);// 微信用户
+			 * user.setUserName(wechatUser.getNickname());
+			 * user.setLoginName(UuidUtils.getObjectUUID("wechat"));
+			 * user.setPassword(UuidUtils.getObjectUUID("wechat"));
+			 * getMoreUserService.saveGetMoreUser(user);// 保存用户
+			 * 
+			 * wechatUser.setGetMoreId(user.getGetMoreId());// 关联ID
+			 * wechatUser.setOpenid(openId_temp);// 初始化openId 为了防止没有授权
+			 * wechatUserService.saveWechatUser(wechatUser); // 保存session
+			 * loginUser = getMoreUserService.getUserById(user.getGetMoreId());
+			 * request.getSession().setAttribute(BaseController.LOGIN_USER,
+			 * loginUser); } else { loginUser =
+			 * getMoreUserService.getUserById(wechatUser.getGetMoreId());
+			 * setRole(request, loginUser);
+			 * request.getSession().setAttribute(BaseController.LOGIN_USER,
+			 * loginUser);// 保存session if (wechatUser.getHeadimgurl() == null ||
+			 * "".equals(wechatUser.getHeadimgurl())) { Integer getMoreId =
+			 * wechatUser.getGetMoreId();// 凯特号 // 查看有头像信息不，没有再请求一次 wechatUser =
+			 * openIdUtil.getUserByTokenAndUser(access_token, openId_temp); if
+			 * (wechatUser.getHeadimgurl() != null && wechatUser.getOpenid() !=
+			 * null) {// 正确返回
+			 * 
+			 * wechatUserService.update(wechatUser);// 更新数据 // 更新头像昵称
+			 * GetMoreUser updateParam = new GetMoreUser();
+			 * updateParam.setGetMoreId(getMoreId);
+			 * updateParam.setUserName(wechatUser.getNickname());
+			 * updateParam.setPhoto(wechatUser.getHeadimgurl());
+			 * getMoreUserService.updateGetMoreUser(updateParam);// 更新 }
+			 * 
+			 * } } } }
+			 * 
+			 */
 
 		}
 
