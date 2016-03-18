@@ -59,4 +59,9 @@ public class GuideChatHistoryServiceImpl implements GuideChatHistoryService{
 		return count;
 	}
 
+	@Override
+	public int loadUncheckCountByParam(GuideChatHistory history) {
+		return historyDao.loadUncheckCountByParam(history);
+	}
+
 }

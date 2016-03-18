@@ -14,5 +14,7 @@ public interface GuideChatHistoryService {
 	PageDTO<List<GuideChatHistoryDTO>> loadByParam(PageDTO<GuideChatHistory> page);
 	int loadCountByParam(PageDTO<GuideChatHistory> page);
 	
+	int loadUncheckCountByParam(GuideChatHistory history);
+	
 	List<GuideChatHistoryDTO> loadListByParam(GuideChatHistory history);
 }

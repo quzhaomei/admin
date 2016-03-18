@@ -29,7 +29,7 @@ public class LimitInterceptor extends HandlerInterceptorAdapter {
 		if(handler.getClass().getAnnotation(LimitTag.class)!=null){//限制登录的
 			SystemUserDTO user=(SystemUserDTO) request.getSession().getAttribute("user");
 			if (user == null) {
-				response.sendRedirect("/admin/login/index.html");
+				response.sendRedirect("admin/login/index.html");
 				return false;
 			}
 			//检测是否控制菜单

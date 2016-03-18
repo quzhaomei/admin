@@ -81,6 +81,13 @@
 		order by gch.createDate asc
 	</select>
 	
+	<select id="loadUncheckCountByParam" resultType="int">
+		select count(*)
+		from guide_chat_history gch 
+		where 1=1 and gch.status=0
+		and gch.toId=#{history.toId} 
+	</select>
+	
 	<select id="loadCountByParam" resultType="int">
 		select count(*)
 		from guide_chat_history gch 

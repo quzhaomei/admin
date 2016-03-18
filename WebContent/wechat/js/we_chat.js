@@ -347,6 +347,7 @@ $(function(){
 					
 				}
 			}
+			$("#msgnotify").remove();
 		}
 		clearInterval(task);
 	}, 500);

@@ -128,5 +128,9 @@
 <script src="js/jquery.min.js"></script>
 <script src="../out/showMenuScript.html?getMoreId=${sessionScope.loginUser.getMoreId }"></script>
 <script src="js/main.js"></script>
+
+<script src="../js/socket/socket.io-1.3.4.js"></script>
+<script src="../js/socket/p-talk.js"></script>
+
 </body>
 </html>

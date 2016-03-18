@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,8 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+import com.rycf.gjb.entity.GuideChatHistory;
+import com.rycf.gjb.service.GuideChatHistoryService;
 import com.rycf.gjb.util.JSONUtil;
 
 @Repository
@@ -36,6 +39,10 @@ public class ServerSocket {
 		ServerSocket socket=new ServerSocket();
 		socket.initSocket();
 	}
+	
+	@Resource
+	private GuideChatHistoryService guideChatHistoryService;
+	
 	//鍚姩鏃跺垵濮嬪寲
 	@PostConstruct
 	public void initSocket(){
@@ -71,6 +78,12 @@ public class ServerSocket {
 				}
 				socket.set("user", userInfo);//绑定用户信息
 				System.out.println("---"+userInfo.getUsername()+"登录");
+				//初始化未接受消息条目
+				GuideChatHistory history=new GuideChatHistory();
+				history.setToId(userInfo.getGetMoreId());
+				int uncheckcount=guideChatHistoryService.loadUncheckCountByParam(history);
+				socket.sendEvent
+				("unaccpet msg", "{\"uncheckcount\":"+uncheckcount+"}");
 			}
 	    });
 	    //say to user

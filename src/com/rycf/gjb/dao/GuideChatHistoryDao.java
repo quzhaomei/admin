@@ -18,6 +18,7 @@ public interface GuideChatHistoryDao {
 	List<GuideChatHistoryDTO> loadByParam(@Param(value = "page")PageDTO<GuideChatHistory> page);
 	int loadCountByParam(@Param(value = "history")GuideChatHistory history);
 	
+	int loadUncheckCountByParam(@Param(value = "history")GuideChatHistory history);
 	List<GuideChatHistoryDTO> loadListByParam(@Param(value = "history")GuideChatHistory history);
 	
 }

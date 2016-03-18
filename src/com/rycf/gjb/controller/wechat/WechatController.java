@@ -1523,6 +1523,13 @@ public class WechatController extends BaseController {
 		map.put("role", role);
 		String url = "http://" + request.getServerName();
 		map.put("url", url + ":14080");
+		
+		request.getServletPath();
+		String host = request.getRequestURL().toString();
+		while(host.lastIndexOf("/")>6){
+			host=host.substring(0, host.lastIndexOf("/"));
+		}
+		map.put("serverhost", host+request.getContextPath());
 		String callback=request.getParameter("jsoncallback");
 		if(callback!=null){
 		model.addAttribute("json", callback+"("+JSONUtil.object2json(map)+")");

@@ -1117,6 +1117,10 @@ button {
   transition: all 0.8s ease-out;
   -webkit-transform: translateZ(0); }
 
+.spinning {
+  animation: spinning 2s ease-in-out infinite;
+  -webkit-animation: spinning 2s ease-in-out infinite; }
+
 #submitting {
   display: inline-block;
   width: 70px;
@@ -1197,6 +1201,50 @@ button {
     -ms-transform: scale(1, 1);
     -webkit-transform: scale(1, 1);
     transform: scale(1, 1); } }
+@-webkit-keyframes spinning {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  10% {
+    -webkit-transform: rotate(15deg);
+    transform: rotate(15deg); }
+  20% {
+    -webkit-transform: rotate(-15deg);
+    transform: rotate(-15deg); }
+  30% {
+    -webkit-transform: rotate(15deg);
+    transform: rotate(15deg); }
+  40% {
+    -webkit-transform: rotate(-15deg);
+    transform: rotate(-15deg); }
+  50% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); } }
+@keyframes spinning {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  10% {
+    -webkit-transform: rotate(15deg);
+    transform: rotate(15deg); }
+  20% {
+    -webkit-transform: rotate(-15deg);
+    transform: rotate(-15deg); }
+  30% {
+    -webkit-transform: rotate(15deg);
+    transform: rotate(15deg); }
+  40% {
+    -webkit-transform: rotate(-15deg);
+    transform: rotate(-15deg); }
+  50% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); } }
 #navmenu {
   position: fixed;
   top: 15%;
@@ -2217,3 +2265,32 @@ label.namecard img {
     color: #a1b1bc;
     font-size: 14px;
     margin-top: 16px; }
+
+#msgnotify {
+  position: fixed;
+  z-index: 998;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  padding-top: 7px;
+  text-align: center;
+  top: 60px;
+  right: 24px;
+  border-radius: 50%;
+  background-color: white;
+  -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1); }
+  #msgnotify .num {
+    background-color: #ce304e;
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    display: inline-block;
+    top: -3px;
+    right: -6px;
+    padding: 1px 4px;
+    border-radius: 20px; }
+  #msgnotify i {
+    color: #a1b1bc;
+    font-size: 20px;
+    display: inline-block; }
