@@ -79,6 +79,8 @@ import com.rycf.gjb.util.MapUtil;
 import com.rycf.gjb.util.MatrixToImageWriter;
 import com.rycf.gjb.util.UuidUtils;
 
+import sun.security.action.GetLongAction;
+
 /**
  * 微信
  * 
@@ -111,15 +113,15 @@ public class WechatController extends BaseController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value = "/login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
-		WechatUser weUser=wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId());
+		WechatUser weUser = wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId());
 		String url = request.getParameter("url");
-		String key="xiaoqushitiancai";
-		String role=(String) request.getSession().getAttribute(Constant.ROLE);
-		String sign=MD5Util.GetMD5Code( weUser.getOpenid()+key);
+		String key = "xiaoqushitiancai";
+		String role = (String) request.getSession().getAttribute(Constant.ROLE);
+		String sign = MD5Util.GetMD5Code(weUser.getOpenid() + key);
 		if (request.getParameter("url") != null) {// 如果是从外部请求
 			try {
 				url = URLDecoder.decode(url, "utf-8");
@@ -127,9 +129,8 @@ public class WechatController extends BaseController {
 				e1.printStackTrace();
 			}
 			try {
-				response.sendRedirect(url + "?openId=" + weUser.getOpenid()+"&nickname="+weUser.getNickname()+"&sign="+sign
-						+"&role="+role
-						);
+				response.sendRedirect(url + "?openId=" + weUser.getOpenid() + "&nickname=" + weUser.getNickname()
+						+ "&sign=" + sign + "&role=" + role);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -813,10 +814,41 @@ public class WechatController extends BaseController {
 	// 个人中心跳转
 	@RequestMapping(value = "/center")
 	public String center(HttpServletRequest request, HttpServletResponse response, Model model) {
-
+		// 新注册用户
+		String channelCode = request.getParameter("channelCode");// 渠道编码
+		if (channelCode != null) {
+			ThirdChannel param = new ThirdChannel();
+			param.setCode(channelCode);
+			int count = channelService.getCountByParam(param);
+			if (count != 0) {
+				model.addAttribute("channelCode", channelCode);
+			}else{
+				channelCode=null;
+			}
+		}
 		if (Constant.NORMAL.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				request.getRequestDispatcher("toNormal.html").forward(request, response);
+				if(channelCode!=null){
+					GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+					if(loginUser.getCode()!=null){
+						request.setAttribute("tips", "您已经绑定过了，不能更换推荐码");
+						request.getRequestDispatcher("noaccess.html").forward(request, response);
+					}else{
+						// 绑定渠道商
+						if (channelCode != null) {
+							GetMoreUser user = new GetMoreUser();
+							user.setCode(channelCode);
+							user.setGetMoreId(loginUser.getGetMoreId());
+							getMoreUserService.updateGetMoreUser(user);
+							loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
+							request.getSession().setAttribute(LOGIN_USER, loginUser);
+							request.setAttribute("tips", "绑定成功！");
+							request.getRequestDispatcher("noaccess.html").forward(request, response);
+						}
+					}
+				}else{
+					request.getRequestDispatcher("toNormal.html").forward(request, response);
+				}
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -825,7 +857,12 @@ public class WechatController extends BaseController {
 
 		if (Constant.GUIDE.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				request.getRequestDispatcher("toGuide.html").forward(request, response);
+				if(channelCode!=null){
+					request.setAttribute("tips", "您已是导购，没有绑定权限");
+					request.getRequestDispatcher("noaccess.html").forward(request, response);
+				}else{
+					request.getRequestDispatcher("toGuide.html").forward(request, response);
+				}
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -834,7 +871,12 @@ public class WechatController extends BaseController {
 
 		if (Constant.CHANNEL.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				request.getRequestDispatcher("toChannel.html").forward(request, response);
+				if(channelCode!=null){
+					request.setAttribute("tips", "您已是渠道商，没有绑定权限");
+					request.getRequestDispatcher("noaccess.html").forward(request, response);
+				}else{
+					request.getRequestDispatcher("toChannel.html").forward(request, response);
+				}
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
@@ -866,26 +908,52 @@ public class WechatController extends BaseController {
 			normalService.save(normal);
 			request.getSession().setAttribute(Constant.ROLE, Constant.NORMAL);
 		}
+		// 绑定渠道商
+		String channelCode = request.getParameter("channelCode");// 渠道编码
+		if (channelCode != null) {
+			ThirdChannel param = new ThirdChannel();
+			param.setCode(channelCode);
+			int count = channelService.getCountByParam(param);
+			if (count > 0) {
+				GetMoreUser user = new GetMoreUser();
+				user.setCode(channelCode);
+				user.setGetMoreId(loginUser.getGetMoreId());
+				getMoreUserService.updateGetMoreUser(user);
+				loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
+				request.getSession().setAttribute(LOGIN_USER, loginUser);
+				
+				request.setAttribute("tips", "绑定成功！");
+					try {
+						request.getRequestDispatcher("noaccess.html").forward(request, response);
+					} catch (ServletException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				return null;
+			}
+		}
 
 		model.addAttribute("user", loginUser);
 		// 订单总数
 		List<OrderDTO> allOrders = orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
 		model.addAttribute("orderCount", allOrders == null ? 0 : allOrders.size());
-		List<OrderDTO> myOrders=orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
-		float totalPay=0f;
-		for(OrderDTO order:myOrders){
-			if("3".equals(order.getStatus())){
-				float rate=order.getBrand().getRate();
-				float hasPay=order.getHasPay();
-				totalPay+=rate*hasPay;
+		List<OrderDTO> myOrders = orderService.getOrderByGetMoreId(loginUser.getGetMoreId());
+		float totalPay = 0f;
+		for (OrderDTO order : myOrders) {
+			if ("3".equals(order.getStatus())) {
+				float rate = order.getBrand().getRate();
+				float hasPay = order.getHasPay();
+				totalPay += rate * hasPay;
 			}
 		}
 		model.addAttribute("totalPay", totalPay);
-		
+
 		// 咨询数目
 		model.addAttribute("questionNum", thirdGuideService.getQuestionCountByGetMoreId(loginUser.getGetMoreId()));
-		model.addAttribute("uncheckQuestionNum", thirdGuideService.getUncheckQuestionCountByGetMoreId(loginUser.getGetMoreId()));
-				
+		model.addAttribute("uncheckQuestionNum",
+				thirdGuideService.getUncheckQuestionCountByGetMoreId(loginUser.getGetMoreId()));
+
 		// 我的导购
 		List<ThirdGuideDTO> guides = thirdGuideService.getGuideByUserId(loginUser.getGetMoreId());
 		if (guides == null) {
@@ -965,13 +1033,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
@@ -1224,13 +1292,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
@@ -1256,13 +1324,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		ThirdChannelDTO channelDTO = channelService.getByGetMoreId(loginUser.getGetMoreId());
@@ -1286,9 +1354,11 @@ public class WechatController extends BaseController {
 			return;
 		}
 		String code = request.getParameter("code");
-		String servername = request.getServerName();
-		int port = request.getServerPort();
-		String text = "http://" + servername + ":" + port + "/wechat/center.html?channelCode=" + code;
+		String host = request.getRequestURL().toString();
+		while (host.lastIndexOf("/") > 6) {
+			host = host.substring(0, host.lastIndexOf("/"));
+		}
+		String text = host + "/" + request.getContextPath() + "/wechat/center.html?channelCode=" + code;
 		int width = 300;
 		int height = 300;
 		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
@@ -1336,7 +1406,8 @@ public class WechatController extends BaseController {
 		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
 		// 导购数目
 		model.addAttribute("talkNum", thirdGuideService.getTalkCountByGetMoreId(loginUser.getGetMoreId()));
-		model.addAttribute("unChecktalkNum", thirdGuideService.getUncheckTalkCountByGetMoreId(loginUser.getGetMoreId()));
+		model.addAttribute("unChecktalkNum",
+				thirdGuideService.getUncheckTalkCountByGetMoreId(loginUser.getGetMoreId()));
 
 		// 客户数目
 		model.addAttribute("customNum", thirdGuideService.getCustomCountByGuideId(guide.getGuideId()));
@@ -1348,7 +1419,7 @@ public class WechatController extends BaseController {
 	@RequestMapping(value = "/guideInfo")
 	public String guideInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
-		
+
 		if (role == null || !role.equals(Constant.GUIDE)) {// 不是导购
 			try {
 				request.setAttribute("role", Constant.GUIDE);
@@ -1376,14 +1447,33 @@ public class WechatController extends BaseController {
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		String cphone = request.getParameter("cphone");
+		String ccode = request.getParameter("ccode");
 		JsonObject json = new JsonObject();
 		GetMoreUser param = new GetMoreUser();
-		param.setPhone(cphone);
+		String message = null;
+		if (cphone != null) {
+			param.setPhone(cphone);
+			message = "号码更换成功！";
+		} else if (ccode != null) {
+			ThirdChannel channelParam = new ThirdChannel();
+			channelParam.setCode(ccode);
+			int count = channelService.getCountByParam(channelParam);
+			if (count == 0) {
+				message = "该推荐码不存在！";
+				json.setStatus("0").setMessage(message);
+				model.addAttribute("json", JSONUtil.object2json(json));
+				return "json";
+			} else {
+				param.setCode(ccode);
+				message = "绑定推荐码成功！";
+			}
+		}
+
 		param.setGetMoreId(loginUser.getGetMoreId());
 		try {
 			getMoreUserService.updateGetMoreUser(param);
 			json.setStatus("1");
-			json.setMessage("信息更新成功");
+			json.setMessage(message);
 		} catch (Exception e) {
 			json.setStatus("0");
 			json.setMessage("更新过程中失败");
@@ -1432,7 +1522,8 @@ public class WechatController extends BaseController {
 
 		return "json";
 	}
-	//问题历史页面
+
+	// 问题历史页面
 	@RequestMapping(value = "/myQuestion")
 	public String myQuestion(HttpServletRequest request, HttpServletResponse response, Model model) {
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
@@ -1451,7 +1542,7 @@ public class WechatController extends BaseController {
 		model.addAttribute("guideHistory", guideHistory);
 		return "wechat/myQuestion";
 	}
-	
+
 	// 导购员历史页面
 	@RequestMapping(value = "/guideHistory")
 	public String guideTalkHistory(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -1465,13 +1556,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
@@ -1494,13 +1585,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		model.addAttribute("wechat", wechatUserService.getWechatUserByGetMoreId(loginUser.getGetMoreId()));
@@ -1523,17 +1614,16 @@ public class WechatController extends BaseController {
 		map.put("role", role);
 		String url = "http://" + request.getServerName();
 		map.put("url", url + ":14080");
-		
-		request.getServletPath();
+
 		String host = request.getRequestURL().toString();
-		while(host.lastIndexOf("/")>6){
-			host=host.substring(0, host.lastIndexOf("/"));
+		while (host.lastIndexOf("/") > 6) {
+			host = host.substring(0, host.lastIndexOf("/"));
 		}
-		map.put("serverhost", host+request.getContextPath());
-		String callback=request.getParameter("jsoncallback");
-		if(callback!=null){
-		model.addAttribute("json", callback+"("+JSONUtil.object2json(map)+")");
-		}else{
+		map.put("serverhost", host + request.getContextPath());
+		String callback = request.getParameter("jsoncallback");
+		if (callback != null) {
+			model.addAttribute("json", callback + "(" + JSONUtil.object2json(map) + ")");
+		} else {
 			model.addAttribute("json", JSONUtil.object2json(map));
 		}
 		return "json";
@@ -1598,14 +1688,14 @@ public class WechatController extends BaseController {
 		model.addAttribute("json", JSONUtil.object2json(json));
 		return "json";
 	}
-	
+
 	@RequestMapping(value = "/getGuideByUserId")
 	public String getGuideByUserId(HttpServletRequest request, HttpServletResponse response, Model model) {
-		String userId=request.getParameter("userId");
-		if(userId!=null&&userId.matches("\\d+")){
-			ThirdGuideDTO guide=thirdGuideService.getByGetMoreId(Integer.parseInt(userId));
-			if(guide!=null){
-				JsonObject json =new JsonObject();
+		String userId = request.getParameter("userId");
+		if (userId != null && userId.matches("\\d+")) {
+			ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(Integer.parseInt(userId));
+			if (guide != null) {
+				JsonObject json = new JsonObject();
 				json.setData(guide.getGuideId());
 				json.setStatus("1");
 				model.addAttribute("json", JSONUtil.object2json(json));
@@ -1613,6 +1703,7 @@ public class WechatController extends BaseController {
 		}
 		return "json";
 	}
+
 	// 跳转添加导购
 	@RequestMapping(value = "/getGuide")
 	public String getGuide(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -1640,7 +1731,7 @@ public class WechatController extends BaseController {
 			// 客户数目
 			model.addAttribute("customNum", thirdGuideService.getCustomCountByGuideId(guide.getGuideId()));
 			//
-			
+
 			model.addAttribute("user", getMoreUserService.getUserById(guide.getGetMoreUser().getGetMoreId()));
 		}
 
@@ -1663,63 +1754,66 @@ public class WechatController extends BaseController {
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		ThirdGuideDTO guide = thirdGuideService.getByGetMoreId(loginUser.getGetMoreId());
 		JsonObject json = new JsonObject();
-		String brandId=request.getParameter("brandId");
-		if(brandId!=null){
-			//如果不是总导购，则返回店铺
+		String brandId = request.getParameter("brandId");
+		if (brandId != null) {
+			// 如果不是总导购，则返回店铺
 			List<StoreDTO> stores = storeService.getStoreByBrandId(brandId);
 			json.setStatus("1");
 			json.setData(stores);
-			
-		}else if (guide != null&&getMoreGuideId.equals(guide.getGuideId()+"")) {
-			//如果是总导购，则返回品牌
-			Brand brand=new Brand();
-			brand.setStatus("1");//有效地
+
+		} else if (guide != null && getMoreGuideId.equals(guide.getGuideId() + "")) {
+			// 如果是总导购，则返回品牌
+			Brand brand = new Brand();
+			brand.setStatus("1");// 有效地
 			List<BrandDTO> brands = brandService.getBrandList(brand);
-			
+
 			json.setStatus("2");
 			json.setData(brands);
 
-		}else if(guide != null){
-			//如果不是总导购，则返回店铺
+		} else if (guide != null) {
+			// 如果不是总导购，则返回店铺
 			List<StoreDTO> stores = storeService.getStoreByBrandId(guide.getBrand().getBrandId());
 			json.setStatus("1");
 			json.setData(stores);
-			
+
 		}
 		model.addAttribute("json", JSONUtil.object2json(json));
 		return "json";
 	}
-	//凯特猫导购
-	private String getMoreGuideId="1";
-	private String chosenGuide(String brandName){
-		ThirdGuide guide=new ThirdGuide();
+
+	// 凯特猫导购
+	private String getMoreGuideId = "1";
+
+	private String chosenGuide(String brandName) {
+		ThirdGuide guide = new ThirdGuide();
 		guide.setBrandName(brandName);
-		List<ThirdGuideDTO> guides=thirdGuideService.getList(guide);
-		
-		List<ThirdGuideDTO> onlines=new ArrayList<ThirdGuideDTO>();
-		if(guides!=null&&guides.size()>0){
-			
-			for(ThirdGuideDTO temp:guides){
-				Integer getMoreId=temp.getGetMoreUser().getGetMoreId();
-				//优先选择在线的
-				if(ServerSocket.isOnline(getMoreId)){
+		List<ThirdGuideDTO> guides = thirdGuideService.getList(guide);
+
+		List<ThirdGuideDTO> onlines = new ArrayList<ThirdGuideDTO>();
+		if (guides != null && guides.size() > 0) {
+
+			for (ThirdGuideDTO temp : guides) {
+				Integer getMoreId = temp.getGetMoreUser().getGetMoreId();
+				// 优先选择在线的
+				if (ServerSocket.isOnline(getMoreId)) {
 					onlines.add(temp);
 				}
 			}
-			
-			if(onlines.size()>0){//有在线的
-				return onlines.get(new Random().nextInt(onlines.size())).getGuideId()+"";
-			}else{
-				return guides.get(new Random().nextInt(guides.size())).getGuideId()+"";
+
+			if (onlines.size() > 0) {// 有在线的
+				return onlines.get(new Random().nextInt(onlines.size())).getGuideId() + "";
+			} else {
+				return guides.get(new Random().nextInt(guides.size())).getGuideId() + "";
 			}
-		}else{
+		} else {
 			return getMoreGuideId;
 		}
 	}
+
 	// 客户对话页面
 	@RequestMapping(value = "/customerChat")
 	public String customerChat(HttpServletRequest request, HttpServletResponse response, Model model) {
-		
+
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		if (role == null || !role.equals(Constant.NORMAL)) {// 如果不是普通用户,或是新用户
 			try {
@@ -1732,28 +1826,27 @@ public class WechatController extends BaseController {
 		}
 
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
-		String imgUrl=request.getParameter("imgUrl");//图片标记
-		if(imgUrl!=null&&!"".equals(imgUrl)){
+		String imgUrl = request.getParameter("imgUrl");// 图片标记
+		if (imgUrl != null && !"".equals(imgUrl)) {
 			model.addAttribute("imgUrl", imgUrl);
 		}
-		
-		String backUrl=request.getParameter("backUrl");//返回标记
-		if(backUrl!=null&&!"".equals(backUrl)){
+
+		String backUrl = request.getParameter("backUrl");// 返回标记
+		if (backUrl != null && !"".equals(backUrl)) {
 			model.addAttribute("backUrl", backUrl);
 		}
-		
-		//两种情况，传导购id或者品牌
+
+		// 两种情况，传导购id或者品牌
 		String guideId = request.getParameter("guideId");// 导购员id
-		String brandName=request.getParameter("brandName");
-		if(brandName!=null){
-			String tempId=chosenGuide(brandName);
-			if(tempId!=null){
-				guideId=tempId;
+		String brandName = request.getParameter("brandName");
+		if (brandName != null) {
+			String tempId = chosenGuide(brandName);
+			if (tempId != null) {
+				guideId = tempId;
 			}
-			
+
 		}
-		
-		
+
 		if (guideId != null && guideId.matches("\\d+")) {// 初始化导购信息
 			ThirdGuideDTO toguide = thirdGuideService.getById(Integer.parseInt(guideId));
 			if (toguide == null) {
@@ -1783,26 +1876,26 @@ public class WechatController extends BaseController {
 			model.addAttribute("pageSize", 5);
 			model.addAttribute("totalPage", chatService.loadCountByParam(page));
 		}
-		
+
 		// 生成微信凭证
-			Date putDate = time.get("ticket_time");
-			Long dual = new Date().getTime() - putDate.getTime();
-			if (dual > 7200 * 900) {// 重置ticket
-				initJsapiSign();
-			}
-			String queryString = request.getQueryString();
+		Date putDate = time.get("ticket_time");
+		Long dual = new Date().getTime() - putDate.getTime();
+		if (dual > 7200 * 900) {// 重置ticket
+			initJsapiSign();
+		}
+		String queryString = request.getQueryString();
 
-			String url = request.getRequestURL().toString();
-			if (queryString != null) {
-				url = url + "?" + queryString;
-			}
-			String sign = openIdUtil.getJsSign(nonceStr, timestamp, ticket, url);
+		String url = request.getRequestURL().toString();
+		if (queryString != null) {
+			url = url + "?" + queryString;
+		}
+		String sign = openIdUtil.getJsSign(nonceStr, timestamp, ticket, url);
 
-			model.addAttribute("appId", appId);
-			model.addAttribute("timestamp", timestamp);
-			model.addAttribute("signature", sign);
-			model.addAttribute("nonceStr", nonceStr);
-				
+		model.addAttribute("appId", appId);
+		model.addAttribute("timestamp", timestamp);
+		model.addAttribute("signature", sign);
+		model.addAttribute("nonceStr", nonceStr);
+
 		return "wechat/customerChat";
 	}
 
@@ -1819,13 +1912,13 @@ public class WechatController extends BaseController {
 				e.printStackTrace();
 			}
 			return null;
-		}else if(status!=1){
-			try{
-			request.getRequestDispatcher("verifying.html").forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		} else if (status != 1) {
+			try {
+				request.getRequestDispatcher("verifying.html").forward(request, response);
+			} catch (ServletException | IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
@@ -1950,7 +2043,6 @@ public class WechatController extends BaseController {
 		model.addAttribute("json", JSONUtil.object2json(json));
 		return "json";
 	}
-
 
 	// 导购对话
 	@RequestMapping(value = "/guideSay")
@@ -2229,16 +2321,17 @@ public class WechatController extends BaseController {
 	private static String create_timestamp() {
 		return Long.toString(System.currentTimeMillis() / 1000);
 	}
-	
-	//无权限界面
+
+	// 无权限界面
 	@RequestMapping(value = "/noaccess")
 	public String noaccess(HttpServletRequest request, HttpServletResponse response, Model model) {
-		return	"wechat/noaccess/error";
-		
+		return "wechat/noaccess/error";
+
 	}
+
 	@RequestMapping(value = "/verifying")
 	public String verifying(HttpServletRequest request, HttpServletResponse response, Model model) {
-		return	"wechat/noaccess/verifying";
-		
+		return "wechat/noaccess/verifying";
+
 	}
 }

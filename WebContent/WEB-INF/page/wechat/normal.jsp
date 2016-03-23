@@ -86,10 +86,9 @@
 				</c:choose>
 				</a>
 			</div>
-			<!--  
 			<div class="listitem arrowright">
-				<a href="my_fav.html"><i class="icon-heart4"></i> 我的收藏 </a>
-			</div>-->
+				<a href="http://guide.51getmore.cn/favorites/"><i class="icon-heart4"></i> 我的收藏 </a>
+			</div>
 			
 
 		</div>

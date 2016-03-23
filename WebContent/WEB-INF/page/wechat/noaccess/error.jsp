@@ -19,19 +19,27 @@
 			<img src="images/logo_cat.png" alt="">
 		</div>
 		<div class="warning">
-			您不是<strong>
-			<c:choose>
-				<c:when test="${role=='normal' }">
-					普通用户
-				</c:when>
-				<c:when test="${role=='guide' }">
-					导购员
-				</c:when>
-				<c:when test="${role=='channel' }">
-					渠道商
-				</c:when>
-			</c:choose>
-			</strong><br>无权查看该页面
+		
+			<c:if test="${not empty tips }">
+				${tips }
+			</c:if>
+			
+			<c:if test="${empty tips }">
+				您不是<strong>
+				<c:choose>
+					<c:when test="${role=='normal' }">
+						普通用户
+					</c:when>
+					<c:when test="${role=='guide' }">
+						导购员
+					</c:when>
+					<c:when test="${role=='channel' }">
+						渠道商
+					</c:when>
+				</c:choose>
+				</strong><br>无权查看该页面
+			</c:if>
+			
 		</div>
 
 		<a href="center.html" class="redirect">返回个人中心<span class="time">5</span></a>

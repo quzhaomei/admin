@@ -27,7 +27,7 @@
 			<div class="listitem arrowright">
 				<div class="cavatar nolink" data-title="修改头像">
 				<label for="cavatar"  class="upload">
-				<i class="icon-thumbs-o-up"></i>头像 
+				<i class="icon-image"></i>头像 
 
 				<span class="right info">
 				

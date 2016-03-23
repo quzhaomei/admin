@@ -26,7 +26,7 @@
 			<div class="listitem arrowright">
 				<div class="cavatar nolink" data-title="修改头像">
 				<label for="cavatar" class="upload">
-				<i class="icon-thumbs-o-up"></i>头像 
+				<i class="icon-image"></i>头像 
 
 				<span class="right info">
 				  	  <input type="file" capture="camera" accept="image/*" id="cavatar" />
@@ -50,8 +50,26 @@
 			</div>
 			<div class="listitem arrowright">
 				<a href="#" class="callpopup" id="cphone" data-target="#changeinfo" data-title="修改手机号"><i class="icon-iphone"></i
-				>手机号 <span class="right info">${user.phone }</span></a>
+				>手机号 <span class="right info">${empty user.phone?"未填写":user.phone }</span></a>
 			</div>
+			
+			<!-- 推荐码 -->
+			<c:choose>
+				<c:when test="${empty user.code }">
+					<div class="listitem arrowright">
+						<a href="#" class="callpopup" id="ccode" data-target="#changeinfo" data-title="录入推荐码"><i class="icon-thumbs-o-up"></i
+						>推荐码 <span class="right info">无</span></a>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="listitem arrowright">
+						<div class="listitem noarrow">
+						<div class="nolink"><i class="icon-thumbs-o-up"></i>推荐码 <span class="right info"
+						>${user.code }</span></div>
+					</div>
+					</div>
+				</c:otherwise>
+			</c:choose>
 			
 		</div>
 
@@ -65,7 +83,8 @@
 		</header>
 		<div class="contents formarea pad_narrow">
 				<fieldset>
-					<input type="text" maxlength="11" name="tel" class="hide cphone formitem" placeholder="${empty guide.phone?'请输入手机号码':guide.phone }" disabled="disalbed" id="phone" />
+					<input type="text" maxlength="11" name="tel" class="hide cphone formitem" placeholder="${empty user.phone?'请输入手机号码':user.phone }" disabled="disalbed" id="phone" />
+					<input type="text" name="rec_code" class="hide ccode formitem" placeholder="${empty user.code?'推荐码':user.code }"  disabled="disabled" maxlength="11"/>
 				</fieldset>
 				
 				
@@ -179,9 +198,11 @@
 				if(json.status=="0"){//失败
 					showProgress('error',json.message);
 				}else{//成功
-					window.location.reload();
 					showProgress('success',json.message);
 				}
+				setTimeout(function(){
+					window.location.reload();
+				}, 1500);
 			},"json");
 		});
 		

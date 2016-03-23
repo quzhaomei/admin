@@ -13,7 +13,7 @@
      <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="noaccess" id="welcome">
-		
+		<c:if test="${empty channelCode }">
 		<div class="main">
 			<div class="iconcustomer icons">
 			<a href="toNormal.html">
@@ -21,9 +21,26 @@
 			</a>
 			</div>
 			<div class="apply">
+			
 				<a href="toNormal.html" class="customer">成为凯特猫用户</a>
+			
 			</div>
 		</div>
+		</c:if>
+			<c:if test="${not empty channelCode }">
+				<div class="main">
+			<div class="iconcustomer icons">
+			<a href="toNormal.html?channelCode=${channelCode }">
+				<img src="images/cathead.svg" alt="">
+			</a>
+			</div>
+			<div class="apply">
+			
+				<a href="toNormal.html?channelCode=${channelCode }" class="customer">成为凯特猫用户</a>
+			
+			</div>
+		</div>
+			</c:if>	
 		
 		
 		<div class="sec">

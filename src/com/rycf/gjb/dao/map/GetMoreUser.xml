@@ -31,6 +31,9 @@
 		<if test="user.type!=null">
 			 b.type=#{user.type},
 		</if>
+		<if test="user.code!=null">
+			 b.code=#{user.code},
+		</if>
 		<if test="user.photo!=null">
 			 b.photo=#{user.photo},
 		</if>

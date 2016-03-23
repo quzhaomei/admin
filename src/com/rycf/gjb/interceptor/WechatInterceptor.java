@@ -84,7 +84,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 			String state = request.getParameter("state");
 
 			// 测试
-			boolean test = false;
+			boolean test = true;
 			String getmoreId = request.getParameter("getId");
 			if (loginUser == null && test && getmoreId != null && getmoreId.matches("\\d+")) {
 				loginUser = getMoreUserService.getUserById(Integer.parseInt(getmoreId));
@@ -126,7 +126,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 					}
 				}
 			} else if (loginUser == null && code != null && "info".equals(state)) { // 开始调取数据
-				String channelCode = request.getParameter("channelCode");// 渠道编码
+		//		String channelCode = request.getParameter("channelCode");// 渠道编码
 				Map<String, Object> jsonMap = openIdUtil.getObjByCode(code);
 				String openId_temp = (String) jsonMap.get("openid");
 				String access_token = (String) jsonMap.get("access_token");
@@ -138,7 +138,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 					GetMoreUser user = new GetMoreUser();
 					user.setCreateDate(new Date());
 					user.setPhoto(wechatUser.getHeadimgurl());
-					user.setCode(channelCode);// 第一次进入初始化渠道编码
+			//		user.setCode(channelCode);// 第一次进入初始化渠道编码
 					user.setStatus(1);// 正常
 					user.setType(1);// 微信用户
 					user.setUserName(wechatUser.getNickname());
