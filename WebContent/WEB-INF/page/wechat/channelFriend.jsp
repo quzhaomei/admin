@@ -16,9 +16,8 @@
 <body class="bg_white with_topbar">
 	
 		<div class="topbar bar_red navback">
-			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心  
+			<a href="center.html"><i class="icon-arrow-left"></i>  返回个人中心 </a> 
 			<div class="getlogo"><a href="http://guide.51getmore.cn"><img src="images/cathead.svg"></a></div>
-			</a>
 		</div>
 		<div class="listset" id="friendslist">
 		<c:if test="${empty weList }">

@@ -46,7 +46,7 @@
 		var task=setInterval(function(){
 			time--;
 			$(".time").text(time);
-			if(time==0){
+			if(time==1){
 				clearInterval(task);
 				window.location.href="center.html";
 			}

@@ -1,45 +1,64 @@
 package com.rycf.gjb.test;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-
-import com.yeepay.g3.utils.common.json.JSONUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Test {
 	public static void main(String[] args) {
-		String action="http://dwz.cn/create.php";
-		String url="http://localhost:8080/admin/phoneRegister.html?" +
-				"registerCode=d0431c6e970c1dcd3c733d33568a32cc";
-		String alias="";
-		
-		PostMethod method=new PostMethod(action);
-		method.addParameters(new NameValuePair[]{
-				new NameValuePair("url", url),
-				new NameValuePair("alias", alias)}
-					);
-		HttpClient client=new HttpClient();
-		try {
-			int status=client.executeMethod(method);
-			if(status==HttpStatus.SC_OK){
-				System.out.println("请求成功");
-			String res=method.getResponseBodyAsString();
-			Map<String, Object>result=JSONUtils.jsonToMap(res, String.class, String.class);
-			result.get("tinyurl");
-			}else{
-				System.out.println("请求失败");
+		final List<Integer> food=new ArrayList<Integer>();
+		final String get="watch";
+		final String eat="watch";
+		 Runnable load=new Runnable() {
+			@Override
+			public void run() {
+				synchronized (get) {
+					for(int i=0;i<=100;i++){
+							food.add(i);
+							System.out.println("补充了一点 i="+i);
+						
+							if(food.size()>0){
+									eat.notify();
+							}else{
+								get.notify();
+								try {
+									eat.wait();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+					}
+					
+				}
 			}
-		} catch (HttpException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		};
+		
+		Runnable ready=new Runnable() {
+			@Override
+			public void run() {
+				synchronized (eat) {
+				for(int i=0;i<=100;i++){
+					if(food.size()>0){
+						food.remove(0);
+						System.out.println("吃掉了一点");
+					}else{
+						get.notify();
+						try {
+							eat.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+					}
+				}
+				}
+			}
+		};
+		Thread thread=new Thread(load);
+		Thread thread1=new Thread(ready);
+		thread1.start();
+		thread.start();
+		
 		
 	}
 }

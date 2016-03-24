@@ -12,6 +12,7 @@ public interface ThirdChannelService {
 	void update(ThirdChannel channel);
 	ThirdChannelDTO getById( Integer id);
 	ThirdChannelDTO getByGetMoreId(Integer getMoreId);
+	ThirdChannelDTO getByCode(String code);
 	
 	PageDTO<List<ThirdChannelDTO>> getByPageAndParam( PageDTO<ThirdChannel> page);
 	List<ThirdChannelDTO> getList( ThirdChannel channel);

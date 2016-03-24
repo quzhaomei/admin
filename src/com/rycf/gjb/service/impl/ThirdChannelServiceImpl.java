@@ -102,4 +102,9 @@ public class ThirdChannelServiceImpl implements ThirdChannelService {
 		return channelDao.getFriendCount(channelId);
 	}
 
+	@Override
+	public ThirdChannelDTO getByCode(String code) {
+		return channelDao.getByCode(code);
+	}
+
 }

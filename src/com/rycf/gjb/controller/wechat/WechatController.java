@@ -822,31 +822,43 @@ public class WechatController extends BaseController {
 			int count = channelService.getCountByParam(param);
 			if (count != 0) {
 				model.addAttribute("channelCode", channelCode);
-			}else{
-				channelCode=null;
+			} else {
+				channelCode = null;
 			}
 		}
 		if (Constant.NORMAL.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				if(channelCode!=null){
+				if (channelCode != null) {
 					GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
-					if(loginUser.getCode()!=null){
-						request.setAttribute("tips", "您已经绑定过了，不能更换推荐码");
+					if (loginUser.getCode() != null) {
+						if (loginUser.getCode().equals(channelCode)) {
+							request.setAttribute("tips", "您已经绑定过该推荐码了，无需重复操作");
+						} else {
+							request.setAttribute("tips", "您已经绑定过推荐码了，不能更换推荐码");
+						}
 						request.getRequestDispatcher("noaccess.html").forward(request, response);
-					}else{
+					} else {
 						// 绑定渠道商
 						if (channelCode != null) {
-							GetMoreUser user = new GetMoreUser();
-							user.setCode(channelCode);
-							user.setGetMoreId(loginUser.getGetMoreId());
-							getMoreUserService.updateGetMoreUser(user);
-							loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
-							request.getSession().setAttribute(LOGIN_USER, loginUser);
-							request.setAttribute("tips", "绑定成功！");
-							request.getRequestDispatcher("noaccess.html").forward(request, response);
+							/**
+							 * GetMoreUser user = new GetMoreUser();
+							 * user.setCode(channelCode);
+							 * user.setGetMoreId(loginUser.getGetMoreId());
+							 * getMoreUserService.updateGetMoreUser(user);
+							 * loginUser =
+							 * getMoreUserService.getUserById(loginUser.
+							 * getGetMoreId());
+							 * request.getSession().setAttribute(LOGIN_USER,
+							 * loginUser); request.setAttribute("tips",
+							 * "绑定成功！");
+							 */
+							ThirdChannelDTO thirdChannelDTO = channelService.getByCode(channelCode);
+							// 跳转确认页面
+							request.setAttribute("channel", thirdChannelDTO);
+							request.getRequestDispatcher("codeConfirm.html").forward(request, response);
 						}
 					}
-				}else{
+				} else {
 					request.getRequestDispatcher("toNormal.html").forward(request, response);
 				}
 			} catch (ServletException | IOException e) {
@@ -857,10 +869,10 @@ public class WechatController extends BaseController {
 
 		if (Constant.GUIDE.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				if(channelCode!=null){
+				if (channelCode != null) {
 					request.setAttribute("tips", "您已是导购，没有绑定权限");
 					request.getRequestDispatcher("noaccess.html").forward(request, response);
-				}else{
+				} else {
 					request.getRequestDispatcher("toGuide.html").forward(request, response);
 				}
 			} catch (ServletException | IOException e) {
@@ -871,10 +883,10 @@ public class WechatController extends BaseController {
 
 		if (Constant.CHANNEL.equals(request.getSession().getAttribute(Constant.ROLE))) {
 			try {
-				if(channelCode!=null){
+				if (channelCode != null) {
 					request.setAttribute("tips", "您已是渠道商，没有绑定权限");
 					request.getRequestDispatcher("noaccess.html").forward(request, response);
-				}else{
+				} else {
 					request.getRequestDispatcher("toChannel.html").forward(request, response);
 				}
 			} catch (ServletException | IOException e) {
@@ -921,15 +933,15 @@ public class WechatController extends BaseController {
 				getMoreUserService.updateGetMoreUser(user);
 				loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
 				request.getSession().setAttribute(LOGIN_USER, loginUser);
-				
+
 				request.setAttribute("tips", "绑定成功！");
-					try {
-						request.getRequestDispatcher("noaccess.html").forward(request, response);
-					} catch (ServletException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				try {
+					request.getRequestDispatcher("noaccess.html").forward(request, response);
+				} catch (ServletException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 		}
@@ -2327,6 +2339,60 @@ public class WechatController extends BaseController {
 	public String noaccess(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/noaccess/error";
 
+	}
+
+	// 确认界面
+	@RequestMapping(value = "/codeConfirm")
+	public String codeConfirm(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return "wechat/noaccess/codeConfirm";
+
+	}
+
+	// 绑定推荐码
+	@RequestMapping(value = "/bindCode")
+	public String bindCode(HttpServletRequest request, HttpServletResponse response, Model model) {
+		JsonObject json=new JsonObject();
+		// 新注册用户
+		String channelCode = request.getParameter("channelCode");// 渠道编码
+		if (channelCode != null) {
+			ThirdChannel param = new ThirdChannel();
+			param.setCode(channelCode);
+			int count = channelService.getCountByParam(param);
+			if (count != 0) {
+				model.addAttribute("channelCode", channelCode);
+			} else {
+				json.setStatus("0").setMessage("该推荐码不存在！");
+				channelCode = null;
+			}
+		}
+		if (Constant.NORMAL.equals(request.getSession().getAttribute(Constant.ROLE))) {
+				if (channelCode != null) {
+					GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
+					if (loginUser.getCode() != null) {
+						if (loginUser.getCode().equals(channelCode)) {
+							json.setStatus("0").setMessage("您已经绑定过该推荐码了，无需重复操作");
+						} else {
+							json.setStatus("0").setMessage("您已经绑定过推荐码了，不能更换推荐码");
+						}
+					} else {
+						// 绑定渠道商
+						if (channelCode != null) {
+
+							GetMoreUser user = new GetMoreUser();
+							user.setCode(channelCode);
+							user.setGetMoreId(loginUser.getGetMoreId());
+							getMoreUserService.updateGetMoreUser(user);
+							loginUser = getMoreUserService.getUserById(loginUser.getGetMoreId());
+							request.getSession().setAttribute(LOGIN_USER, loginUser);
+							json.setStatus("1").setMessage("绑定推荐码成功！");
+						}
+					}
+				} 
+		}else{
+			json.setStatus("0").setMessage("只有普通用户才能绑定推荐码！");
+		}
+		model.addAttribute("json", JSONUtil.object2json(json));
+		return "json";
 	}
 
 	@RequestMapping(value = "/verifying")

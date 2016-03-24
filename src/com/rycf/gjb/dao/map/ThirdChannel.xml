@@ -28,6 +28,7 @@
 		<association property="userDTO" column="getMoreId" javaType="com.rycf.gjb.dto.GetMoreUserDTO">
 		<id property="getMoreId" column="getMoreId"/>
 		<result property="userName" column="userName"/>
+		<result property="photo" column="photo"/>
 		</association>
 	</resultMap>
 	<resultMap type="com.rycf.gjb.entity.WechatUser" id="wechatUser">
@@ -105,6 +106,16 @@
 		on g.getMoreId=t.getMoreId
 		left join third_channel tc on tc.id=t.parentId
 		where t.id=#{id}
+	</select>
+	<select id="getByCode" resultMap="channelDTO">
+		select t.id,t.parentId,t.rate,t.getMoreId,g.userName,g.photo,t.name,t.sex,t.phone,t.job,t.type,t.introImg
+		,t.createDate,t.status,t.isCompany,t.code,t.unpay,t.totalPay,
+		t.description,t.updateDate,t.updateUserId
+		,tc.name parentName,tc.status parentStatus from
+		third_channel t left join getmore_user g
+		on g.getMoreId=t.getMoreId
+		left join third_channel tc on tc.id=t.parentId
+		where t.code=#{code}
 	</select>
 	<select id="getByGetMoreId" resultMap="channelDTO"><!-- 非公司只能有一个 -->
 		select t.id,tc.id parentId,t.rate,t.getMoreId,g.userName,t.name,t.sex,t.phone,t.job,t.type,t.introImg

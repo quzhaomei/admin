@@ -13,6 +13,7 @@
      <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="noaccess" id="welcome">
+${empty channelCode }
 		<c:if test="${empty channelCode }">
 		<div class="main">
 			<div class="iconcustomer icons">
@@ -36,7 +37,7 @@
 			</div>
 			<div class="apply">
 			
-				<a href="toNormal.html?channelCode=${channelCode }" class="customer">成为凯特猫用户</a>
+				<a href="toNormal.html?channelCode=${channelCode }" class="customer">确认绑定</a>
 			
 			</div>
 		</div>

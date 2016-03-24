@@ -14,6 +14,8 @@ public interface ThirdChannelDao {
 	void update(@Param(value = "channel") ThirdChannel channel);
 	ThirdChannelDTO getById(@Param(value = "id") Integer id);
 	ThirdChannelDTO getByGetMoreId(@Param(value = "getMoreId") Integer getMoreId);
+	ThirdChannelDTO getByCode(@Param(value = "code") String code);
+	
 	List<ThirdChannelDTO> getByPageAndParam(@Param(value = "page") PageDTO<ThirdChannel> page);
 	
 	List<ThirdChannelDTO> getListByParam(@Param(value = "channel")ThirdChannel channel);
