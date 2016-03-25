@@ -70,7 +70,7 @@ String path = request.getContextPath();
 												<a href="#contact">报名注册</a>
 											</li>
 											<li>
-												<a href="http://jzpaidan.com/minisite/designApply_to.html">精彩活动</a>
+												<a href="http://jzpaidan.com/minisite/designApply_to.html">家装派单</a>
 											</li>
 										</ul>
 									</nav>

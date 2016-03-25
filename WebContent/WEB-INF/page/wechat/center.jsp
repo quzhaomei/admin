@@ -7,14 +7,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>凯特猫 买家具从返利开始</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+     <meta name="viewport" content="width=321">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">
      <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="noaccess" id="welcome">
-${empty channelCode }
-		<c:if test="${empty channelCode }">
+
 		<div class="main">
 			<div class="iconcustomer icons">
 			<a href="toNormal.html">
@@ -27,21 +26,7 @@ ${empty channelCode }
 			
 			</div>
 		</div>
-		</c:if>
-			<c:if test="${not empty channelCode }">
-				<div class="main">
-			<div class="iconcustomer icons">
-			<a href="toNormal.html?channelCode=${channelCode }">
-				<img src="images/cathead.svg" alt="">
-			</a>
-			</div>
-			<div class="apply">
-			
-				<a href="toNormal.html?channelCode=${channelCode }" class="customer">确认绑定</a>
-			
-			</div>
-		</div>
-			</c:if>	
+
 		
 		
 		<div class="sec">

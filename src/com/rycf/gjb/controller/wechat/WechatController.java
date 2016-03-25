@@ -894,8 +894,14 @@ public class WechatController extends BaseController {
 			}
 			return null;
 		}
-
-		return "wechat/center";
+		if(channelCode==null){
+			return "wechat/center";
+		}else{
+			ThirdChannelDTO thirdChannelDTO = channelService.getByCode(channelCode);
+			// 跳转确认页面
+			model.addAttribute("channel", thirdChannelDTO);
+			return "wechat/center_recode_choosen";
+		}
 	}
 
 	// 普通个人中心
@@ -2351,6 +2357,7 @@ public class WechatController extends BaseController {
 	// 绑定推荐码
 	@RequestMapping(value = "/bindCode")
 	public String bindCode(HttpServletRequest request, HttpServletResponse response, Model model) {
+		GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 		JsonObject json=new JsonObject();
 		// 新注册用户
 		String channelCode = request.getParameter("channelCode");// 渠道编码
@@ -2365,9 +2372,8 @@ public class WechatController extends BaseController {
 				channelCode = null;
 			}
 		}
-		if (Constant.NORMAL.equals(request.getSession().getAttribute(Constant.ROLE))) {
+		if (request.getSession().getAttribute(Constant.ROLE)==null||Constant.NORMAL.equals(request.getSession().getAttribute(Constant.ROLE))) {
 				if (channelCode != null) {
-					GetMoreUserDTO loginUser = (GetMoreUserDTO) request.getSession().getAttribute(LOGIN_USER);
 					if (loginUser.getCode() != null) {
 						if (loginUser.getCode().equals(channelCode)) {
 							json.setStatus("0").setMessage("您已经绑定过该推荐码了，无需重复操作");
@@ -2388,6 +2394,17 @@ public class WechatController extends BaseController {
 						}
 					}
 				} 
+				//绑定为普通用户
+				if(request.getSession().getAttribute(Constant.ROLE)==null){
+					ThirdNormal normal = normalService.getByGetMoreId(loginUser.getGetMoreId());
+					if (normal == null) {
+						normal = new ThirdNormal();
+						normal.setGetMoreId(loginUser.getGetMoreId());
+						normalService.save(normal);
+						request.getSession().setAttribute(Constant.ROLE, Constant.NORMAL);
+					}
+				}
+				
 		}else{
 			json.setStatus("0").setMessage("只有普通用户才能绑定推荐码！");
 		}
@@ -2398,6 +2415,12 @@ public class WechatController extends BaseController {
 	@RequestMapping(value = "/verifying")
 	public String verifying(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "wechat/noaccess/verifying";
+
+	}
+	
+	@RequestMapping(value = "/newbindok")
+	public String newbindok(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return "wechat/noaccess/newbindok";
 
 	}
 }

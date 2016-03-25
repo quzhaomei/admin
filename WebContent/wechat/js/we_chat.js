@@ -219,13 +219,7 @@ function loadHistory(toId,pageIndex,pageSize,tempId,callback){
 		}
 	},"json");
 }
-$("#talking-container").on("click",".loadPage",function(){
-	var toId=$(this).attr("toId");
-	var pageIndex=$(this).attr("pageIndex");
-	var pageSize=$(this).attr("pageSize");
-	var tempId=$(this).attr("tempId");
-	loadHistory(toId,pageIndex,pageSize,tempId);
-});
+
 
 //加载未接受信息，以及历史信息数目
 function loadUnCheckHis(toId,fn){
@@ -263,6 +257,13 @@ $(function(){
 		
 	});
 
+	$("#talking-container").on("touchstart",".loadPage",function(){
+		var toId=$(this).attr("toId");
+		var pageIndex=$(this).attr("pageIndex");
+		var pageSize=$(this).attr("pageSize");
+		var tempId=$(this).attr("tempId");
+		loadHistory(toId,pageIndex,pageSize,tempId);
+	});
 	
 	//发送图片
 	$(".add_img").on("click",function(){

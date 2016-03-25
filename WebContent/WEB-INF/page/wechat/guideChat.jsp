@@ -8,7 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>导购 | ${toUser.userName }</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=321">
       <meta name="format-detection" content="telephone=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">

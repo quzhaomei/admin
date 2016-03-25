@@ -7,7 +7,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>个人中心 | 普通用户</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=321">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
      <link rel="stylesheet" href="css/fonts.css">
      <link rel="stylesheet" href="css/main.css">

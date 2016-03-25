@@ -2146,13 +2146,13 @@ label.namecard img {
       border-radius: 50%;
       border: 2px solid #f3555c; }
 
-#errorpage, #successpage {
+#errorpage, #successpage, #choosepage {
   text-align: center; }
-  #errorpage.noaccess, #successpage.noaccess {
+  #errorpage.noaccess, #successpage.noaccess, #choosepage.noaccess {
     background-color: #ce304e; }
-    #errorpage.noaccess strong, #successpage.noaccess strong {
+    #errorpage.noaccess strong, #successpage.noaccess strong, #choosepage.noaccess strong {
       color: #FFD263; }
-  #errorpage .icon, #successpage .icon {
+  #errorpage .icon, #successpage .icon, #choosepage .icon {
     background-color: #f3555c;
     display: inline-block;
     width: 130px;
@@ -2164,12 +2164,12 @@ label.namecard img {
     text-align: center;
     padding-top: 33px;
     margin-bottom: 25px; }
-    #errorpage .icon img, #successpage .icon img {
+    #errorpage .icon img, #successpage .icon img, #choosepage .icon img {
       width: 80px;
       display: inline-block; }
-  #errorpage .warning, #errorpage .confirm, #successpage .warning, #successpage .confirm {
+  #errorpage .warning, #errorpage .confirm, #successpage .warning, #successpage .confirm, #choosepage .warning, #choosepage .confirm {
     color: white; }
-  #errorpage .redirect, #successpage .redirect {
+  #errorpage .redirect, #successpage .redirect, #choosepage .redirect {
     display: inline-block;
     background-color: #24ABB5;
     font-size: 12px;
@@ -2177,21 +2177,76 @@ label.namecard img {
     padding: 2px 10px;
     margin-top: 20px;
     border-radius: 15px; }
-    #errorpage .redirect span, #successpage .redirect span {
+    #errorpage .redirect span, #successpage .redirect span, #choosepage .redirect span {
       color: #FFD263;
       font-size: 13px;
       display: inline-block;
       margin-left: 5px; }
-  #errorpage.gray, #successpage.gray {
+  #errorpage.gray, #successpage.gray, #choosepage.gray {
     background-color: #bfcdd7; }
-    #errorpage.gray .icon, #successpage.gray .icon {
+    #errorpage.gray .icon, #successpage.gray .icon, #choosepage.gray .icon {
       background-color: #dee6eb; }
-    #errorpage.gray .redirect, #successpage.gray .redirect {
+    #errorpage.gray .redirect, #successpage.gray .redirect, #choosepage.gray .redirect {
       background-color: #5b7585; }
-    #errorpage.gray .warning, #errorpage.gray .confirm, #successpage.gray .warning, #successpage.gray .confirm {
+    #errorpage.gray .warning, #errorpage.gray .confirm, #successpage.gray .warning, #successpage.gray .confirm, #choosepage.gray .warning, #choosepage.gray .confirm {
       color: #475a66; }
-  #errorpage button, #successpage button {
+  #errorpage button, #successpage button, #choosepage button {
     margin-top: 20px; }
+
+#choosepage {
+  background-image: url("../images/geometry.png");
+  background-repeat: repeat;
+  background-size: 300px 300px; }
+  #choosepage .icon {
+    margin-top: 4%;
+    background-color: transparent !important;
+    width: 90px !important;
+    margin-bottom: 10px;
+    height: auto; }
+    #choosepage .icon img {
+      width: 90px; }
+  #choosepage button {
+    margin-top: 15px;
+    margin-bottom: 15px; }
+  #choosepage .confirm {
+    font-size: 12px;
+    margin-top: 0px; }
+    #choosepage .confirm .hello {
+      font-size: 16px;
+      display: inline-block;
+      margin-bottom: 15px; }
+      #choosepage .confirm .hello strong {
+        color: #b4213c; }
+  #choosepage .otherchoice {
+    padding: 0px 50px;
+    font-size: 11px;
+    padding-bottom: 25px;
+    margin-top: 20px;
+    color: #475a66; }
+    #choosepage .otherchoice .info {
+      margin-bottom: 15px; }
+  #choosepage .iconguider, #choosepage .icondistri {
+    display: inline-block;
+    width: 49%;
+    text-align: center; }
+    #choosepage .iconguider a, #choosepage .icondistri a {
+      display: block; }
+    #choosepage .iconguider i, #choosepage .icondistri i {
+      font-size: 28px;
+      display: inline-block;
+      color: white;
+      background-color: #bfcdd7;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      padding-top: 10px;
+      text-align: center; }
+    #choosepage .iconguider span, #choosepage .icondistri span {
+      display: block;
+      font-size: 10px;
+      margin-top: 10px; }
+    #choosepage .iconguider a:active i, #choosepage .iconguider a:focus i, #choosepage .icondistri a:active i, #choosepage .icondistri a:focus i {
+      background-color: #b4213c; }
 
 #successpage {
   background-image: url("../images/geometry.png");
@@ -2223,6 +2278,20 @@ label.namecard img {
       height: 100px;
       border: 3px solid #a1b1bc;
       border-radius: 50% !important; }
+  #successpage.new strong {
+    color: #b4213c; }
+  #successpage.new .icon {
+    height: auto;
+    border: none;
+    width: 80px;
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    margin-bottom: 15px; }
+    #successpage.new .icon img {
+      height: auto;
+      width: 80px;
+      border: none;
+      border-radius: 0px !important; }
 
 #nocontent {
   text-align: center;

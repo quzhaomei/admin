@@ -9,7 +9,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>导购 | ${toguide.name}</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+     <meta name="viewport" content="width=321">
       <meta name="format-detection" content="telephone=no">
      <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
@@ -53,7 +53,7 @@
 			</div>
 		</div>
 		<c:if test="${check==0 }">
-			<div class="chatnotice anime_l"><!-- 只能向您主动发送2条信息， -->
+		<!--  -->	<div class="chatnotice anime_l">
 			该导购员不是您的品牌专属导购，如需保持联系，请 
 			<a href="getGuide.html?guideId=${toguide.guideId }"> <i class="icon-plus"></i>添加TA为您的品牌导购</a>
 			</div>
@@ -171,7 +171,7 @@
 
 		if($('.chatnotice')[0]){
 			$('.chatnotice').addClass('shown');
-			setTimeout(function(){$('.chatnotice').removeClass('shown')}, 5000);
+			setTimeout(function(){$('.chatnotice').removeClass('shown').css("zIndex","-1")}, 5000);
 		}
 		
 		//导购头像跳转

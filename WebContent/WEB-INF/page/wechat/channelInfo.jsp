@@ -7,7 +7,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>个人中心 | 个人资料</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+     <meta name="viewport" content="width=321">
      <meta name="format-detection" content="telephone=no">
      <meta name="format-detection" content="telephone=no">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
