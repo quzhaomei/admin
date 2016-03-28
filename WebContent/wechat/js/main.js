@@ -114,11 +114,16 @@ $('#navbttn').on('click', '', function(event) {
 	$('.olay_dark').toggleClass('hide');
 });
 
-
+var ajax_time_task
 $(document).ajaxStart(function(){
-		showAjaxWaiting();
+		ajax_time_task=setTimeout(function(){
+			showAjaxWaiting();
+		}, 500);
 	}).ajaxStop(function(){
-		closeAjaxWaiting();
+		if(ajax_time_task){
+			clearTimeout(ajax_time_task);
+		}
+			closeAjaxWaiting();
 	});
 	
 });
