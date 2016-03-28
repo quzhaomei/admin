@@ -4,28 +4,38 @@ var user;
  * socket 公共js
  */
 	
-window.onerror = function(errorMessage, scriptURI, lineNumber,columnNumber,errorObj) {
-    alert("错误信息："+ errorMessage+
-      ",出错文件：" +scriptURI+","+lineNumber+","+columnNumber+","+errorObj);
-   }	
 	
 var TalkingUser=(function($){
 	
 $(function(){
-	$.ajax({
-		url: "socketLogin.html",
-		type: "get",
-		dataType: 'jsonp',
-		jsonp: 'jsoncallback',
-		success: function(json){  
-			user=new TalkingUser(json.user.getMoreId,json.user.userName,json.user.photo,
-					json.url,json.role,json.serverhost);
-			user.login();//登录
-        },  
-        error: function(){  
-            alert('fail');  
-        }  
+	var remoteUrl;
+	$("script").each(function(){
+		if(this.src.indexOf("socket.io-1.3.4.js")!=-1){
+			remoteUrl=this.src;
+			for(var i=3;i>0;i--){
+				if(remoteUrl.lastIndexOf("/")!=-1){
+					remoteUrl=remoteUrl.substring(0, remoteUrl.lastIndexOf("/"));
+				}
+			}
+			remoteUrl=remoteUrl+"/wechat/socketLogin.html"
+		}
 	});
+	if(remoteUrl){
+		$.ajax({
+			url: remoteUrl,
+			type: "get",
+			dataType: 'jsonp',
+			jsonp: 'jsoncallback',
+			success: function(json){  
+				user=new TalkingUser(json.user.getMoreId,json.user.userName,json.user.photo,
+						json.url,json.role,json.serverhost);
+				user.login();//登录
+	        },  
+	        error: function(){ 
+	        	
+	        }  
+		});
+	}
 });
 //聊天用户对象,在首页创建
 function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
@@ -64,7 +74,7 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 						'<i class="icon-bubbles4 spinning"></i>'+
 						'<span class="num">'+data.uncheckcount+'</span></div>');
 			}
-			$("body").on("click","#msgnotify",function(){
+			$("#msgnotify").on("click",function(){
 				if(_this.role=="guide"){
 					window.location.href=_this.url+"/wechat/guideCustom.html";
 				}else if(_this.role=="normal"){
@@ -94,6 +104,13 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 					$("body").append('<div id="msgnotify">'+
 					'<i class="icon-bubbles4 spinning"></i>'+
 					'<span class="num">1</span></div>');
+					$("#msgnotify").on("click",function(){
+						if(_this.role=="guide"){
+							window.location.href=_this.url+"/wechat/guideCustom.html";
+						}else if(_this.role=="normal"){
+							window.location.href=_this.url+"/wechat/myQuestion.html";
+						}
+					});
 				}else{
 					var num=$("#msgnotify .num").text();
 					num=parseInt(num, 10);

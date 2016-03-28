@@ -84,7 +84,7 @@ public class WechatInterceptor extends HandlerInterceptorAdapter {
 			String state = request.getParameter("state");
 
 			// 测试
-			boolean test = true;
+			boolean test = false;
 			String getmoreId = request.getParameter("getId");
 			if (loginUser == null && test && getmoreId != null && getmoreId.matches("\\d+")) {
 				loginUser = getMoreUserService.getUserById(Integer.parseInt(getmoreId));

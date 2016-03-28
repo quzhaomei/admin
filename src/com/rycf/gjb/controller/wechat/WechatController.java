@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class WechatController extends BaseController {
 		String key = "xiaoqushitiancai";
 		String role = (String) request.getSession().getAttribute(Constant.ROLE);
 		String sign = MD5Util.GetMD5Code(weUser.getOpenid() + key);
+		String avatar=weUser.getHeadimgurl();
 		if (request.getParameter("url") != null) {// 如果是从外部请求
 			try {
 				url = URLDecoder.decode(url, "utf-8");
@@ -129,8 +131,9 @@ public class WechatController extends BaseController {
 				e1.printStackTrace();
 			}
 			try {
-				response.sendRedirect(url + "?openId=" + weUser.getOpenid() + "&nickname=" + weUser.getNickname()
-						+ "&sign=" + sign + "&role=" + role);
+				response.sendRedirect(url + "?openId=" + weUser.getOpenid() + "&nickname=" + URLEncoder.encode(weUser.getNickname(),
+						"utf-8")
+						+ "&sign=" + sign + "&role=" + role+"&avatar="+URLEncoder.encode(avatar,"utf-8"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
