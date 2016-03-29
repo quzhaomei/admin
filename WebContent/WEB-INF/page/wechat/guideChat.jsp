@@ -20,8 +20,8 @@
      
 </head>
 <body class="bg_white with_topbar">
+	<input type="hidden" id="notips-unreview" />
 	<input type="hidden" id="toId" value="${toUser.getMoreId }"/>
-	
 	<input type="hidden" id="guideId" value="${guide.guideId }"/>
 	<input type="hidden" id="pageSize" value="${pageSize }"/>
 	<input type="hidden" id="pageIndex" value="${pageIndex }"/>
@@ -348,6 +348,7 @@
 			var html="为您推荐另一位来自于 "+storeName+" 的资深导购 <a href='customerChat.html?guideId="+guideId+"'>"+guideName+" [开始咨询]</a>";
 			chat.sendHtml(html,this);
 			guiderChoose.removeClass('shown');
+			$('.overlay').addClass('hide');
 		});
 		
 		

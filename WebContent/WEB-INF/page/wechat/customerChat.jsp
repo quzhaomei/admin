@@ -26,6 +26,8 @@
      
 </head>
 <body class="bg_white with_topbar">
+	<input type="hidden" id="notips-unreview" />
+	
 	<input type="hidden" id="imgUrl" value="${imgUrl }"/>
 	
 	<input type="hidden" id="toId" value="${toUser.getMoreId }"/>

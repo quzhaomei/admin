@@ -68,6 +68,9 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 		
 		//初始化未接受信息条数
 		socket.on("unaccpet msg",function(data){
+			if($("#notips-unreview")[0]){
+				return;
+			}
 			data=JSON.parse(data);
 			if(data.uncheckcount&&data.uncheckcount!=0){//链接成功，推送登录信息
 				$("body").append('<div id="msgnotify">'+
@@ -76,7 +79,7 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 			}
 			$("#msgnotify").on("click",function(){
 				if(_this.role=="guide"){
-					window.location.href=_this.url+"/wechat/guideCustom.html";
+					window.location.href=_this.url+"/wechat/guideHistory.html";
 				}else if(_this.role=="normal"){
 					window.location.href=_this.url+"/wechat/myQuestion.html";
 				}
@@ -106,7 +109,7 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 					'<span class="num">1</span></div>');
 					$("#msgnotify").on("click",function(){
 						if(_this.role=="guide"){
-							window.location.href=_this.url+"/wechat/guideCustom.html";
+							window.location.href=_this.url+"/wechat/guideHistory.html";
 						}else if(_this.role=="normal"){
 							window.location.href=_this.url+"/wechat/myQuestion.html";
 						}

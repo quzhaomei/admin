@@ -2192,6 +2192,10 @@ label.namecard img {
       color: #475a66; }
   #errorpage button, #successpage button, #choosepage button {
     margin-top: 20px; }
+    #errorpage button span, #successpage button span, #choosepage button span {
+      font-weight: normal;
+      font-size: 0.7em;
+      opacity: 0.6; }
 
 #choosepage {
   background-image: url("../images/geometry.png");
@@ -2208,6 +2212,14 @@ label.namecard img {
   #choosepage button {
     margin-top: 15px;
     margin-bottom: 15px; }
+    #choosepage button.enter {
+      margin-bottom: 8px;
+      margin-top: 10px; }
+  #choosepage .append {
+    font-size: 11px;
+    color: #475a66;
+    margin-bottom: 15px;
+    text-align: center; }
   #choosepage .confirm {
     font-size: 12px;
     margin-top: 0px; }
