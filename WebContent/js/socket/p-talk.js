@@ -1,3 +1,5 @@
+
+
 var user;
 
 /**
@@ -6,18 +8,17 @@ var user;
 	
 	
 var TalkingUser=(function($){
-	
 $(function(){
 	var remoteUrl;
 	$("script").each(function(){
-		if(this.src.indexOf("socket.io-1.3.4.js")!=-1){
+		if(this.src.indexOf("socket.io")!=-1){
 			remoteUrl=this.src;
 			for(var i=3;i>0;i--){
 				if(remoteUrl.lastIndexOf("/")!=-1){
 					remoteUrl=remoteUrl.substring(0, remoteUrl.lastIndexOf("/"));
 				}
 			}
-			remoteUrl=remoteUrl+"/wechat/socketLogin.html"
+			remoteUrl=remoteUrl+"/wechat/socketLogin.html?"+Math.random();
 		}
 	});
 	if(remoteUrl){
@@ -32,8 +33,7 @@ $(function(){
 				user.login();//登录
 	        },  
 	        error: function(){ 
-	        	
-	        }  
+	        } 
 		});
 	}
 });
@@ -49,19 +49,23 @@ function talkingUser(getMoreId,username,imgPath,server,role,serverhost){
 	var _this=this;
 	this.callback=null;//默认的回调
 	this.login=function(){//登录聊天系统方法,并初始化事件
+		
 		socket = io.connect(server,{
 			'reconnection delay' : 5000,
 			'force new connection' : true
 		});
+		
 		socket.on("connect success",function(data){
+			
 			data=JSON.parse(data);
 			if(data.status=="ok"){//链接成功，推送登录信息
 				setTimeout(function(){
 					socket.emit("login", {//向服务器注册用户
-						getMoreId:_this.getMoreId,
-						username:_this.username,
-						imgPath:_this.imgPath
+						'getMoreId':_this.getMoreId,
+						'username':_this.username,
+						'imgPath':_this.imgPath
 					});
+					
 				}, 500);
 			}
 		});

@@ -61,16 +61,10 @@ String path = request.getContextPath();
 									<nav>
 										<ul id="menu" class="sf-menu sf-js-enabled">
 											<li class="active">
-												<a href="#getmore">凯特猫</a>
+												<a href="#getmore">软装返利</a>
 											</li>
 											<li>
-												<a href="#service">签约商户</a>
-											</li>
-											<li>
-												<a href="#contact">报名注册</a>
-											</li>
-											<li>
-												<a href="http://jzpaidan.com/minisite/designApply_to.html">家装派单</a>
+												<a href="http://www.jzpaidan.com/minisite/designApply_to.html">家装设计</a>
 											</li>
 										</ul>
 									</nav>

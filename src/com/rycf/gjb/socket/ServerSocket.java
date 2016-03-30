@@ -61,6 +61,7 @@ public class ServerSocket {
 				("connect success", "{\"status\":\"ok\"}");
 	        }
 	    });
+	   
 	    //login浜嬩欢
 	    server.addEventListener("login", UserInfo.class, new DataListener<UserInfo>() {
 			@Override
@@ -114,6 +115,7 @@ public class ServerSocket {
 	        public void onDisconnect(SocketIOClient socket) {
 	        	UserInfo userInfo=socket.get("user");
 	        	if(userInfo!=null){
+	        		System.out.println(userInfo.getUsername()+"下线了");
 	        		Integer userId=userInfo.getGetMoreId();
 	        		socketMap.remove("user"+userId);//socket
 	        	}
