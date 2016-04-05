@@ -796,7 +796,8 @@ button {
       margin: 15px 5px;
       margin-left: 0px;
       display: inline-block;
-      vertical-align: middle; }
+      vertical-align: middle;
+      border-radius: 50%; }
       .listset .listitem .avatar img {
         width: 100%;
         height: auto;
@@ -1118,8 +1119,8 @@ button {
   -webkit-transform: translateZ(0); }
 
 .spinning {
-  animation: spinning 2s ease-in-out infinite;
-  -webkit-animation: spinning 2s ease-in-out infinite; }
+  animation: spinning 2s infinite ease-in-out;
+  -webkit-animation: spinning 2s infinite ease-in-out; }
 
 #submitting {
   display: inline-block;
@@ -1304,7 +1305,8 @@ label.namecard img {
     display: inline-block;
     float: left; }
     .mini_info .avatar img {
-      border: 3px solid #bfcdd7; }
+      border: 3px solid #bfcdd7;
+      border-radius: 50%; }
   .mini_info .info_contents {
     display: inline-block;
     color: #586167;
@@ -1964,10 +1966,15 @@ label.namecard img {
       font-weight: normal;
       font-size: 0.8em; }
   .toolbox label.preword {
-    display: block; }
+    display: block;
+    position: relative; }
     .toolbox label.preword select {
-      position: fixed;
-      top: -100000px; }
+      position: absolute;
+      top: 0px;
+      height: 60px !important;
+      margin: 0px !important;
+      padding: 0px !important;
+      opacity: 0; }
 
 .chatnotice {
   z-index: 9999;
@@ -2105,6 +2112,8 @@ label.namecard img {
     padding-bottom: 15px;
     padding-top: 15px;
     margin-bottom: 10px; }
+  .chooseguider #brandchoose {
+    margin-bottom: 5px; }
   .chooseguider.shown {
     -webkit-transform: scale(1, 1);
     transform: scale(1, 1); }
@@ -2410,8 +2419,10 @@ label.namecard img {
     display: inline-block;
     top: -3px;
     right: -6px;
-    padding: 1px 4px;
-    border-radius: 20px; }
+    padding: 1px 3px;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center; }
   #msgnotify i {
     color: #a1b1bc;
     font-size: 20px;
